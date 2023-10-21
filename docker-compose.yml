@@ -16,7 +16,7 @@ services:
     volumes:
       - postgres_volume:/var/lib/postgresql
     ports:
-      - 3300:3300
+      - 3300:5432
 
 volumes:
   postgres_volume:
