@@ -7,6 +7,7 @@ services:
     volumes:
       - ./app:/app
     tty: true
+    working_dir: /app
 
   db:
     image: postgres:15.4-bullseye
