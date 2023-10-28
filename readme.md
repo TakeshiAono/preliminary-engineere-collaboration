@@ -22,3 +22,9 @@
 - docker psコマンドでコンテナの名前を確認する。
 - docker exec -it `コンテナ名` bash コマンドを実行
 	> https://zenn.dev/sickleaf/articles/99884a12b0489cf21d45#docker-ps%E3%81%AE%E3%82%B5%E3%83%B3%E3%83%97%E3%83%AB のnamesカラムのところに書いてあるのがコンテナ名
+
+
+# Webサーバーの立ち上げ方
+	1. apiサーバーコンテナへログインする
+	2. /app ディレクトリ上で ./gradlew bootRunコマンドを実行
+	3. ブラウザでlocalhost:8080に入れればOK(2023/10/28時点ではエラーページが出力されればOK)
