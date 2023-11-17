@@ -11,8 +11,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-@Table(name = "Users", indexes = {@Index(name = "project_name_index", columnList = "name")})
-public class User {
+@Table(name = "Projects", indexes = {@Index(name = "user_name_index", columnList = "name")})
+public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -23,15 +23,11 @@ public class User {
     @Column(name = "iconUrl", nullable = true, length = 50)
     private String iconUrl;
 
-    @Column(name = "introduce", nullable = true, columnDefinition = "TEXT")
-    private String introduce;
+    @Column(name = "description", nullable = true, columnDefinition = "TEXT")
+    private String description;
 
-    // @ManyToOne()
-    // @JoinColumn(name = "project_id", referencedColumnName = "id")
-    // private Project project;
-
-    // // 空のコンストラクタ
-    // public User() {}
+    // 空のコンストラクタ
+    public Project() {}
 
     // Getter、Setter
     public Integer getId() {
@@ -40,17 +36,16 @@ public class User {
     public void setId(Integer id) {
         this.id = id;
     }
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-    public String getIconUrl() {
-        return iconUrl;
-    }
-    public void setIconUrl(String iconUrl) {
-        this.iconUrl = iconUrl;
-    }
-
+    // public Integer getIconUrl() {
+    //     return id;
+    // }
+    // public void setIconUrl(String icon_url) {
+    //     this.icon_url = icon_url;
+    // }
+    // public String getUserName() {
+    //     return userName;
+    // }
+    // public void setUserName(String userName) {
+    //     this.userName = userName;
+    // }
 }
