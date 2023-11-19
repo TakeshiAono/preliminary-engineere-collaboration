@@ -26,9 +26,9 @@ public class User {
     @Column(name = "introduce", nullable = true, columnDefinition = "TEXT")
     private String introduce;
 
-    // @ManyToOne()
-    // @JoinColumn(name = "project_id", referencedColumnName = "id")
-    // private Project project;
+    @ManyToOne()
+    @JoinColumn(name = "project_id", referencedColumnName = "id")
+    private Project project;
 
     // // 空のコンストラクタ
     // public User() {}

@@ -27,25 +27,38 @@ public class Project {
     private String description;
 
     // 空のコンストラクタ
-    public Project() {}
+    // public Project() {}
 
     // Getter、Setter
     public Integer getId() {
         return id;
     }
+
     public void setId(Integer id) {
         this.id = id;
     }
-    // public Integer getIconUrl() {
-    //     return id;
-    // }
-    // public void setIconUrl(String icon_url) {
-    //     this.icon_url = icon_url;
-    // }
-    // public String getUserName() {
-    //     return userName;
-    // }
-    // public void setUserName(String userName) {
-    //     this.userName = userName;
-    // }
+
+    public Integer getIconUrl() {
+        return id;
+    }
+
+    public void setIconUrl(String icon_url) {
+        this.iconUrl = icon_url;
+    }
+
+    public String getName() {
+        return name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }
