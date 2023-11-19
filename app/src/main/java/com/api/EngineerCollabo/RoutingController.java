@@ -16,6 +16,9 @@ public class RoutingController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ProjectRepository projectRepository;
     
 
     // routing/index の処理(GET)
@@ -25,11 +28,12 @@ public class RoutingController {
         model.setViewName("indexc");
         System.out.println("Hello");
         System.out.println("Im fine");
-        User user = new User();
-        user.setName("testUser");
-        user.setIconUrl("testURL");
+        Project project = new Project();
+        project.setName("testUser2aaaaa");
+        project.setIconUrl("testURL2aaaa");
+        project.setDescription("testDescriptioaaaaaan");
 
-        userRepository.save(user);
+        projectRepository.save(project);
 
         return model;
     }
