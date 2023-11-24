@@ -27,14 +27,26 @@ public class Roll {
     @JoinColumn(name = "member_id", referencedColumnName = "id")
     private Member member;
 
-    // // 空のコンストラクタ
-    // public User() {}
-
-    // Getter、Setter
     public Integer getId() {
         return id;
     }
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getCountLog() {
+        return countLog;
+    }
+    
+    public void setCountLog(Integer countLog) {
+        this.countLog = countLog;
     }
 }

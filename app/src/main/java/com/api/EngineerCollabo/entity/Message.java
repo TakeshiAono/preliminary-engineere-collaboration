@@ -35,14 +35,27 @@ public class Message {
     @JoinColumn(name = "channel_id", referencedColumnName = "id")
     private Channel channel;
 
-    // // 空のコンストラクタ
-    // public User() {}
-
-    // Getter、Setter
     public Integer getId() {
         return id;
     }
+
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public String getContent() {
+        return text;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 }

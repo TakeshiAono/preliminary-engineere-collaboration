@@ -28,14 +28,19 @@ public class Offer {
     @JoinColumn(name = "scout_user_id", referencedColumnName = "id")
     private User scoutUser;
 
-    // // 空のコンストラクタ
-    // public User() {}
-
-    // Getter、Setter
     public Integer getId() {
         return id;
     }
+
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }
