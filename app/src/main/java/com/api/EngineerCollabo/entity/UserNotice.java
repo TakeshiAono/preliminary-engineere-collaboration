@@ -24,14 +24,19 @@ public class UserNotice {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    // // 空のコンストラクタ
-    // public User() {}
-
-    // Getter、Setter
     public Integer getId() {
         return id;
     }
+
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getLog() {
+        return log;
+    }
+
+    public void setLog(String log) {
+        this.log = log;
     }
 }

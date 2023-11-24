@@ -20,9 +20,6 @@ public class Channel {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
-    private String content;
-
     @ManyToOne()
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user_id;
@@ -35,14 +32,19 @@ public class Channel {
     @JoinColumn(name = "message_id", referencedColumnName = "id")
     private Message message;
 
-    // // 空のコンストラクタ
-    // public User() {}
-
-    // Getter、Setter
     public Integer getId() {
         return id;
     }
+
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
