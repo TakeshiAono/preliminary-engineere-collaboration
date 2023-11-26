@@ -37,10 +37,10 @@ public class RoutingController {
         // project.setIconUrl("testURL2aaaa");
         // project.setDescription("testDescriptioaaaaaan");
         try {
-            User user_aono = new User();
-            user_aono.setName("aono");
+            User user_test = new User();
+            user_test.setName("testUser");
             // UserService userService;
-            userService.getScoutedUser(user_aono);
+            userService.getScoutedUser(user_test);
             // User findUser = userRepository.findById(21);
             // Project project1 = userRepository.findProjectById(21);
             // user_aono.setProject(project);
@@ -49,7 +49,7 @@ public class RoutingController {
             // ProjectRepository projectRepository = new ProjectRepository();
             // List<Project> users = projectRepository.findByIdAndUsersIsNotNull(18);
             // project.setUsers(userList);
-            userRepository.save(user_aono);
+            userRepository.save(user_test);
 
             // Project savedProject = projectRepository.save(project);
             // List<User> users = savedProject.getUsers();
@@ -63,7 +63,7 @@ public class RoutingController {
             // model.addAttribute("test", projectRepository.findByUser(findUser).getName());
             System.out.println("Hello22");
             // System.out.println(project.getName());
-            model.addAttribute("test", userRepository.findById(4).getName());
+            // model.addAttribute("test", userRepository.findById(4).getName());
 
         } catch(Exception e) {
             System.out.println("エラー");
