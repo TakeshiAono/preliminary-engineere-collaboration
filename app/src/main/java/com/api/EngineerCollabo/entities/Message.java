@@ -9,6 +9,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
+import java.util.ArrayList;
+import java.util.List;
+import jakarta.persistence.PrePersist;
 
 @Entity
 @Table(name = "messages")
@@ -25,7 +30,7 @@ public class Message {
 
     @ManyToOne()
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user_id;
+    private User user;
 
     @ManyToOne()
     @JoinColumn(name = "chat_room_id", referencedColumnName = "id")
