@@ -9,23 +9,21 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
+import java.util.ArrayList;
+import java.util.List;
+import jakarta.persistence.PrePersist;
 
 @Entity
-@Table(name = "files")
-public class File {
+@Table(name = "chat_rooms")
+public class ChatRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "name", nullable = false)
     private String name;
-
-    @Column(name = "file_url", nullable = false)
-    private String fileUrl;
-
-    @ManyToOne()
-    @JoinColumn(name = "directory_id", referencedColumnName = "id")
-    private Directory directory;
 
     @ManyToOne()
     @JoinColumn(name = "project_id", referencedColumnName = "id")
@@ -34,24 +32,13 @@ public class File {
     public Integer getId() {
         return id;
     }
-
     public void setId(Integer id) {
         this.id = id;
     }
-
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getFileUrl() {
-        return fileUrl;
-    }
-
-    public void setFileUrl(String fileUrl) {
-        this.fileUrl = fileUrl;
     }
 }

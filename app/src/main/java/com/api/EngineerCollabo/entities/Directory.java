@@ -9,26 +9,28 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
+import java.util.ArrayList;
+import java.util.List;
+import jakarta.persistence.PrePersist;
 
 @Entity
-@Table(name = "Users", indexes = {@Index(name = "project_name_index", columnList = "name")})
-public class User {
+@Table(name = "directories")
+public class Directory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "name", nullable = false, length = 50)
+    @Column(name = "name", nullable = false)
     private String name;
-
-    @Column(name = "iconUrl", nullable = true, length = 50)
-    private String iconUrl;
-
-    @Column(name = "introduce", nullable = true, columnDefinition = "TEXT")
-    private String introduce;
 
     @ManyToOne()
     @JoinColumn(name = "project_id", referencedColumnName = "id")
     private Project project;
+
+    @OneToMany(mappedBy = "directory", cascade = CascadeType.ALL)
+    private List<File> files = new ArrayList<>();
 
     public Integer getId() {
         return id;
@@ -44,29 +46,5 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getIconUrl() {
-        return iconUrl;
-    }
-
-    public void setIconUrl(String iconUrl) {
-        this.iconUrl = iconUrl;
-    }
-
-    public String getIntroduce() {
-        return iconUrl;
-    }
-
-    public void setIntroduce(String iconUrl) {
-        this.introduce = iconUrl;
-    }
-
-    public Project getProject() {
-        return project;
-    }
-
-    public void setProject(Project project) {
-        this.project = project;
     }
 }

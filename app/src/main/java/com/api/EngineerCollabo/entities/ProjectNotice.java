@@ -9,28 +9,25 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
+import java.util.ArrayList;
+import java.util.List;
+import jakarta.persistence.PrePersist;
 
 @Entity
-@Table(name = "channels")
-public class Channel {
+@Table(name = "project_notices")
+public class ProjectNotice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "name", nullable = false)
-    private String name;
+    @Column(name = "log", nullable = false)
+    private String log;
 
     @ManyToOne()
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user_id;
-
-    @ManyToOne()
-    @JoinColumn(name = "chat_room_id", referencedColumnName = "id")
-    private ChatRoom chatRoom;
-
-    @ManyToOne()
-    @JoinColumn(name = "message_id", referencedColumnName = "id")
-    private Message message;
+    @JoinColumn(name = "project_id", referencedColumnName = "id")
+    private Project project;
 
     public Integer getId() {
         return id;
@@ -40,11 +37,11 @@ public class Channel {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getLog() {
+        return log;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLog(String log) {
+        this.log = log;
     }
 }

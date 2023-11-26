@@ -1,7 +1,13 @@
 package com.api.EngineerCollabo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
 
 public interface ChannelRepository extends JpaRepository<Channel, Integer> {
-    // カスタムのクエリメソッドが不要な場合は、このインターフェースだけで十分です
+
+    Channel findById(int id);
+
+    List<Channel> findByUser(User user);
+
+    Channel findByMessages(Message message);
 }

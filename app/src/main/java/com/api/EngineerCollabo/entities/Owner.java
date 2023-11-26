@@ -9,10 +9,15 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
+import java.util.ArrayList;
+import java.util.List;
+import jakarta.persistence.PrePersist;
 
 @Entity
-@Table(name = "project_notices")
-public class ProjectNotice {
+@Table(name = "owners")
+public class Owner {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -21,22 +26,21 @@ public class ProjectNotice {
     private String log;
 
     @ManyToOne()
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+
+    @ManyToOne()
     @JoinColumn(name = "project_id", referencedColumnName = "id")
     private Project project;
 
+    // // 空のコンストラクタ
+    // public User() {}
+
+    // Getter、Setter
     public Integer getId() {
         return id;
     }
-
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getLog() {
-        return log;
-    }
-
-    public void setLog(String log) {
-        this.log = log;
     }
 }

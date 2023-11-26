@@ -1,7 +1,11 @@
 package com.api.EngineerCollabo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
 
 public interface ProjectNoticeRepository extends JpaRepository<ProjectNotice, Integer> {
-    // カスタムのクエリメソッドが不要な場合は、このインターフェースだけで十分です
+
+    ProjectNotice findById(int id);
+
+    ProjectNotice findByProject(Project project);
 }
