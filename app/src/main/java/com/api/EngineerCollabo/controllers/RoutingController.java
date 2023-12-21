@@ -40,7 +40,7 @@ public class RoutingController {
             User user_test = new User();
             user_test.setName("testUser");
             // UserService userService;
-            userService.getScoutedUser(user_test);
+//            userService.getScoutedUser(user_test);
             // User findUser = userRepository.findById(21);
             // Project project1 = userRepository.findProjectById(21);
             // user_aono.setProject(project);

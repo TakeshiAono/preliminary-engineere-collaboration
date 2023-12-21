@@ -15,7 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 import jakarta.persistence.PrePersist;
 
+import lombok.Data;
+
 @Entity
+@Data
 @Table(name = "Users", indexes = {@Index(name = "project_name_index", columnList = "name")})
 public class User {
     @Id
@@ -24,6 +27,12 @@ public class User {
 
     @Column(name = "name", nullable = false, length = 50)
     private String name;
+
+    @Column(name = "email", nullable = false, length = 50)
+    private String email;
+
+    @Column(name = "password", nullable = false, length = 50)
+    private String password;
 
     @Column(name = "iconUrl", nullable = true, length = 50)
     private String iconUrl;
@@ -59,53 +68,53 @@ public class User {
     @OneToMany(mappedBy = "scoutedUser", cascade = CascadeType.ALL)
     private List<Offer> scoutedOffers = new ArrayList<>();
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getIconUrl() {
-        return iconUrl;
-    }
-
-    public void setIconUrl(String iconUrl) {
-        this.iconUrl = iconUrl;
-    }
-
-    public String getIntroduce() {
-        return iconUrl;
-    }
-
-    public void setIntroduce(String iconUrl) {
-        this.introduce = iconUrl;
-    }
-
-    public Boolean getIsOwner() {
-        return isOwner;
-    }
-
-    public void setIsOwner(Boolean isOwner) {
-        this.isOwner = isOwner;
-    }
-
-    public Project getProject() {
-        return project;
-    }
-
-    public void setProject(Project project) {
-        this.project = project;
-    }
+//    public Integer getId() {
+//        return id;
+//    }
+//
+//    public void setId(Integer id) {
+//        this.id = id;
+//    }
+//
+//    public String getName() {
+//        return name;
+//    }
+//
+//    public void setName(String name) {
+//        this.name = name;
+//    }
+//
+//    public String getIconUrl() {
+//        return iconUrl;
+//    }
+//
+//    public void setIconUrl(String iconUrl) {
+//        this.iconUrl = iconUrl;
+//    }
+//
+//    public String getIntroduce() {
+//        return iconUrl;
+//    }
+//
+//    public void setIntroduce(String iconUrl) {
+//        this.introduce = iconUrl;
+//    }
+//
+//    public Boolean getIsOwner() {
+//        return isOwner;
+//    }
+//
+//    public void setIsOwner(Boolean isOwner) {
+//        this.isOwner = isOwner;
+//    }
+//
+//    public Project getProject() {
+//        return project;
+//    }
+//
+//    public void setProject(Project project) {
+//        this.project = project;
+//    }
 
     @PrePersist
     public void prePersist()
