@@ -1,19 +1,8 @@
 package com.api.EngineerCollabo;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Index;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Table;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.CascadeType;
 import java.util.ArrayList;
 import java.util.List;
-import jakarta.persistence.PrePersist;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +18,7 @@ public class UserService {
 
     /**
      * ユーザ登録する情報のDBインサート処理
+     * 
      * @param RequestUserRegist ユーザ登録APIのリクエストボディ
      * @return responseUserRegist ユーザ登録APIのレスポンスボディ
      */
@@ -40,11 +30,13 @@ public class UserService {
         responseUserRegist.setId(user.getId());
         responseUserRegist.setName(user.getName());
         responseUserRegist.setEmail(user.getEmail());
+        // responseUserRegist.setPassword(user.getPassword());
         return responseUserRegist;
     };
 
     /**
      * ユーザ登録するユーザ情報の作成処理
+     * 
      * @param RequestUserRegist ユーザ登録APIのリクエストボディ
      * @return user ユーザ情報
      */
@@ -52,7 +44,7 @@ public class UserService {
         String hashPw;
         User user = new User();
         hashPw = PasswordUtil.hashSHA256(requestUserRegist.getPassword());
-        user.setName(requestUserRegist.getName());
+        // user.setName(requestUserRegist.getName());
         user.setPassword(hashPw);
         user.setEmail(requestUserRegist.getEmail());
 
@@ -61,6 +53,7 @@ public class UserService {
 
     /**
      * ログインするユーザ情報の作成処理
+     * 
      * @param RequestLogin ログインAPIのリクエストボディ
      * @return responseLogin ログインAPIのレスポンスボディ
      */
@@ -71,21 +64,23 @@ public class UserService {
         userList = userRepository.findByEmail(loginUser.getEmail());
 
         ResponseLogin responseLogin = new ResponseLogin();
-        if ( userList.size() == 0) {
+        if (userList.size() == 0) {
             responseLogin.setStatus("error");
-        } else if ( ! (loginUser.getPassword().equals(userList.get(0).getPassword() ))) {
+        } else if (!(loginUser.getPassword().equals(userList.get(0).getPassword()))) {
             responseLogin.setStatus("error");
         } else {
             responseLogin.setStatus("success");
             responseLogin.setId(userList.get(0).getId());
             responseLogin.setName(userList.get(0).getName());
             responseLogin.setEmail(userList.get(0).getEmail());
+            // responseLogin.setPassword(userList.get(0).getPassword());
         }
         return responseLogin;
     };
 
     /**
      * ログインするユーザ情報の作成処理
+     * 
      * @param RequestLogin ログインAPIのリクエストボディ
      * @return user ユーザ情報
      */
@@ -100,22 +95,22 @@ public class UserService {
     };
 }
 
-//@Service
-//public class UserService {
-//    @Autowired
-//    private UserRepository userRepository;
+// @Service
+// public class UserService {
+// @Autowired
+// private UserRepository userRepository;
 //
-//    @Autowired
-//    private OfferRepository offerRepository;
+// @Autowired
+// private OfferRepository offerRepository;
 //
-//    public List<List<User>> getScoutedUser(User user) {
-//      List<Offer> offers = offerRepository.findByUser(user);
-//      List<List<User>> users = new ArrayList<>();
-//      offers.forEach(offer -> {
-//        System.out.println("aaa");
-//        System.out.println(offer);
-//        users.add(userRepository.findByScoutedOffers(offer));
-//      });
-//      return users;
-//    }
-//}
+// public List<List<User>> getScoutedUser(User user) {
+// List<Offer> offers = offerRepository.findByUser(user);
+// List<List<User>> users = new ArrayList<>();
+// offers.forEach(offer -> {
+// System.out.println("aaa");
+// System.out.println(offer);
+// users.add(userRepository.findByScoutedOffers(offer));
+// });
+// return users;
+// }
+// }

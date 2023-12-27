@@ -2,7 +2,6 @@ package com.api.EngineerCollabo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
  * ユーザ関連のAPI
  */
 @RestController
-@RequestMapping("/user")
+// @RequestMapping("/user")
 public class UserController {
 
     // サービスクラスの依存性注入
@@ -21,10 +20,11 @@ public class UserController {
     /**
      * ユーザ登録API
      * POST /user/regist
+     * 
      * @param requestUserRegist ユーザ登録APIのリクエストボディ
      * @return responseUserRegist ユーザ登録APIのレスポンスボディ
      */
-    @PostMapping("regist")
+    @PostMapping("/account")
     public ResponseUserRegist userRegist(@RequestBody RequestUserRegist requestUserRegist) {
 
         // サービスクラスのユーザ登録処理呼び出し
@@ -35,18 +35,19 @@ public class UserController {
     }
 
     /**
-     +   * ログインAPI
-     +   * POST /user/login
-     +   * @param requestLogin ログインAPIのリクエストボディ
-     +   * @return responseLogin ログインAPIのレスポンスボディ
-     +   */
-     @PostMapping("login")
-     public ResponseLogin login(@RequestBody RequestLogin requestLogin) {
+     * ログインAPI
+     * POST /user/login
+     * 
+     * @param requestLogin ログインAPIのリクエストボディ
+     * @return responseLogin ログインAPIのレスポンスボディ
+     */
+    @PostMapping("/login")
+    public ResponseLogin login(@RequestBody RequestLogin requestLogin) {
 
-         // サービスクラスのログイン処理呼び出し
-         ResponseLogin responseLogin = userService.login(requestLogin);
+        // サービスクラスのログイン処理呼び出し
+        ResponseLogin responseLogin = userService.login(requestLogin);
 
-         // APIレスポンス
-         return responseLogin;
-        }
+        // APIレスポンス
+        return responseLogin;
     }
+}
