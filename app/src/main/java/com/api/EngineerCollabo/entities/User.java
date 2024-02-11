@@ -42,7 +42,7 @@ public class User {
     @Column(name = "introduce", nullable = true, columnDefinition = "TEXT")
     private String introduce;
 
-    @Column(name = "is_owner", nullable = false, columnDefinition = "boolean default false")
+    @Column(name = "is_owner", nullable = true, columnDefinition = "boolean default false")
     private Boolean isOwner;
     // TODO: project_idがnullでも保存できてしまう。
     @ManyToOne()
@@ -70,53 +70,53 @@ public class User {
     @OneToMany(mappedBy = "scoutedUser", cascade = CascadeType.ALL)
     private List<Offer> scoutedOffers = new ArrayList<>();
 
-    // public Integer getId() {
-    // return id;
-    // }
-    //
-    // public void setId(Integer id) {
-    // this.id = id;
-    // }
-    //
-    // public String getName() {
-    // return name;
-    // }
-    //
-    // public void setName(String name) {
-    // this.name = name;
-    // }
-    //
-    // public String getIconUrl() {
-    // return iconUrl;
-    // }
-    //
-    // public void setIconUrl(String iconUrl) {
-    // this.iconUrl = iconUrl;
-    // }
-    //
-    // public String getIntroduce() {
-    // return iconUrl;
-    // }
-    //
-    // public void setIntroduce(String iconUrl) {
-    // this.introduce = iconUrl;
-    // }
-    //
-    // public Boolean getIsOwner() {
-    // return isOwner;
-    // }
-    //
-    // public void setIsOwner(Boolean isOwner) {
-    // this.isOwner = isOwner;
-    // }
-    //
-    // public Project getProject() {
-    // return project;
-    // }
-    //
-    // public void setProject(Project project) {
-    // this.project = project;
-    // }
+    public Integer getId() {
+    return id;
+    }
+    
+    public void setId(Integer id) {
+    this.id = id;
+    }
+    
+    public String getName() {
+    return name;
+    }
+    
+    public void setName(String name) {
+    this.name = name;
+    }
+    
+    public String getIconUrl() {
+    return iconUrl;
+    }
+    
+    public void setIconUrl(String iconUrl) {
+    this.iconUrl = iconUrl;
+    }
+    
+    public String getIntroduce() {
+    return iconUrl;
+    }
+    
+    public void setIntroduce(String iconUrl) {
+    this.introduce = iconUrl;
+    }
+    
+    public Boolean getIsOwner() {
+    return isOwner;
+    }
+    
+    public void setIsOwner(Boolean isOwner) {
+    this.isOwner = isOwner;
+    }
+    
+    public Project getProject() {
+    return project;
+    }
+    
+    public void setProject(Project project) {
+    this.project = project;
+    }
 
     @PrePersist
     public void prePersist() {
