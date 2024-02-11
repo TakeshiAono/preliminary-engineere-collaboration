@@ -7,10 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @Service
 @Transactional
-public class UserService {
+public class UserService implements UserDetailsService {
 
     // リポジトリクラスの依存性注入
     @Autowired
@@ -93,6 +97,23 @@ public class UserService {
 
         return user;
     };
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        // データベースからユーザー情報を取得
+        User user = userRepository.findByName(username);
+        // データベースから取得したユーザー情報がnullの場合、例外をスロー
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        
+        // UserDetailsオブジェクトに変換して返す
+        return org.springframework.security.core.userdetails.User
+            .withUsername(user.getName())
+            .password(user.getPassword())
+            .roles("USER") // ユーザーのロールを指定
+            .build();
+    }
 }
 
 // @Service
