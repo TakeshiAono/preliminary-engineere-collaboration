@@ -26,7 +26,7 @@ public class UserNotice {
     private String log;
 
     @ManyToOne()
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
     private User user;
 
     public Integer getId() {

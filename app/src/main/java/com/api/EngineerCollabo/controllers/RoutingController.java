@@ -27,10 +27,16 @@ public class RoutingController {
     // routing/index の処理(GET)
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     public String indexGet(Model model) {
+        // springSecurityの設定でログイン前に/routing/indexに飛ぶと、2回下記のコードが実行され、2レコード保存されるが問題ないので気にしないで欲しい
+        Project project = projectRepository.findById(1);
         User user_test = new User();
         user_test.setName("testUser");
+        user_test.setEmail("testemail");
+        user_test.setPassword("testpassword3");
+
+        user_test.setProject(project);
         userRepository.save(user_test);
-        Project project = projectRepository.findById(18);
+        
         return "indexc";
     }
 }

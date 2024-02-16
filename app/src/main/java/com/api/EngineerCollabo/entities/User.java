@@ -46,7 +46,7 @@ public class User {
     private Boolean isOwner;
     // TODO: project_idがnullでも保存できてしまう。
     @ManyToOne()
-    @JoinColumn(name = "project_id", referencedColumnName = "id")
+    @JoinColumn(name = "project_id", nullable = false, referencedColumnName = "id")
     private Project project;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
