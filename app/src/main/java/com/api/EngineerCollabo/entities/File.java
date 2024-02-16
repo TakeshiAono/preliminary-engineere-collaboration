@@ -29,11 +29,11 @@ public class File {
     private String fileUrl;
 
     @ManyToOne()
-    @JoinColumn(name = "directory_id", referencedColumnName = "id")
+    @JoinColumn(name = "directory_id", nullable = false, referencedColumnName = "id")
     private Directory directory;
 
     @ManyToOne()
-    @JoinColumn(name = "project_id", referencedColumnName = "id")
+    @JoinColumn(name = "project_id", nullable = false, referencedColumnName = "id")
     private Project project;
 
     public Integer getId() {

@@ -26,11 +26,11 @@ public class Channel {
     private String name;
 
     @ManyToOne()
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
     private User user;
 
     @ManyToOne()
-    @JoinColumn(name = "chat_room_id", referencedColumnName = "id")
+    @JoinColumn(name = "chat_room_id", nullable = false, referencedColumnName = "id")
     private ChatRoom chatRoom;
 
     @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL)

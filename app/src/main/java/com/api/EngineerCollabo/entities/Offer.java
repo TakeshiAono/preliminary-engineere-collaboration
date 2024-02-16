@@ -26,11 +26,11 @@ public class Offer {
     private String message;
 
     @ManyToOne()
-    @JoinColumn(name = "scouted_user_id", referencedColumnName = "id")
+    @JoinColumn(name = "scouted_user_id", nullable = false, referencedColumnName = "id")
     private User scoutedUser;
 
     @ManyToOne()
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
     private User user;
 
     public Integer getId() {

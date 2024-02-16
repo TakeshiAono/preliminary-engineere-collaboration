@@ -26,7 +26,7 @@ public class Directory {
     private String name;
 
     @ManyToOne()
-    @JoinColumn(name = "project_id", referencedColumnName = "id")
+    @JoinColumn(name = "project_id", nullable = false, referencedColumnName = "id")
     private Project project;
 
     @OneToMany(mappedBy = "directory", cascade = CascadeType.ALL)

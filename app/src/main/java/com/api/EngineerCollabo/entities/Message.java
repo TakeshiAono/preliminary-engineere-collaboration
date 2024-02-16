@@ -29,15 +29,15 @@ public class Message {
     private String content;
 
     @ManyToOne()
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
     private User user;
 
     @ManyToOne()
-    @JoinColumn(name = "chat_room_id", referencedColumnName = "id")
+    @JoinColumn(name = "chat_room_id", nullable = false, referencedColumnName = "id")
     private ChatRoom chatRoom;
 
     @ManyToOne()
-    @JoinColumn(name = "channel_id", referencedColumnName = "id")
+    @JoinColumn(name = "channel_id", nullable = false, referencedColumnName = "id")
     private Channel channel;
 
     public Integer getId() {
