@@ -9,7 +9,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import java.util.Optional;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping("/projects")
@@ -68,20 +73,20 @@ public class ProjectController {
         projectRepository.save(requestProject);
     }
 
-    // /**
-    //  * ログインAPI
-    //  * POST /user/login
-    //  * 
-    //  * @param requestLogin ログインAPIのリクエストボディ
-    //  * @return responseLogin ログインAPIのレスポンスボディ
-    //  */
-    // @PostMapping("/login")
-    // public ResponseLogin login(@RequestBody RequestLogin requestLogin) {
-
-    //     // サービスクラスのログイン処理呼び出し
-    //     ResponseLogin responseLogin = userService.login(requestLogin);
-
-    //     // APIレスポンス
-    //     return responseLogin;
-    // }
+    @GetMapping("/search")
+    public List<Project> createProject(@RequestParam(value = "name", required = false, defaultValue = "") String name, @RequestParam(value = "description", required = false, defaultValue = "") String description) {
+        // TODO: likeのand検索ができるライブラリがありそうなのでそれを使う。
+        if(name != null && description != null) {
+            List<Project> projectList = projectRepository.findByNameLike("%"+ name +"%");
+            return projectList.stream().filter(project -> project.getDescription().contains(description)).collect(Collectors.toList());
+        } else if(name != null) {
+            List<Project> projectList = projectRepository.findByNameLike("%"+ name +"%");
+            return projectList;
+        } else if(description != null) {
+            List<Project> projectList = projectRepository.findByDescriptionLike("%"+ description +"%");
+            return projectList;
+        } else {
+            return new ArrayList<>();
+        }
+    }
 }

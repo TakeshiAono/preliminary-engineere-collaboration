@@ -16,4 +16,8 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
     Project findByDirectories(Directory directory);
 
     Project findByFiles(File file);
+
+    List<Project> findByNameLike(String searchWord);
+
+    List<Project> findByDescriptionLike(String searchWord);
 }
