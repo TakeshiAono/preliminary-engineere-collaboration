@@ -34,7 +34,6 @@ public class SecurityConfig {
           .loginProcessingUrl("/login") //このurlにpostでリクエストされると認証処理が開始される
           .loginPage("/routing/index") // vueのログインページのurlを記載する
           .defaultSuccessUrl("https://github.com/TakeshiAono/preliminary-engineere-collaboration") //ログイン成功した時にリダイレクトさせるurl
-          // .failureUrl("/routing/index")// vueのログインページのurlを記載する
           .usernameParameter("username")
           .passwordParameter("password")
           .permitAll()
@@ -56,7 +55,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public DaoAuthenticationProvider ccc() {
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
       DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
       authProvider.setUserDetailsService(userService);
       authProvider.setPasswordEncoder(passwordEncoder());

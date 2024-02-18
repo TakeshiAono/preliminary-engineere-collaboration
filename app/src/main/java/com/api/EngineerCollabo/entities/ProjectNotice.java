@@ -26,7 +26,7 @@ public class ProjectNotice {
     private String log;
 
     @ManyToOne()
-    @JoinColumn(name = "project_id", referencedColumnName = "id")
+    @JoinColumn(name = "project_id", nullable = false, referencedColumnName = "id")
     private Project project;
 
     public Integer getId() {

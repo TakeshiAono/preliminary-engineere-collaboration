@@ -115,23 +115,3 @@ public class UserService implements UserDetailsService {
             .build();
     }
 }
-
-// @Service
-// public class UserService {
-// @Autowired
-// private UserRepository userRepository;
-//
-// @Autowired
-// private OfferRepository offerRepository;
-//
-// public List<List<User>> getScoutedUser(User user) {
-// List<Offer> offers = offerRepository.findByUser(user);
-// List<List<User>> users = new ArrayList<>();
-// offers.forEach(offer -> {
-// System.out.println("aaa");
-// System.out.println(offer);
-// users.add(userRepository.findByScoutedOffers(offer));
-// });
-// return users;
-// }
-// }
