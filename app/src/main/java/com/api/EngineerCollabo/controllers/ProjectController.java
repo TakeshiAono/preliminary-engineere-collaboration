@@ -2,6 +2,7 @@ package com.api.EngineerCollabo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,30 @@ public class ProjectController {
             return project;
         } else {
             return null;
+        }
+    }
+
+    @PatchMapping("/{id}")
+    public void putProject(@PathVariable("id") Optional<Integer> ID, @RequestBody Project requestProject) {
+        if (ID.isPresent()) {
+            int id = ID.get();
+            Project project = projectRepository.findById(id);
+
+            String name = requestProject.getName();
+            if (name != null) {
+                project.setName(name);
+            }
+
+            String iconUrl = requestProject.getIconUrl();
+            if (iconUrl != null) {
+                project.setIconUrl(iconUrl);
+            }
+
+            String description = requestProject.getDescription();
+            if (description != null) {
+                project.setDescription(description);
+            }
+            projectRepository.save(project);
         }
     }
 
