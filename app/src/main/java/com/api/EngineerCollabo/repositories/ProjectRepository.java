@@ -7,6 +7,8 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
     
     Project findById(int id);
 
+    void deleteById(int id);
+
     Project findByUsers(User user);
 
     Project findByProjectNotices(ProjectNotice projectNotice);
