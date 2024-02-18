@@ -27,50 +27,16 @@ public class RoutingController {
     // routing/index の処理(GET)
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     public String indexGet(Model model) {
-        System.out.println("Hello");
-        System.out.println("Im fine");
-        // User user_aono = new User();
-        // user.getId();
+        // springSecurityの設定でログイン前に/routing/indexに飛ぶと、2回下記のコードが実行され、2レコード保存されるが問題ないので気にしないで欲しい
+        Project project = projectRepository.findById(1);
+        User user_test = new User();
+        user_test.setName("testUser");
+        user_test.setEmail("testemail");
+        user_test.setPassword("testpassword3");
 
-        // Project project = new Project();
-        // project.setName("testUser2aaaaa");
-        // project.setIconUrl("testURL2aaaa");
-        // project.setDescription("testDescriptioaaaaaan");
-        try {
-            User user_test = new User();
-            user_test.setName("testUser");
-            // UserService userService;
-//            userService.getScoutedUser(user_test);
-            // User findUser = userRepository.findById(21);
-            // Project project1 = userRepository.findProjectById(21);
-            // user_aono.setProject(project);
-            // List<User> userList = new ArrayList();
-            // userList.add(user_aono);
-            // ProjectRepository projectRepository = new ProjectRepository();
-            // List<Project> users = projectRepository.findByIdAndUsersIsNotNull(18);
-            // project.setUsers(userList);
-            userRepository.save(user_test);
-
-            // Project savedProject = projectRepository.save(project);
-            // List<User> users = savedProject.getUsers();
-            // User user = users.get(0);
-            // System.out.println("テスト");
-            // System.out.println(users.get(0).getId());
-            // model.addAttribute("test", users.get(0).getId());
-            Project project = projectRepository.findById(18);
-            // List<User> users = userRepository.findByProject(project);
-            // model.addAttribute("test", users.get(0).getName());
-            // model.addAttribute("test", projectRepository.findByUser(findUser).getName());
-            System.out.println("Hello22");
-            // System.out.println(project.getName());
-            // model.addAttribute("test", userRepository.findById(4).getName());
-
-        } catch(Exception e) {
-            System.out.println("エラー");
-            System.out.println(e);
-
-
-        }
+        user_test.setProject(project);
+        userRepository.save(user_test);
+        
         return "indexc";
     }
 }

@@ -23,11 +23,11 @@ public class Follower {
     private Integer id;
 
     @ManyToOne()    
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
     private User user;
 
     @ManyToOne()    
-    @JoinColumn(name = "follower_id", referencedColumnName = "id")
+    @JoinColumn(name = "follower_id", nullable = false, referencedColumnName = "id")
     private User follower;
 
     public Integer getId() {

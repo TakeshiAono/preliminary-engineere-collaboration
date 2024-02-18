@@ -23,11 +23,11 @@ public class Member {
     private Integer id;
 
     @ManyToOne()
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
     private User user;
 
     @ManyToOne()
-    @JoinColumn(name = "project_id", referencedColumnName = "id")
+    @JoinColumn(name = "project_id", nullable = false, referencedColumnName = "id")
     private Project project;
 
     // // 空のコンストラクタ
