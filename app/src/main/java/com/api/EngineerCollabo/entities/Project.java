@@ -60,12 +60,12 @@ public class Project {
         this.id = id;
     }
 
-    public Integer getIconUrl() {
-        return id;
+    public String getIconUrl() {
+        return iconUrl;
     }
 
-    public void setIconUrl(String icon_url) {
-        this.iconUrl = icon_url;
+    public void setIconUrl(String iconUrl) {
+        this.iconUrl = iconUrl;
     }
 
     public String getName() {
@@ -77,7 +77,7 @@ public class Project {
     }
 
     public String getDescription() {
-        return name;
+        return description;
     }
 
     public void setDescription(String description) {
