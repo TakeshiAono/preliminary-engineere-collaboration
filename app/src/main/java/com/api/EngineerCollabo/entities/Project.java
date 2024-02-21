@@ -83,4 +83,8 @@ public class Project {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public List<User> getUsers() {
+        return this.users;
+    }
 }

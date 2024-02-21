@@ -44,7 +44,7 @@ public class User {
 
     @Column(name = "is_owner", nullable = true, columnDefinition = "boolean default false")
     private Boolean isOwner;
-    // TODO: project_idがnullでも保存できてしまう。
+
     @ManyToOne()
     @JoinColumn(name = "project_id", nullable = false, referencedColumnName = "id")
     private Project project;
