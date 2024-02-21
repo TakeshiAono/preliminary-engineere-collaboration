@@ -24,13 +24,20 @@ public class ProjectController {
     @Autowired
     ProjectRepository projectRepository;
 
-    @GetMapping
-    @RequestMapping("/{id}")
-    public Project responseProject(@PathVariable("id") Optional<Integer> ID) {
+    @GetMapping("/{id}")
+    public ResponseProject responseProject(@PathVariable("id") Optional<Integer> ID) {
         if (ID.isPresent()) {
             int id = ID.get();
+            ResponseProject responseProject = new ResponseProject();
             Project project = projectRepository.findById(id);
-            return project;
+            responseProject.setId(project.getId());
+            responseProject.setName(project.getName());
+            responseProject.setIconUrl(project.getIconUrl());
+            responseProject.setDescription(project.getDescription());
+            responseProject.setUserIds(
+                project.getUsers().stream().map(user -> user.getId()).collect(Collectors.toList())
+            );
+            return responseProject;
         } else {
             return null;
         }
