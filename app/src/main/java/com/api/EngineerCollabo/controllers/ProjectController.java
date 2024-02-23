@@ -7,11 +7,13 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import java.util.Optional;
 import java.util.List;
+
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -24,20 +26,15 @@ public class ProjectController {
     @Autowired
     ProjectRepository projectRepository;
 
+    @Autowired
+    ProjectService projectService;
+
     @GetMapping("/{id}")
     public ResponseProject responseProject(@PathVariable("id") Optional<Integer> ID) {
         if (ID.isPresent()) {
             int id = ID.get();
-            ResponseProject responseProject = new ResponseProject();
             Project project = projectRepository.findById(id);
-            responseProject.setId(project.getId());
-            responseProject.setName(project.getName());
-            responseProject.setIconUrl(project.getIconUrl());
-            responseProject.setDescription(project.getDescription());
-            responseProject.setUserIds(
-                project.getUsers().stream().map(user -> user.getId()).collect(Collectors.toList())
-            );
-            return responseProject;
+            return projectService.changeResponseProject(project);
         } else {
             return null;
         }
