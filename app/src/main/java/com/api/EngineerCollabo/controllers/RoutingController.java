@@ -1,4 +1,4 @@
-package com.api.EngineerCollabo;
+package com.api.EngineerCollabo.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -7,6 +7,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.api.EngineerCollabo.entities.Project;
+import com.api.EngineerCollabo.entities.User;
+import com.api.EngineerCollabo.repositories.ProjectRepository;
+import com.api.EngineerCollabo.repositories.UserRepository;
+import com.api.EngineerCollabo.services.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
