@@ -1,4 +1,4 @@
-package com.api.EngineerCollabo;
+package com.api.EngineerCollabo.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-// import com.api.EngineerCollabo.entities.Project;
-// import com.api.EngineerCollabo.entities.ResponseProject;
-// import com.api.EngineerCollabo.repositories.ProjectRepository;
-// import com.api.EngineerCollabo.services.ProjectService;
+import com.api.EngineerCollabo.entities.Project;
+import com.api.EngineerCollabo.entities.ResponseProject;
+import com.api.EngineerCollabo.repositories.ProjectRepository;
+import com.api.EngineerCollabo.services.ProjectService;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PathVariable;

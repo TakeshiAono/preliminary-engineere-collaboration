@@ -1,4 +1,4 @@
-package com.api.EngineerCollabo;
+package com.api.EngineerCollabo.services;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Index;

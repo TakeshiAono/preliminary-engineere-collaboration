@@ -1,9 +1,15 @@
-package com.api.EngineerCollabo;
+package com.api.EngineerCollabo.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.api.EngineerCollabo.entities.RequestLogin;
+import com.api.EngineerCollabo.entities.RequestUserRegist;
+import com.api.EngineerCollabo.entities.ResponseLogin;
+import com.api.EngineerCollabo.entities.ResponseUserRegist;
+import com.api.EngineerCollabo.services.UserService;
 
 /**
  * UserControllerクラス
