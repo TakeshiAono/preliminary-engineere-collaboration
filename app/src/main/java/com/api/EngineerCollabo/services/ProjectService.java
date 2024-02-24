@@ -1,4 +1,4 @@
-package com.api.EngineerCollabo;
+package com.api.EngineerCollabo.services;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Index;
@@ -17,6 +17,9 @@ import java.util.stream.Collectors;
 import jakarta.persistence.PrePersist;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.api.EngineerCollabo.entities.Project;
+import com.api.EngineerCollabo.entities.ResponseProject;
 
 @Service
 public class ProjectService {

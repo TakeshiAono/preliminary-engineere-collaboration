@@ -1,4 +1,4 @@
-package com.api.EngineerCollabo;
+package com.api.EngineerCollabo.util;
 
 import java.security.MessageDigest;
 import java.math.BigInteger;
