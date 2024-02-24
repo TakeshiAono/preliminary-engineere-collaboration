@@ -1,4 +1,4 @@
-package com.api.EngineerCollabo;
+package com.api.EngineerCollabo.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Index;
@@ -82,5 +82,29 @@ public class Project {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<User> getUsers() {
+        return this.users;
+    }
+
+    public List<Owner> getOwners() {
+        return this.owners;
+    }
+
+    public List<ProjectNotice> getProjectNotices() {
+        return this.projectNotices;
+    }
+
+    public List<Directory> getDirectories() {
+        return this.directories;
+    }
+
+    public List<File> getFiles() {
+        return this.files;
+    }
+
+    public List<ChatRoom> getChatRooms() {
+        return this.chatRooms;
     }
 }

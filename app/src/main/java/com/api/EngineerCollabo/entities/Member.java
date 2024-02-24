@@ -1,4 +1,4 @@
-package com.api.EngineerCollabo;
+package com.api.EngineerCollabo.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Index;
@@ -37,7 +37,12 @@ public class Member {
     public Integer getId() {
         return id;
     }
+
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public User getUser() {
+        return this.user;
     }
 }
