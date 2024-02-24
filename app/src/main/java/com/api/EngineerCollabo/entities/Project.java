@@ -87,4 +87,24 @@ public class Project {
     public List<User> getUsers() {
         return this.users;
     }
+
+    public List<Owner> getOwners() {
+        return this.owners;
+    }
+
+    public List<ProjectNotice> getProjectNotices() {
+        return this.projectNotices;
+    }
+
+    public List<Directory> getDirectories() {
+        return this.directories;
+    }
+
+    public List<File> getFiles() {
+        return this.files;
+    }
+
+    public List<ChatRoom> getChatRooms() {
+        return this.chatRooms;
+    }
 }
