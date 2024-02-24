@@ -1,6 +1,5 @@
 package com.api.EngineerCollabo.entities;
 
-// import java.nio.channels.Channel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +16,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Data;
-import com.api.EngineerCollabo.entities.*;
 
 @Data
 @Entity
