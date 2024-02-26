@@ -1,10 +1,18 @@
-package com.api.EngineerCollabo;
+package com.api.EngineerCollabo.services;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.api.EngineerCollabo.PasswordUtil;
+import com.api.EngineerCollabo.RequestLogin;
+import com.api.EngineerCollabo.RequestUserRegist;
+import com.api.EngineerCollabo.ResponseLogin;
+import com.api.EngineerCollabo.ResponseUserRegist;
+import com.api.EngineerCollabo.User;
+import com.api.EngineerCollabo.UserRepository;
 
 import jakarta.transaction.Transactional;
 // 開発中は認証機能をOFFにしている。
@@ -16,8 +24,8 @@ import jakarta.transaction.Transactional;
 @Transactional
 
 public class UserService {
-// 開発中は認証機能をOFFにしている。
-// public class UserService implements UserDetailsService {
+    // 開発中は認証機能をOFFにしている。
+    // public class UserService implements UserDetailsService {
 
     // リポジトリクラスの依存性注入
     @Autowired
@@ -103,19 +111,26 @@ public class UserService {
 
     // 開発中は認証機能をOFFにしている。
     // @Override
-    // public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    //     // データベースからユーザー情報を取得
-    //     User user = userRepository.findByName(username);
-    //     // データベースから取得したユーザー情報がnullの場合、例外をスロー
-    //     if (user == null) {
-    //         throw new UsernameNotFoundException("User not found");
-    //     }
-        
-    //     // UserDetailsオブジェクトに変換して返す
-    //     return org.springframework.security.core.userdetails.User
-    //         .withUsername(user.getName())
-    //         .password(user.getPassword())
-    //         .roles("USER") // ユーザーのロールを指定
-    //         .build();
+    // public UserDetails loadUserByUsername(String username) throws
+    // UsernameNotFoundException {
+    // // データベースからユーザー情報を取得
+    // User user = userRepository.findByName(username);
+    // // データベースから取得したユーザー情報がnullの場合、例外をスロー
+    // if (user == null) {
+    // throw new UsernameNotFoundException("User not found");
     // }
+
+    // // UserDetailsオブジェクトに変換して返す
+    // return org.springframework.security.core.userdetails.User
+    // .withUsername(user.getName())
+    // .password(user.getPassword())
+    // .roles("USER") // ユーザーのロールを指定
+    // .build();
+    // }
+
+    public void updateUser(Integer id, User user) {
+        if (userRepository.findById(id).get() != null) {
+            userRepository.save(user);
+        }
+    }
 }
