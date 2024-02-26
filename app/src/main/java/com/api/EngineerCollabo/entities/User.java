@@ -85,54 +85,6 @@ public class User {
     @JoinTable(name = "offers", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "scouted_user_id", referencedColumnName = "id"))
     private List<User> offers = new ArrayList<>();
 
-    // public Integer getId() {
-    // return id;
-    // }
-
-    // public void setId(Integer id) {
-    // this.id = id;
-    // }
-
-    // public String getName() {
-    // return name;
-    // }
-
-    // public void setName(String name) {
-    // this.name = name;
-    // }
-
-    // public String getIconUrl() {
-    // return iconUrl;
-    // }
-
-    // public void setIconUrl(String iconUrl) {
-    // this.iconUrl = iconUrl;
-    // }
-
-    // public String getIntroduce() {
-    // return iconUrl;
-    // }
-
-    // public void setIntroduce(String iconUrl) {
-    // this.introduce = iconUrl;
-    // }
-
-    // public Boolean getIsOwner() {
-    // return isOwner;
-    // }
-
-    // public void setIsOwner(Boolean isOwner) {
-    // this.isOwner = isOwner;
-    // }
-
-    // public Project getProject() {
-    // return project;
-    // }
-
-    // public void setProject(Project project) {
-    // this.project = project;
-    // }
-
     @PrePersist
     public void prePersist() {
         if (getIsOwner() == null) {
