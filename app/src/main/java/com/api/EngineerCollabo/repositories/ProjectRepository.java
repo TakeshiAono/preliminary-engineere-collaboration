@@ -10,13 +10,18 @@ import com.api.EngineerCollabo.entities.User;
 
 import java.util.List;
 
+
 public interface ProjectRepository extends JpaRepository<Project, Integer> {
-    
+
     Project findById(int id);
+
+
+    // Project findByUsers(User user);
 
     void deleteById(int id);
 
     Project findByUsers(User user);
+
 
     Project findByProjectNotices(ProjectNotice projectNotice);
 

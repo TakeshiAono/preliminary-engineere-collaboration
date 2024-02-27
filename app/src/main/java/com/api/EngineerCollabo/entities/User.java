@@ -6,12 +6,14 @@ import java.util.List;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
@@ -44,11 +46,13 @@ public class User {
     @Column(name = "is_owner", nullable = true, columnDefinition = "boolean default false")
     private Boolean isOwner;
 
-    @ManyToOne()
-    @JoinColumn(name = "project_id", nullable = false, referencedColumnName = "id")
-    private Project project;
+    // TODO: project_idがnullでも保存できてしまう。
+    // @ManyToOne()
+    // @JoinColumn(name = "project_id", nullable = false, referencedColumnName =
+    // "id")
+    // private Project project;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+        @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserNotice> userNotices = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -63,11 +67,23 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Channel> channels = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Offer> offers = new ArrayList<>();
+    // @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    // private List<Offer> offers = new ArrayList<>();
 
-    @OneToMany(mappedBy = "scoutedUser", cascade = CascadeType.ALL)
-    private List<Offer> scoutedOffers = new ArrayList<>();
+    // @OneToMany(mappedBy = "scoutedUser", cascade = CascadeType.ALL)
+    // private List<Offer> scoutedOffers = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "members", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"))
+    private List<Project> projects = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "followers", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "follower_id", referencedColumnName = "id"))
+    private List<User> followers = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "offers", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "scouted_user_id", referencedColumnName = "id"))
+    private List<User> offers = new ArrayList<>();
 
     @PrePersist
     public void prePersist() {
