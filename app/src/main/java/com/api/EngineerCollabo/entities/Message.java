@@ -1,14 +1,19 @@
-package com.api.EngineerCollabo;
+package com.api.EngineerCollabo.entities;
 
 import jakarta.persistence.Column;
+
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Table;
+import lombok.Data;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 
+
+@Data
 @Entity
 @Table(name = "messages")
 public class Message {
@@ -34,27 +39,4 @@ public class Message {
     @JoinColumn(name = "channel_id", nullable = false, referencedColumnName = "id")
     private Channel channel;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
 }
