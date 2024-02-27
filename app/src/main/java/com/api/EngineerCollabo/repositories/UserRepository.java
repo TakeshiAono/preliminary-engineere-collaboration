@@ -1,5 +1,6 @@
 package com.api.EngineerCollabo.repositories;
 
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.api.EngineerCollabo.entities.Channel;
@@ -12,6 +13,8 @@ import com.api.EngineerCollabo.entities.User;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+
 public interface UserRepository extends JpaRepository<User, Integer> {
 
     User findById(int id);
@@ -20,7 +23,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     List<User> findByEmail(String email);
 
-    List<User> findByProject(Project project);
+    // List<User> findByProject(Project project);
 
     User findByMessages(Message message);
 
@@ -32,5 +35,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     List<User> findByOffers(Offer offer);
 
-    List<User> findByScoutedOffers(Offer offer);
+    // List<User> findByScoutedOffers(Offer offer);
 }
