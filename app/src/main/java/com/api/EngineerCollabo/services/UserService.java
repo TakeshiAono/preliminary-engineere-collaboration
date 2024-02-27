@@ -6,15 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
-import com.api.EngineerCollabo.PasswordUtil;
-import com.api.EngineerCollabo.RequestLogin;
-import com.api.EngineerCollabo.RequestUserRegist;
-import com.api.EngineerCollabo.ResponseLogin;
-import com.api.EngineerCollabo.ResponseUserRegist;
-import com.api.EngineerCollabo.User;
-import com.api.EngineerCollabo.UserRepository;
-
 import com.api.EngineerCollabo.entities.RequestLogin;
 import com.api.EngineerCollabo.entities.RequestUserRegist;
 import com.api.EngineerCollabo.entities.ResponseLogin;

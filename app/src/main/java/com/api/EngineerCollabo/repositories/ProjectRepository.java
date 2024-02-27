@@ -20,7 +20,7 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
 
     void deleteById(int id);
 
-    Project findByUsers(User user);
+    // Project findByUsers(User user);
 
 
     Project findByProjectNotices(ProjectNotice projectNotice);

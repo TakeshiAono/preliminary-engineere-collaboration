@@ -31,7 +31,8 @@ public class ProjectService {
     responseProject.setIconUrl(project.getIconUrl());
     responseProject.setDescription(project.getDescription());
     responseProject.setUserIds(
-        project.getUsers().stream().map(user -> user.getId()).collect(Collectors.toList())
+        project.getMembers().stream().map(member -> member.getUser().getId())
+          .collect(Collectors.toList())
     );
     return responseProject;
   }
