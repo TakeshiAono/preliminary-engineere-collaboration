@@ -130,6 +130,7 @@ public class UserService {
 
     public void updateUser(Integer id, User user) {
         if (userRepository.findById(id).get() != null) {
+            user.setId(id);
             userRepository.save(user);
         }
     }
