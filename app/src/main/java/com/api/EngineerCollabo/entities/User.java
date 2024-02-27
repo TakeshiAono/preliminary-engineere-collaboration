@@ -1,6 +1,5 @@
-package com.api.EngineerCollabo;
+package com.api.EngineerCollabo.entities;
 
-// import java.nio.channels.Channel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,8 +19,8 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Data;
 
-@Entity
 @Data
+@Entity
 @Table(name = "Users", indexes = { @Index(name = "project_name_index", columnList = "name") })
 public class User {
     @Id
@@ -46,13 +45,14 @@ public class User {
 
     @Column(name = "is_owner", nullable = true, columnDefinition = "boolean default false")
     private Boolean isOwner;
+
     // TODO: project_idがnullでも保存できてしまう。
     // @ManyToOne()
     // @JoinColumn(name = "project_id", nullable = false, referencedColumnName =
     // "id")
     // private Project project;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+        @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserNotice> userNotices = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

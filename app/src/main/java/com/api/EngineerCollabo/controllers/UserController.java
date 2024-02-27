@@ -1,6 +1,8 @@
 package com.api.EngineerCollabo.controllers;
 
+
 import java.util.Optional;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +13,12 @@ import com.api.EngineerCollabo.ResponseLogin;
 import com.api.EngineerCollabo.ResponseUserRegist;
 import com.api.EngineerCollabo.User;
 import com.api.EngineerCollabo.UserRepository;
+import com.api.EngineerCollabo.services.UserService;
+
+import com.api.EngineerCollabo.entities.RequestLogin;
+import com.api.EngineerCollabo.entities.RequestUserRegist;
+import com.api.EngineerCollabo.entities.ResponseLogin;
+import com.api.EngineerCollabo.entities.ResponseUserRegist;
 import com.api.EngineerCollabo.services.UserService;
 
 /**

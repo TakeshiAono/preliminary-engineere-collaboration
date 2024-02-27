@@ -1,20 +1,16 @@
-package com.api.EngineerCollabo;
+package com.api.EngineerCollabo.entities;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Index;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
+import lombok.Data;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.CascadeType;
-import java.util.ArrayList;
-import java.util.List;
-import jakarta.persistence.PrePersist;
 
+@Data
 @Entity
 @Table(name = "chat_rooms")
 public class ChatRoom {
@@ -28,17 +24,4 @@ public class ChatRoom {
     @ManyToOne()
     @JoinColumn(name = "project_id", nullable = false, referencedColumnName = "id")
     private Project project;
-
-    public Integer getId() {
-        return id;
-    }
-    public void setId(Integer id) {
-        this.id = id;
-    }
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
 }
