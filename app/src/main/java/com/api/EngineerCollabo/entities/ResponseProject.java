@@ -15,4 +15,13 @@ public class ResponseProject {
 
     private List<Integer> userIds;
 
+    private List<Integer> ownerIds;
+
+    private List<Integer> projectNoticeIds;
+
+    private List<Integer> directoryIds;
+
+    private List<Integer> fileIds;
+
+    private List<Integer> chatRoomIds;
 }
