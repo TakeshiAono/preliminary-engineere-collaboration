@@ -18,9 +18,6 @@ public class Owner {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "log", nullable = false)
-    private String log;
-
     @ManyToOne()
     @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
     private User user;
