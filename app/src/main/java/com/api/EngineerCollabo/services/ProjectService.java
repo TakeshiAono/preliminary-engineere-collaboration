@@ -33,6 +33,21 @@ public class ProjectService {
     responseProject.setUserIds(
         project.getUsers().stream().map(user -> user.getId()).collect(Collectors.toList())
     );
+    responseProject.setOwnerIds(
+        project.getOwners().stream().map(user -> user.getId()).collect(Collectors.toList())
+    );
+    responseProject.setProjectNoticeIds(
+        project.getProjectNotices().stream().map(projectNotice -> projectNotice.getId()).collect(Collectors.toList())
+    );
+    responseProject.setDirectoryIds(
+        project.getDirectories().stream().map(directory -> directory.getId()).collect(Collectors.toList())
+    );
+    responseProject.setFileIds(
+        project.getFiles().stream().map(file -> file.getId()).collect(Collectors.toList())
+    );
+    responseProject.setChatRoomIds(
+        project.getChatRooms().stream().map(chatRoom -> chatRoom.getId()).collect(Collectors.toList())
+    );
     return responseProject;
   }
 }
