@@ -13,4 +13,6 @@ INSERT INTO chat_rooms (name, project_id) VALUES ('chat_room1', 1),('chat_room1'
 INSERT INTO channels (name, chat_room_id, user_id) VALUES ('chat_room1', 1, 1),('chat_room2', 1, 1);
 INSERT INTO messages (text, content, user_id, chat_room_id, channel_id) VALUES ('message1', 'content1', 1, 1, 1),('message2', 'content2', 1, 1, 1);
 INSERT INTO followers (user_id, follower_id) VALUES (1, 2),(1, 3);
+INSERT INTO members (project_id, user_id) VALUES (1, 1), (1,2)
 INSERT INTO offers (message, scouted_user_id, user_id) VALUES ('message1', 2, 1),('message2', 3, 1);
+INSERT INTO owners (project_id, user_id) VALUES (1, 1),(1, 2);
