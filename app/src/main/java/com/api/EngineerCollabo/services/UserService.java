@@ -146,12 +146,21 @@ public class UserService {
         responseUser.setPassword(user.getPassword());
         responseUser.setIconUrl(user.getIconUrl());
         responseUser.setIntroduce(user.getIntroduce());
-        // responseUser.setProjectIds(
-        //     user.getProjects().stream().map(project -> project.getProject().getId())
-        //       .collect(Collectors.toList()));
-        responseUser.setUserIds(
-            user.getMembers().stream().map(member -> member.getUser().getId())
-            .collect(Collectors.toList()));
+        responseUser.setFollowerIds(
+            user.getFollowers().stream().map(follower -> follower.getUser().getId()).collect(Collectors.toList()));
+        responseUser.setSkillIds(
+            user.getSkills().stream().map(skill -> skill.getId()).collect(Collectors.toList()));
+        responseUser.setRollIds(
+            user.getRolls().stream().map(roll -> roll.getId()).collect(Collectors.toList()));
+        responseUser.setChannelIds(
+            user.getChannels().stream().map(channel -> channel.getId()).collect(Collectors.toList()));
+        responseUser.setMessageIds(
+            user.getMessages().stream().map(message -> message.getId()).collect(Collectors.toList()));
+        responseUser.setOfferIds(
+            user.getOffers().stream().map(offer -> offer.getId()).collect(Collectors.toList()));
+        responseUser.setUserNoticeIds(
+            user.getUserNotices().stream().map(userNotice -> userNotice.getId()).collect(Collectors.toList()));
+
         return responseUser;
     }
 
