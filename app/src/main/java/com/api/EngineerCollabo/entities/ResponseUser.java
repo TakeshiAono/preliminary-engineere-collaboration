@@ -17,11 +17,19 @@ public class ResponseUser {
     
     private String introduce;
 
-    private List<Integer> userIds;
+    private List<Integer> followerIds;
 
-    // private List<Integer> projectIds;
+    private List<Integer> skillIds;
 
-    // private List<Integer> followerIds;
+    private List<Integer> rollIds;
+
+    private List<Integer> channelIds;
+    
+    private List<Integer> messageIds;
+
+    private List<Integer> offerIds;
+
+    private List<Integer> userNoticeIds;
 
 }
 
