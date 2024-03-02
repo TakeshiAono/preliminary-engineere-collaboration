@@ -7,6 +7,7 @@ import com.api.EngineerCollabo.entities.File;
 import com.api.EngineerCollabo.entities.Project;
 import com.api.EngineerCollabo.entities.ProjectNotice;
 import com.api.EngineerCollabo.entities.User;
+import com.api.EngineerCollabo.entities.Member;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
 
     void deleteById(int id);
 
-    Project findByUsers(User user);
+    Project findByMembers(Member member);
 
 
     Project findByProjectNotices(ProjectNotice projectNotice);

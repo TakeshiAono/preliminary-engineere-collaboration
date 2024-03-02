@@ -1,24 +1,17 @@
 package com.api.EngineerCollabo.controllers;
 
-
 import java.util.Optional;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import com.api.EngineerCollabo.RequestLogin;
-import com.api.EngineerCollabo.RequestUserRegist;
-import com.api.EngineerCollabo.ResponseLogin;
-import com.api.EngineerCollabo.ResponseUserRegist;
-import com.api.EngineerCollabo.User;
-import com.api.EngineerCollabo.UserRepository;
-import com.api.EngineerCollabo.services.UserService;
 
 import com.api.EngineerCollabo.entities.RequestLogin;
 import com.api.EngineerCollabo.entities.RequestUserRegist;
 import com.api.EngineerCollabo.entities.ResponseLogin;
 import com.api.EngineerCollabo.entities.ResponseUserRegist;
+import com.api.EngineerCollabo.entities.ResponseUser;
+import com.api.EngineerCollabo.entities.User;
+import com.api.EngineerCollabo.repositories.UserRepository;
 import com.api.EngineerCollabo.services.UserService;
 
 /**
@@ -71,11 +64,11 @@ public class UserController {
 
     /* profile api */
     @GetMapping("/users/{id}")
-    public User getUser(@PathVariable("id") Optional<Integer> ID) {
+    public ResponseUser getUser(@PathVariable("id") Optional<Integer> ID) {
         if (ID.isPresent()) {
             int id = ID.get();
             User user = userRepository.findById(id);
-            return user;
+            return userService.changeResponseUser(user);
         } else {
             return null;
         }
