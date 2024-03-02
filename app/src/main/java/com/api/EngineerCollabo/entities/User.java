@@ -67,23 +67,18 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Channel> channels = new ArrayList<>();
 
-    // @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    // private List<Offer> offers = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Offer> offers = new ArrayList<>();
 
-    // @OneToMany(mappedBy = "scoutedUser", cascade = CascadeType.ALL)
-    // private List<Offer> scoutedOffers = new ArrayList<>();
+    @OneToMany(mappedBy = "scoutedUser", cascade = CascadeType.ALL)
+    private List<Offer> scoutedOffers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL)
+    private List<Follower> followers = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "members", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"))
     private List<Member> members = new ArrayList<>();
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "followers", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "follower_id", referencedColumnName = "id"))
-    private List<Follower> followers = new ArrayList<>();
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "offers", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "scouted_user_id", referencedColumnName = "id"))
-    private List<Offer> offers = new ArrayList<>();
 
     @PrePersist
     public void prePersist() {
