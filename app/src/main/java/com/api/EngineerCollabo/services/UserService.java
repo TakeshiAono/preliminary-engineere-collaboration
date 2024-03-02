@@ -1,24 +1,18 @@
 package com.api.EngineerCollabo.services;
 
+import java.util.stream.Collectors;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
-import com.api.EngineerCollabo.PasswordUtil;
-import com.api.EngineerCollabo.RequestLogin;
-import com.api.EngineerCollabo.RequestUserRegist;
-import com.api.EngineerCollabo.ResponseLogin;
-import com.api.EngineerCollabo.ResponseUserRegist;
-import com.api.EngineerCollabo.User;
-import com.api.EngineerCollabo.UserRepository;
-
 import com.api.EngineerCollabo.entities.RequestLogin;
 import com.api.EngineerCollabo.entities.RequestUserRegist;
 import com.api.EngineerCollabo.entities.ResponseLogin;
 import com.api.EngineerCollabo.entities.ResponseUserRegist;
+import com.api.EngineerCollabo.entities.ResponseUser;
 import com.api.EngineerCollabo.entities.User;
 import com.api.EngineerCollabo.repositories.UserRepository;
 import com.api.EngineerCollabo.util.PasswordUtil;
@@ -143,4 +137,23 @@ public class UserService {
             userRepository.save(user);
         }
     }
+
+    public ResponseUser changeResponseUser(User user) {
+        ResponseUser responseUser = new ResponseUser();
+        responseUser.setId(user.getId());
+        responseUser.setName(user.getName());
+        responseUser.setEmail(user.getEmail());
+        responseUser.setPassword(user.getPassword());
+        responseUser.setIconUrl(user.getIconUrl());
+        responseUser.setIntroduce(user.getIntroduce());
+        // responseUser.setProjectIds(
+        //     user.getProjects().stream().map(project -> project.getProject().getId())
+        //       .collect(Collectors.toList()));
+        responseUser.setUserIds(
+            user.getMembers().stream().map(member -> member.getUser().getId())
+            .collect(Collectors.toList()));
+        return responseUser;
+    }
+
+
 }
