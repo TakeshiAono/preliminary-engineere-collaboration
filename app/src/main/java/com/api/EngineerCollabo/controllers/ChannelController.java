@@ -43,6 +43,27 @@ public class ChannelController {
         } else {
             return null;
         }
-    
+    }
+
+    @PatchMapping("/{id}")
+    public void putChanel(@PathVariable("id") Optional<Integer> ID, @RequestBody Channel requestChannel) {
+        if (ID.isPresent()) {
+            int id = ID.get();
+            Channel channel = channelRepository.findById(id);
+
+            String name = requestChannel.getName();
+            if (name != null) {
+                channel.setName(name);
+            }
+            channelRepository.save(channel);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteChannel(@PathVariable("id") Optional<Integer> ID) {
+        if (ID.isPresent()) {
+            int id = ID.get();
+            channelRepository.deleteById(id);
+        }
     }
 }
