@@ -19,6 +19,7 @@ import com.api.EngineerCollabo.services.UserService;
  * ユーザ関連のAPI
  */
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 public class UserController {
 
     // サービスクラスの依存性注入
