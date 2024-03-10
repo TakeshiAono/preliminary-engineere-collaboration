@@ -37,14 +37,13 @@ public class ChannelController {
 
     @PostMapping("/create")
     public void createChannel(@RequestBody Channel requestChannel) {
+        String name = requestChannel.getName();
         Integer userId = requestChannel.getUserId();
         Integer chatRoomId = requestChannel.getChatRoomId();
 
         if(userId != null){
-            channelService.createChannel(userId, chatRoomId);
-
+            channelService.createChannel(name, userId, chatRoomId);
         }
-
     }
 
     @GetMapping("/{id}")
