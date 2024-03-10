@@ -3,6 +3,8 @@ package com.api.EngineerCollabo.controllers;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.api.EngineerCollabo.entities.RequestLogin;
@@ -37,13 +39,18 @@ public class UserController {
      * @return responseUserRegist ユーザ登録APIのレスポンスボディ
      */
     @PostMapping("/account")
-    public ResponseUserRegist userRegist(@RequestBody RequestUserRegist requestUserRegist) {
-
+    public ResponseEntity<?> userRegist(@RequestBody RequestUserRegist requestUserRegist) {
+        ResponseUserRegist responseUserRegist = null;
         // サービスクラスのユーザ登録処理呼び出し
-        ResponseUserRegist responseUserRegist = userService.insertUser(requestUserRegist);
+        try {
+            // TODO: handle exception
+            responseUserRegist = userService.insertUser(requestUserRegist);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
 
         // APIレスポンス
-        return responseUserRegist;
+        return ResponseEntity.ok(responseUserRegist);
     }
 
     /**
@@ -54,13 +61,15 @@ public class UserController {
      * @return responseLogin ログインAPIのレスポンスボディ
      */
     @PostMapping("/login")
-    public ResponseLogin login(@RequestBody RequestLogin requestLogin) {
-
+    public ResponseEntity<?>  login(@RequestBody RequestLogin requestLogin) {
         // サービスクラスのログイン処理呼び出し
         ResponseLogin responseLogin = userService.login(requestLogin);
-
         // APIレスポンス
-        return responseLogin;
+        if(responseLogin.getStatus() != "error") {
+            return ResponseEntity.ok(responseLogin);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
     /* profile api */
