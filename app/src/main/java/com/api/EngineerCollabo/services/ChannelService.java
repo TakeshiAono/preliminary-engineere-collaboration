@@ -38,13 +38,13 @@ public class ChannelService {
     @Autowired
     private ChannelRepository channelRepository;
 
-    public Channel createChannel(Integer userId, Integer chatRoomId) {
+    public Channel createChannel(String name, Integer userId, Integer chatRoomId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow(() -> new EntityNotFoundException("ChatRoom not found"));
-
         Channel channel = new Channel();
-        channel.setUser(user);
-        channel.setChatRoom(chatRoom);
+        channel.setName(name);
+        channel.setUserId(user.getId());
+        channel.setChatRoomId(chatRoom.getId());
 
         return channelRepository.save(channel);
     }
