@@ -25,12 +25,18 @@ public class Channel {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "user_id")
+    private Integer userId;
+    
+    @Column(name = "chat_room_id")
+    private Integer chatRoomId;
+
     @ManyToOne()
-    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
+    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
     private User user;
 
     @ManyToOne()
-    @JoinColumn(name = "chat_room_id", nullable = false, referencedColumnName = "id")
+    @JoinColumn(name = "chat_room_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
     private ChatRoom chatRoom;
 
     @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL)

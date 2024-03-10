@@ -15,9 +15,12 @@ import java.util.Optional;
 import java.util.List;
 
 import com.api.EngineerCollabo.repositories.ChannelRepository;
+import com.api.EngineerCollabo.repositories.UserRepository;
 import com.api.EngineerCollabo.services.ChannelService;
 import com.api.EngineerCollabo.entities.ResponseChannel;
 import com.api.EngineerCollabo.entities.Channel;
+import com.api.EngineerCollabo.entities.User;
+import com.api.EngineerCollabo.entities.ChatRoom;
 
 @RestController
 @RequestMapping("/channels")
@@ -27,11 +30,21 @@ public class ChannelController {
     ChannelRepository channelRepository;
 
     @Autowired
+    UserRepository userRepository;
+
+    @Autowired
     ChannelService channelService;
 
     @PostMapping("/create")
     public void createChannel(@RequestBody Channel requestChannel) {
-        channelRepository.save(requestChannel);
+        Integer userId = requestChannel.getUserId();
+        Integer chatRoomId = requestChannel.getChatRoomId();
+
+        if(userId != null){
+            channelService.createChannel(userId, chatRoomId);
+
+        }
+
     }
 
     @GetMapping("/{id}")
