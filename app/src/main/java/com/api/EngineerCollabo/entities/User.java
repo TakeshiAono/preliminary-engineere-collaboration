@@ -18,6 +18,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Data
 @Entity
@@ -45,6 +46,9 @@ public class User {
 
     @Column(name = "is_owner", nullable = true, columnDefinition = "boolean default false")
     private Boolean isOwner;
+
+    // @Column(name = "user_id")
+    // private Integer userId;
 
     // TODO: project_idがnullでも保存できてしまう。
     // @ManyToOne()
