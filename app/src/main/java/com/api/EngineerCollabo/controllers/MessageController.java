@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +29,18 @@ public class MessageController {
 
     @Autowired
     MessageService messageService;
+
+    @PostMapping("/create")
+    public void createMessage(@RequestBody Message requestMessage) {
+        String text = requestMessage.getText();
+        String content = requestMessage.getContent();
+        Integer userId = requestMessage.getUserId();
+        Integer channelId = requestMessage.getChannelId();
+
+        if (userId != null && channelId != null) {
+            messageService.createMessage(text, content, userId, channelId);
+        }
+    }
 
     @GetMapping("/{id}")
     public ResponseMessage responseMessage(@PathVariable("id") Optional<Integer> ID) {
