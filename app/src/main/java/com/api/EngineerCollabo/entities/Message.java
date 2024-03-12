@@ -24,8 +24,14 @@ public class Message {
     @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String content;
 
+    @Column(name = "user_id")
+    private Integer userId;
+
+    @Column(name = "channel_id")
+    private Integer channelId;
+
     @ManyToOne()
-    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
+    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
     private User user;
 
     // @ManyToOne()
@@ -34,7 +40,7 @@ public class Message {
     // private ChatRoom chatRoom;
 
     @ManyToOne()
-    @JoinColumn(name = "channel_id", nullable = false, referencedColumnName = "id")
+    @JoinColumn(name = "channel_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
     private Channel channel;
 
 }
