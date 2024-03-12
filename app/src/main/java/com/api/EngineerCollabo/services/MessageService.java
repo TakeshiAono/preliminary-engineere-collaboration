@@ -1,22 +1,20 @@
 package com.api.EngineerCollabo.services;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Index;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Table;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.CascadeType;
-import java.util.ArrayList;
-import java.util.List;
-import jakarta.persistence.PrePersist;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.api.EngineerCollabo.entities.Message;
+import com.api.EngineerCollabo.entities.ResponseMessage;
 
 @Service
 public class MessageService {
+
+    public ResponseMessage changeResponseMessage(Message message) {
+        ResponseMessage responseMessage = new ResponseMessage();
+        responseMessage.setId(message.getId());
+        responseMessage.setText(message.getText());
+        responseMessage.setContent(message.getContent());
+        responseMessage.setUserId(message.getUser().getId());
+        responseMessage.setChannelId(message.getChannel().getId());
+        return responseMessage;
+    }
 }
