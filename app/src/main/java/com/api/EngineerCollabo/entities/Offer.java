@@ -1,15 +1,14 @@
 package com.api.EngineerCollabo.entities;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Index;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Table;
-import lombok.Data;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.Data;
 
 @Data
 @Entity
@@ -22,11 +21,17 @@ public class Offer {
     @Column(name = "message", nullable = true, columnDefinition = "TEXT")
     private String message;
 
+    @Column(name = "user_id")
+    private Integer userId;
+
+    @Column(name = "scouted_user_id")
+    private Integer scoutedUserId;
+
     @ManyToOne()
-    @JoinColumn(name = "scouted_user_id", nullable = false, referencedColumnName = "id")
+    @JoinColumn(name = "scouted_user_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
     private User scoutedUser;
 
     @ManyToOne()
-    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
+    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
     private User user;
 }
