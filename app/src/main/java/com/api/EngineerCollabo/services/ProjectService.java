@@ -35,6 +35,8 @@ public class ProjectService {
     responseProject.setChatRoomIds(
         project.getChatRooms().stream().map(chatRoom -> chatRoom.getId()).collect(Collectors.toList())
     );
+    responseProject.setUserIds(
+        project.getUsers().stream().map(user -> user.getId()).collect(Collectors.toList()));
     return responseProject;
   }
 }
