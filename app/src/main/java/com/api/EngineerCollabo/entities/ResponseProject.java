@@ -21,7 +21,8 @@ public class ResponseProject {
 
     private List<Integer> directoryIds;
 
+    private List<Integer> chatRoomIds;
+
     private List<Integer> fileIds;
 
-    private List<Integer> chatRoomIds;
 }
