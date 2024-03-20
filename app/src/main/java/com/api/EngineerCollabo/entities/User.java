@@ -3,6 +3,8 @@ package com.api.EngineerCollabo.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.ManyToAny;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -81,8 +83,12 @@ public class User {
     private List<Follower> followers = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "members", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"))
+    @JoinTable(name = "members", joinColumns = @JoinColumn(name = "users_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"))
     private List<Member> members = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "projects_users", joinColumns = @JoinColumn(name = "users_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"))
+    private List<Project> projects = new ArrayList<>();
 
     @PrePersist
     public void prePersist() {

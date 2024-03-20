@@ -160,6 +160,8 @@ public class UserService {
             user.getOffers().stream().map(offer -> offer.getId()).collect(Collectors.toList()));
         responseUser.setUserNoticeIds(
             user.getUserNotices().stream().map(userNotice -> userNotice.getId()).collect(Collectors.toList()));
+        responseUser.setProjectIds(
+            user.getProjects().stream().map(project -> project.getId()).collect(Collectors.toList()));
 
         return responseUser;
     }

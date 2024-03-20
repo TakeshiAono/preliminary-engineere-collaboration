@@ -14,7 +14,7 @@ public class ResponseUser {
     private String password;
 
     private String iconUrl;
-    
+
     private String introduce;
 
     private List<Integer> followerIds;
@@ -31,6 +31,7 @@ public class ResponseUser {
 
     private List<Integer> userNoticeIds;
 
+    private List<Integer> projectIds;
 }
 
 
