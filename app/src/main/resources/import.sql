@@ -18,3 +18,4 @@ INSERT INTO followers (user_id, follower_id) VALUES (1, 2),(1, 3);
 INSERT INTO members (project_id, user_id) VALUES (1, 1), (1,2)
 INSERT INTO offers (message, scouted_user_id, user_id) VALUES ('message1', 2, 1),('message2', 3, 1);
 INSERT INTO owners (project_id, user_id) VALUES (1, 1),(1, 2);
+INSERT INTO projects_users (project_id, users_id) VALUES (1, 1),(1, 2),(2, 1);
