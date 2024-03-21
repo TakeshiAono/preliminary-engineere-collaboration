@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.api.EngineerCollabo.entities.Offer;
 import com.api.EngineerCollabo.entities.ResponseOffer;
 import com.api.EngineerCollabo.repositories.OfferRepository;
-import com.api.EngineerCollabo.repositories.UserRepository;
 import com.api.EngineerCollabo.services.OfferService;
 
 @RestController
@@ -24,9 +23,6 @@ public class OfferController {
 
     @Autowired
     OfferRepository offerRepository;
-
-    @Autowired
-    UserRepository userRepository;
 
     @Autowired
     OfferService offerService;
