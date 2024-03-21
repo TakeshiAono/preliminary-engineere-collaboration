@@ -6,7 +6,7 @@ import lombok.Data;
 public class ResponseOffer {
     private Integer id;
 
-    private String text;
+    private String message;
 
     private Integer userId;
 
