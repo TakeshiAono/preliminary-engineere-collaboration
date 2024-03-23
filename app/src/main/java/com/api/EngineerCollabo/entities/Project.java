@@ -3,8 +3,6 @@ package com.api.EngineerCollabo.entities;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.annotations.ManyToAny;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -51,8 +49,8 @@ public class Project {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Directory> directories = new ArrayList<>();
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    private List<File> files = new ArrayList<>();
+    // @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    // private List<File> files = new ArrayList<>();
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<ChatRoom> chatRooms = new ArrayList<>();
