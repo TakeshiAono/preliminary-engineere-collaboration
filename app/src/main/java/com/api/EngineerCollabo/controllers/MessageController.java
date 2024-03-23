@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.api.EngineerCollabo.entities.Message;
 import com.api.EngineerCollabo.entities.ResponseMessage;
 import com.api.EngineerCollabo.repositories.MessageRepository;
-import com.api.EngineerCollabo.repositories.UserRepository;
 import com.api.EngineerCollabo.services.MessageService;
 
 @RestController
@@ -23,9 +22,6 @@ import com.api.EngineerCollabo.services.MessageService;
 public class MessageController {
     @Autowired
     MessageRepository messageRepository;
-
-    @Autowired
-    UserRepository userRepository;
 
     @Autowired
     MessageService messageService;
