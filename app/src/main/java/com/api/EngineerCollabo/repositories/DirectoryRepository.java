@@ -1,12 +1,12 @@
 package com.api.EngineerCollabo.repositories;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.api.EngineerCollabo.entities.Directory;
 import com.api.EngineerCollabo.entities.File;
 import com.api.EngineerCollabo.entities.Project;
-
-import java.util.List;
 
 public interface DirectoryRepository extends JpaRepository<Directory, Integer> {
 
