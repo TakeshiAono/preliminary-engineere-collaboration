@@ -1,9 +1,8 @@
 package com.api.EngineerCollabo.services;
 
-import java.util.stream.Collectors;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,8 +10,8 @@ import org.springframework.stereotype.Service;
 import com.api.EngineerCollabo.entities.RequestLogin;
 import com.api.EngineerCollabo.entities.RequestUserRegist;
 import com.api.EngineerCollabo.entities.ResponseLogin;
-import com.api.EngineerCollabo.entities.ResponseUserRegist;
 import com.api.EngineerCollabo.entities.ResponseUser;
+import com.api.EngineerCollabo.entities.ResponseUserRegist;
 import com.api.EngineerCollabo.entities.User;
 import com.api.EngineerCollabo.repositories.UserRepository;
 import com.api.EngineerCollabo.util.PasswordUtil;
@@ -147,24 +146,23 @@ public class UserService {
         responseUser.setIconUrl(user.getIconUrl());
         responseUser.setIntroduce(user.getIntroduce());
         responseUser.setFollowerIds(
-            user.getFollowers().stream().map(follower -> follower.getUser().getId()).collect(Collectors.toList()));
+                user.getFollowers().stream().map(follower -> follower.getUser().getId()).collect(Collectors.toList()));
         responseUser.setSkillIds(
-            user.getSkills().stream().map(skill -> skill.getId()).collect(Collectors.toList()));
-        responseUser.setRollIds(
-            user.getRolls().stream().map(roll -> roll.getId()).collect(Collectors.toList()));
+                user.getSkills().stream().map(skill -> skill.getId()).collect(Collectors.toList()));
+        responseUser.setRoleIds(
+                user.getRoles().stream().map(role -> role.getId()).collect(Collectors.toList()));
         responseUser.setChannelIds(
-            user.getChannels().stream().map(channel -> channel.getId()).collect(Collectors.toList()));
+                user.getChannels().stream().map(channel -> channel.getId()).collect(Collectors.toList()));
         responseUser.setMessageIds(
-            user.getMessages().stream().map(message -> message.getId()).collect(Collectors.toList()));
+                user.getMessages().stream().map(message -> message.getId()).collect(Collectors.toList()));
         responseUser.setOfferIds(
-            user.getOffers().stream().map(offer -> offer.getId()).collect(Collectors.toList()));
+                user.getOffers().stream().map(offer -> offer.getId()).collect(Collectors.toList()));
         responseUser.setUserNoticeIds(
-            user.getUserNotices().stream().map(userNotice -> userNotice.getId()).collect(Collectors.toList()));
+                user.getUserNotices().stream().map(userNotice -> userNotice.getId()).collect(Collectors.toList()));
         responseUser.setProjectIds(
-            user.getProjects().stream().map(project -> project.getId()).collect(Collectors.toList()));
+                user.getProjects().stream().map(project -> project.getId()).collect(Collectors.toList()));
 
         return responseUser;
     }
-
 
 }
