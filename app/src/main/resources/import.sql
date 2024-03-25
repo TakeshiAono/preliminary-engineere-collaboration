@@ -10,7 +10,7 @@ INSERT INTO directories (name, project_id) VALUES ('directory1', 1),('directory2
 -- INSERT INTO files (name, file_url, directory_id, project_id) VALUES ('file1', 'file_url1', 1, 1),('file2', 'file_url2', 1, 1);
 INSERT INTO files (name, file_url, directory_id) VALUES ('file1', 'file_url1', 1),('file2', 'file_url2', 1);
 INSERT INTO skills (name, count_log, user_id) VALUES ('skill1', 1, 1),('skill2', 2, 1);
-INSERT INTO rolls (name, count_log, user_id) VALUES ('roll1', 1, 1),('roll2', 2, 1);
+INSERT INTO roles (name, count_log, user_id) VALUES ('role1', 1, 1),('role2', 2, 1);
 INSERT INTO chat_rooms (name, project_id) VALUES ('chat_room1', 1),('chat_room1', 1);
 -- INSERT INTO channels (name, chat_room_id, user_id) VALUES ('chat_room1', 1, 1),('chat_room2', 1, 1);
 INSERT INTO channels (name, chat_room_id, user_id) VALUES ('channel1', 1, 1),('channel2', 1, 1);

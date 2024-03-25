@@ -12,60 +12,60 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.api.EngineerCollabo.entities.ResponseRoll;
-import com.api.EngineerCollabo.entities.Roll;
-import com.api.EngineerCollabo.repositories.RollRepository;
-import com.api.EngineerCollabo.services.RollService;
+import com.api.EngineerCollabo.entities.ResponseRole;
+import com.api.EngineerCollabo.entities.Role;
+import com.api.EngineerCollabo.repositories.RoleRepository;
+import com.api.EngineerCollabo.services.RoleService;
 
 @RestController
-@RequestMapping("/rolls")
-public class RollController {
+@RequestMapping("/roles")
+public class RoleController {
 
     @Autowired
-    RollRepository rollRepository;
+    RoleRepository roleRepository;
 
     @Autowired
-    RollService rollService;
+    RoleService roleService;
 
     @PostMapping("/create")
-    public void createRoll(@RequestBody Roll requestRoll) {
-        String name = requestRoll.getName();
-        Integer countLog = requestRoll.getCountLog();
-        Integer userId = requestRoll.getUserId();
+    public void createRole(@RequestBody Role requestRole) {
+        String name = requestRole.getName();
+        Integer countLog = requestRole.getCountLog();
+        Integer userId = requestRole.getUserId();
 
         if (userId != null) {
-            rollService.createRoll(name, countLog, userId);
+            roleService.createRole(name, countLog, userId);
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseRoll responseRoll(@PathVariable("id") Optional<Integer> ID) {
+    public ResponseRole responseRole(@PathVariable("id") Optional<Integer> ID) {
         if (ID.isPresent()) {
             int id = ID.get();
-            Roll roll = rollRepository.findById(id);
-            return rollService.changeResponseRoll(roll);
+            Role role = roleRepository.findById(id);
+            return roleService.changeResponseRole(role);
         } else {
             return null;
         }
     }
 
     @PatchMapping("/{id}")
-    public void putRoll(@PathVariable("id") Optional<Integer> ID, @RequestBody Roll requestRoll) {
+    public void putRole(@PathVariable("id") Optional<Integer> ID, @RequestBody Role requestRole) {
         if (ID.isPresent()) {
             int id = ID.get();
-            Roll roll = rollRepository.findById(id);
+            Role role = roleRepository.findById(id);
 
-            String name = requestRoll.getName();
+            String name = requestRole.getName();
             if (name != null) {
-                roll.setName(name);
+                role.setName(name);
             }
 
-            Integer countLog = requestRoll.getCountLog();
+            Integer countLog = requestRole.getCountLog();
             if (countLog != null) {
-                roll.setCountLog(countLog);
+                role.setCountLog(countLog);
             }
 
-            rollRepository.save(roll);
+            roleRepository.save(role);
         }
     }
 
@@ -73,7 +73,7 @@ public class RollController {
     public void deleteOffer(@PathVariable("id") Optional<Integer> ID) {
         if (ID.isPresent()) {
             int id = ID.get();
-            rollRepository.deleteById(id);
+            roleRepository.deleteById(id);
         }
     }
 }
