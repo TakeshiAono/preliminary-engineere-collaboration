@@ -5,6 +5,7 @@ INSERT INTO users (is_owner, icon_url, name, introduce, password, email) VALUES 
 -- userの暗号化する前のpasswordはpassword1,password2,password3
 INSERT INTO members (project_id, user_id) VALUES (1, 1),(1, 2),(1, 3);
 INSERT INTO project_notices (log, project_id) VALUES ('log1', 1),('log2', 1);
+INSERT INTO user_notices (log, user_id) VALUES ('log1', 1),('log2', 1);
 INSERT INTO directories (name, project_id) VALUES ('directory1', 1),('directory2', 1);
 -- INSERT INTO files (name, file_url, directory_id, project_id) VALUES ('file1', 'file_url1', 1, 1),('file2', 'file_url2', 1, 1);
 INSERT INTO files (name, file_url, directory_id) VALUES ('file1', 'file_url1', 1),('file2', 'file_url2', 1);
