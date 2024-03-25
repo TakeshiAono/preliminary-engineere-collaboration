@@ -3,7 +3,7 @@ package com.api.EngineerCollabo.entities;
 import lombok.Data;
 
 @Data
-public class ResponseRoll {
+public class ResponseRole {
     private Integer id;
 
     private String name;
