@@ -30,10 +30,13 @@ public class ChatRoom {
     // @Column(name = "chat_room_id")
     // private Integer chatRoomId;
 
+    @Column(name = "project_id")
+    private Integer projectId;
+
     @OneToMany(mappedBy= "chatRoom", cascade = CascadeType.ALL)
     private List<Channel> channels = new ArrayList<>();
 
     @ManyToOne()
-    @JoinColumn(name = "project_id", nullable = false, referencedColumnName = "id")
+    @JoinColumn(name = "project_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
     private Project project;
 }
