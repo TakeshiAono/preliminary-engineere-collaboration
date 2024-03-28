@@ -1,6 +1,7 @@
 package com.api.EngineerCollabo.entities;
 
 import java.util.List;
+
 import lombok.Data;
 
 @Data
@@ -21,10 +22,10 @@ public class ResponseUser {
 
     private List<Integer> skillIds;
 
-    private List<Integer> rollIds;
+    private List<Integer> roleIds;
 
     private List<Integer> channelIds;
-    
+
     private List<Integer> messageIds;
 
     private List<Integer> offerIds;
@@ -33,5 +34,3 @@ public class ResponseUser {
 
     private List<Integer> projectIds;
 }
-
-
