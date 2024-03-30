@@ -45,6 +45,8 @@ public class MessageService {
         responseMessage.setContent(message.getContent());
         responseMessage.setUserId(message.getUser().getId());
         responseMessage.setChannelId(message.getChannel().getId());
+        responseMessage.setCreatedAt(message.getCreatedAt());
+        responseMessage.setUpdatedAt(message.getUpdatedAt());
         return responseMessage;
     }
 }
