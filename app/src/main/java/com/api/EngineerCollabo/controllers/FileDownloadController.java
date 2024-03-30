@@ -2,7 +2,7 @@ package com.api.EngineerCollabo.controllers;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.http.HttpHeaders;
+// import java.net.http.HttpHeaders;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -11,25 +11,24 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpHeaders;
 
 @RestController
 public class FileDownloadController {
 
     @GetMapping("/download")
     public ResponseEntity<byte[]> downloadFile() throws IOException {
-        System.out.println("テスト1");
+        // resourcesディレクトリからファイルを読み込む
         Resource resource = new ClassPathResource("test.txt");
-        System.out.println("テスト2");
         InputStream inputStream = resource.getInputStream();
-        System.out.println("テスト3");
-        byte[] fileContent = inputStream.readAllBytes();
-        System.out.println("テスト");
-        System.out.println(fileContent);
+        byte[] data = inputStream.readAllBytes();
 
+        // ファイルダウンロード時のヘッダーを設定
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         headers.setContentDispositionFormData("attachment", "test.txt");
+        headers.setContentLength(data.length);
 
-        return new ResponseEntity<>(fileContent, headers, HttpStatus.OK);
+        return new ResponseEntity<>(data, headers, HttpStatus.OK);
     }
 }
