@@ -1,5 +1,4 @@
 package com.api.EngineerCollabo.entities;
-import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,14 +9,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import jakarta.persistence.EntityListeners;
 
 @Data
 @Entity
-@EntityListeners(AuditingEntityListener.class)
 @Table(name = "messages")
 public class Message {
     @Id
@@ -35,14 +29,6 @@ public class Message {
 
     @Column(name = "channel_id")
     private Integer channelId;
-
-    @CreatedDate
-    @Column(name = "created_at", updatable = false)
-    private Date createdAt;
-
-    @LastModifiedDate
-    @Column(name = "updated_at")
-    private Date updatedAt;
 
     @ManyToOne()
     @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
