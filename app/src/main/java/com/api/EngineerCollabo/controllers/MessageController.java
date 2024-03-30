@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.api.EngineerCollabo.entities.Message;
 import com.api.EngineerCollabo.entities.ResponseMessage;
@@ -19,7 +18,6 @@ import com.api.EngineerCollabo.repositories.MessageRepository;
 import com.api.EngineerCollabo.services.MessageService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/messages")
 public class MessageController {
     @Autowired
