@@ -1,6 +1,7 @@
 package com.api.EngineerCollabo.entities;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -33,6 +34,9 @@ public class Project {
 
     @Column(name = "description", nullable = true, columnDefinition = "TEXT")
     private String description;
+
+    @Column(name = "deadline", nullable = true, columnDefinition = "DATE")
+    private Date deadline;
 
     // @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     // private List<User> users = new ArrayList<>();

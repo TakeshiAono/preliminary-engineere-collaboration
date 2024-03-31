@@ -1,5 +1,6 @@
 package com.api.EngineerCollabo.entities;
 
+import java.util.Date;
 import java.util.List;
 import lombok.Data;
 
@@ -12,6 +13,8 @@ public class ResponseProject {
     private String iconUrl;
 
     private String description;
+
+    private Date deadline;
 
     private List<Integer> userIds;
 
