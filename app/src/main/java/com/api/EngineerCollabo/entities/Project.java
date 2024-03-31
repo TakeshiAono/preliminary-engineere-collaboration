@@ -55,6 +55,9 @@ public class Project {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<ChatRoom> chatRooms = new ArrayList<>();
 
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    private List<Operation> operations = new ArrayList<>();
+
     @ManyToMany
     @JoinTable(name = "projects_users", joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "users_id", referencedColumnName = "id"))
     private List<User> users = new ArrayList<>();
