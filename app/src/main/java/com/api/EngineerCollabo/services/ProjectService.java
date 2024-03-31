@@ -15,6 +15,7 @@ public class ProjectService {
 		responseProject.setName(project.getName());
 		responseProject.setIconUrl(project.getIconUrl());
 		responseProject.setDescription(project.getDescription());
+		responseProject.setDeadline(project.getDeadline());
 		responseProject.setUserIds(
 				project.getMembers().stream().map(member -> member.getUser().getId())
 						.collect(Collectors.toList()));
@@ -25,10 +26,6 @@ public class ProjectService {
 						.collect(Collectors.toList()));
 		responseProject.setDirectoryIds(
 				project.getDirectories().stream().map(directory -> directory.getId()).collect(Collectors.toList()));
-		// responseProject.setFileIds(
-		// project.getFiles().stream().map(file ->
-		// file.getId()).collect(Collectors.toList())
-		// );
 		responseProject.setChatRoomIds(
 				project.getChatRooms().stream().map(chatRoom -> chatRoom.getId()).collect(Collectors.toList()));
 		responseProject.setUserIds(
