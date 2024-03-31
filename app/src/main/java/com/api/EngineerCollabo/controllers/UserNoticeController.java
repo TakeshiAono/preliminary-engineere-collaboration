@@ -16,8 +16,10 @@ import com.api.EngineerCollabo.entities.ResponseUserNotice;
 import com.api.EngineerCollabo.entities.UserNotice;
 import com.api.EngineerCollabo.repositories.UserNoticeRepository;
 import com.api.EngineerCollabo.services.UserNoticeService;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/userNotices")
 public class UserNoticeController {
     @Autowired
