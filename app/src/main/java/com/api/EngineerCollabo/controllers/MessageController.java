@@ -17,65 +17,73 @@ import com.api.EngineerCollabo.entities.Message;
 import com.api.EngineerCollabo.entities.ResponseMessage;
 import com.api.EngineerCollabo.repositories.MessageRepository;
 import com.api.EngineerCollabo.services.MessageService;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/messages")
 public class MessageController {
-    @Autowired
-    MessageRepository messageRepository;
+    // @Autowired
+    // MessageRepository messageRepository;
 
-    @Autowired
-    MessageService messageService;
+    // @Autowired
+    // MessageService messageService;
 
-    @PostMapping("/create")
-    public void createMessage(@RequestBody Message requestMessage) {
-        String text = requestMessage.getText();
-        String content = requestMessage.getContent();
-        Integer userId = requestMessage.getUserId();
-        Integer channelId = requestMessage.getChannelId();
-
-        if (userId != null && channelId != null) {
-            messageService.createMessage(text, content, userId, channelId);
-        }
+    @MessageMapping("/chat")
+    @SendTo("/topic/messages")
+    public String sendChatMessage(String chatMessage) {
+        return chatMessage;
     }
 
-    @GetMapping("/{id}")
-    public ResponseMessage responseMessage(@PathVariable("id") Optional<Integer> ID) {
-        if (ID.isPresent()) {
-            int id = ID.get();
-            Message message = messageRepository.findById(id);
-            return messageService.changeResponseMessage(message);
-        } else {
-            return null;
-        }
-    }
+    // @PostMapping("/create")
+    // public void createMessage(@RequestBody Message requestMessage) {
+    //     String text = requestMessage.getText();
+    //     String content = requestMessage.getContent();
+    //     Integer userId = requestMessage.getUserId();
+    //     Integer channelId = requestMessage.getChannelId();
 
-    @PatchMapping("/{id}")
-    public void putMessage(@PathVariable("id") Optional<Integer> ID, @RequestBody Message requestMessage) {
-        if (ID.isPresent()) {
-            int id = ID.get();
-            Message message = messageRepository.findById(id);
+    //     if (userId != null && channelId != null) {
+    //         messageService.createMessage(text, content, userId, channelId);
+    //     }
+    // }
 
-            String text = requestMessage.getText();
-            if (text != null) {
-                message.setText(text);
-            }
+    // @GetMapping("/{id}")
+    // public ResponseMessage responseMessage(@PathVariable("id") Optional<Integer> ID) {
+    //     if (ID.isPresent()) {
+    //         int id = ID.get();
+    //         Message message = messageRepository.findById(id);
+    //         return messageService.changeResponseMessage(message);
+    //     } else {
+    //         return null;
+    //     }
+    // }
 
-            String content = requestMessage.getContent();
-            if (content != null) {
-                message.setContent(content);
-            }
-            messageRepository.save(message);
-        }
-    }
+    // @PatchMapping("/{id}")
+    // public void putMessage(@PathVariable("id") Optional<Integer> ID, @RequestBody Message requestMessage) {
+    //     if (ID.isPresent()) {
+    //         int id = ID.get();
+    //         Message message = messageRepository.findById(id);
 
-    @DeleteMapping("/{id}")
-    public void deleteMessage(@PathVariable("id") Optional<Integer> ID) {
-        if (ID.isPresent()) {
-            int id = ID.get();
-            messageRepository.deleteById(id);
-        }
-    }
+    //         String text = requestMessage.getText();
+    //         if (text != null) {
+    //             message.setText(text);
+    //         }
+
+    //         String content = requestMessage.getContent();
+    //         if (content != null) {
+    //             message.setContent(content);
+    //         }
+    //         messageRepository.save(message);
+    //     }
+    // }
+
+    // @DeleteMapping("/{id}")
+    // public void deleteMessage(@PathVariable("id") Optional<Integer> ID) {
+    //     if (ID.isPresent()) {
+    //         int id = ID.get();
+    //         messageRepository.deleteById(id);
+    //     }
+    // }
 
 }
