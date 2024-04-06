@@ -29,3 +29,9 @@
 	2. /app ディレクトリ上で ./gradlew bootRunコマンドを実行
 	3. 手順2とは別のshellを立ち上げ、/app ディレクトリ上で ./gradlew build --continuousコマンドを実行(コード変更を検知して自動ビルドをしてくれる)
 	3. ブラウザでlocalhost:8080に入れればOK(2023/10/28時点ではエラーページが出力されればOK)
+
+# 推奨の拡張機能(vscode)
+  - Spring Boot Tools
+    https://marketplace.visualstudio.com/items?itemName=vmware.vscode-spring-boot
+
+	これでインテリセンスが効くようになる。
