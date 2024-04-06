@@ -30,6 +30,7 @@ import java.util.List;
 // import static org.mockito.Mockito.description;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.stream.Collectors;
 
 
@@ -80,6 +81,11 @@ public class ProjectController {
             String description = requestProject.getDescription();
             if (description != null) {
                 project.setDescription(description);
+            }
+
+            Date deadline = requestProject.getDeadline();
+            if (deadline != null) {
+                project.setDeadline(deadline);
             }
             projectRepository.save(project);
         }
