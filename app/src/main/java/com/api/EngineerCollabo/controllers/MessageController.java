@@ -10,31 +10,51 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.stereotype.Controller;
 
 import com.api.EngineerCollabo.entities.Message;
 import com.api.EngineerCollabo.entities.ResponseMessage;
 import com.api.EngineerCollabo.repositories.MessageRepository;
-import com.api.EngineerCollabo.services.MessageService;
+// import com.api.EngineerCollabo.services.MessageService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.web.util.HtmlUtils;
 
-@RestController
+@Controller
 @CrossOrigin(origins = "http://localhost:5173")
-@RequestMapping("/messages")
+// @RequestMapping("/messages")
 public class MessageController {
-    // @Autowired
-    // MessageRepository messageRepository;
 
     // @Autowired
     // MessageService messageService;
 
-    @MessageMapping("/chat")
-    @SendTo("/topic/messages")
-    public String sendChatMessage(String chatMessage) {
-        return chatMessage;
+    @Autowired
+    MessageRepository messageRepository;
+
+    @MessageMapping("/message")
+    @SendTo("/receive/message")
+    public Message send(Message message) throws Exception {
+
+        Message savedMessage= messageRepository.save(message);
+
+        Thread.sleep(1000);
+        return new Message(HtmlUtils.htmlEscape(savedMessage.getText()), HtmlUtils.htmlEscape(savedMessage.getContent()));
     }
+
+    // public void sendMessage(Message message) {
+    //     // チャットメッセージの処理
+    //     String text = message.getText();
+    //     String content = message.getContent();
+    //     Integer userId = message.getUserId();
+    //     Integer channelId = message.getChannelId();
+
+    //     if(userId !=null && channelId !=null){
+    //         messageService.saveMessage(text, content, userId, channelId);
+    //     }
+    // }
+    
+
 
     // @PostMapping("/create")
     // public void createMessage(@RequestBody Message requestMessage) {
