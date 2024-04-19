@@ -19,5 +19,5 @@ INSERT INTO followers (user_id, follower_id) VALUES (1, 2),(1, 3);
 -- INSERT INTO members (project_id, user_id) VALUES (1, 1), (1,2)
 INSERT INTO offers (message, scouted_user_id, user_id) VALUES ('message1', 2, 1),('message2', 3, 1);
 INSERT INTO owners (project_id, user_id) VALUES (1, 1),(1, 2);
-INSERT INTO projects_users (project_id, users_id) VALUES (1, 1),(1, 2),(2, 1);
+-- INSERT INTO projects_users (project_id, users_id) VALUES (1, 1),(1, 2),(2, 1);
 INSERT INTO operations (project_id, log, created_at, updated_at) VALUES (1, 'ログ1', date('2024/01/15'), date('2024/01/20')),(1, 'ログ2', date('2024/02/15'), date('2024/02/20')),(2, 'ログ3', date('2024/03/15'), date('2024/03/20'));

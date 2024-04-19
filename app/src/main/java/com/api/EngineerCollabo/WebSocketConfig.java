@@ -12,12 +12,15 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/topic");
-        config.setApplicationDestinationPrefixes("/app");
+        // 受信エンドポイントの設定
+        config.enableSimpleBroker("/receive");
+        // 送信エンドポイントの設定（プレフィクス定義）
+        config.setApplicationDestinationPrefixes("/send");
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/chat").withSockJS();
+        // 初回WebSocket通信開始時のエンドポイントの設定
+        registry.addEndpoint("/routing/websocket").withSockJS();
     }
 }
