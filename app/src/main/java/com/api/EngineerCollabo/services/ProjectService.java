@@ -16,9 +16,6 @@ public class ProjectService {
 		responseProject.setIconUrl(project.getIconUrl());
 		responseProject.setDescription(project.getDescription());
 		responseProject.setDeadline(project.getDeadline());
-		responseProject.setUserIds(
-				project.getMembers().stream().map(member -> member.getUser().getId())
-						.collect(Collectors.toList()));
 		responseProject.setOwnerIds(
 				project.getOwners().stream().map(user -> user.getId()).collect(Collectors.toList()));
 		responseProject.setProjectNoticeIds(
