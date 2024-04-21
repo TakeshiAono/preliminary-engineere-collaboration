@@ -12,7 +12,7 @@ function setConnected(connected) {
 }
 
 function connect() {
-  var socket = new SockJS('/routing/websocket'); // WebSocket通信開始
+  var socket = new SockJS('/websocket'); // WebSocket通信開始
   stompClient = Stomp.over(socket);
   stompClient.connect({}, function (frame) {
     setConnected(true);
