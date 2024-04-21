@@ -1,11 +1,17 @@
 package com.api.EngineerCollabo.entities;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,6 +27,7 @@ import lombok.Data;
 
 @Data
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "Users", indexes = { @Index(name = "project_name_index", columnList = "name") })
 public class User {
     @Id
@@ -55,6 +62,14 @@ public class User {
     // "id")
     // private Project project;
 
+    @CreatedDate
+    @Column(name = "created_at", updatable = false)
+    private Date createdAt;
+
+    @LastModifiedDate
+    @Column(name = "updated_at")
+    private Date updatedAt;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserNotice> userNotices = new ArrayList<>();
 
@@ -83,7 +98,7 @@ public class User {
     private List<Follower> followers = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "members", joinColumns = @JoinColumn(name = "users_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"))
+    @JoinTable(name = "members", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"))
     private List<Member> members = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
