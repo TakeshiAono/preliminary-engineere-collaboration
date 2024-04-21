@@ -98,7 +98,7 @@ public class User {
     private List<Follower> followers = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "members", joinColumns = @JoinColumn(name = "users_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"))
+    @JoinTable(name = "members", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"))
     private List<Member> members = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
