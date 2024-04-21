@@ -52,8 +52,4 @@ public class RoutingController {
         return "indexc";
     }
 
-     @RequestMapping(value = "/chat", method = RequestMethod.GET)
-    public String chatPage(){
-        return "chat";
-    }
 }
