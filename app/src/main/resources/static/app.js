@@ -40,24 +40,22 @@ function sendMessage() {
   // 接続が確立されている場合、メッセージを送信する
   else {
     stompClient.send("/send/message", {}, JSON.stringify({
+      'userId': $("#userId").val(),
+      'channelId': $("#channelId").val(),
       'text': $("#text").val(),
       'content': $("#content").val()
     }));
+    $("#userId").val('');
+    $("#channelId").val('');
+    $("#text").val('');
     $("#content").val('');
   }
 }
 
-//function sendMessage() {
-//  // /send/messageエンドポイントにメッセージを送信する
-//  stompClient.send("/send/message", {}, JSON.stringify(
-//      {'name': $("#name").val(), 'statement': $("#statement").val()}));
-//  $("#statement").val('');
-//}
-
 function showMessage(message) {
   // 受信したメッセージを整形して表示
   $("#message").append(
-    "<tr><td>" + message.text + ": " + message.content + "</td></tr>");
+    "<tr><td>" + message.userId + ": " + message.channelId + ": " + message.text + ": " + message.content + "</td></tr>");
 }
 
 $(function () {

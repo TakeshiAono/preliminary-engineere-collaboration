@@ -16,7 +16,7 @@ import org.springframework.stereotype.Controller;
 import com.api.EngineerCollabo.entities.Message;
 import com.api.EngineerCollabo.entities.ResponseMessage;
 import com.api.EngineerCollabo.repositories.MessageRepository;
-// import com.api.EngineerCollabo.services.MessageService;
+import com.api.EngineerCollabo.services.MessageService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.util.HtmlUtils;
@@ -26,20 +26,32 @@ import org.springframework.web.util.HtmlUtils;
 // @RequestMapping("/messages")
 public class MessageController {
 
-    // @Autowired
-    // MessageService messageService;
+    @Autowired
+    MessageService messageService;
 
     @Autowired
     MessageRepository messageRepository;
 
     @MessageMapping("/message")
     @SendTo("/receive/message")
-    public Message send(Message message) throws Exception {
+    public Message sendMessage(Message requestMessage) throws Exception {
 
-        Message savedMessage= messageRepository.save(message);
+        String text = requestMessage.getText();
+        String content = requestMessage.getContent();
+        Integer userId = requestMessage.getUserId();
+        Integer channelId = requestMessage.getChannelId();
+
+        if (userId != null && channelId != null) {
+            messageService.createMessage(text, content, userId, channelId);
+        }
 
         Thread.sleep(1000);
-        return new Message(HtmlUtils.htmlEscape(savedMessage.getText()), HtmlUtils.htmlEscape(savedMessage.getContent()));
+        return new Message(
+            HtmlUtils.htmlEscape(text), 
+            HtmlUtils.htmlEscape(content),
+            userId,
+            channelId
+        );
     }
 
     // public void sendMessage(Message message) {
