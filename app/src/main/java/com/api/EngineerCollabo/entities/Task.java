@@ -29,8 +29,8 @@ public class Task {
     @Column(name = "name", length = 50)
     private String name;
 
-    @Column(name = "is_done")
-    private Boolean isDone;
+    @Column(name = "done_at")
+    private Date doneAt;
 
     @Column(name = "project_id")
     private Integer projectId;
