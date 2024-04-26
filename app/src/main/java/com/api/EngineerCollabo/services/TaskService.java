@@ -27,12 +27,15 @@ public class TaskService {
     @Autowired
     private TaskRepository taskRepository;
 
-    public Task createTask(String name, Boolean isDone, Integer projectId, Date deadline, String description, Integer inChargeUserId) {
-        User inChargeUser = userRepository.findById(inChargeUserId).orElseThrow(() -> new EntityNotFoundException("User not found"));
-        Project project = projectRepository.findById(projectId).orElseThrow(() -> new EntityNotFoundException("Project not found"));
+    public Task createTask(String name, Date doneAt, Integer projectId, Date deadline, String description,
+            Integer inChargeUserId) {
+        User inChargeUser = userRepository.findById(inChargeUserId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new EntityNotFoundException("Project not found"));
         Task task = new Task();
         task.setName(name);
-        task.setIsDone(isDone);
+        task.setDoneAt(doneAt);
         task.setDeadline(deadline);
         task.setDescription(description);
         task.setProjectId(project.getId());
@@ -45,7 +48,7 @@ public class TaskService {
         ResponseTask responseTask = new ResponseTask();
         responseTask.setId(task.getId());
         responseTask.setName(task.getName());
-        responseTask.setIsDone(task.getIsDone());
+        responseTask.setDoneAt(task.getDoneAt());
         responseTask.setDeadline(task.getDeadline());
         responseTask.setDescription(task.getDescription());
         responseTask.setProjectId(task.getProject().getId());

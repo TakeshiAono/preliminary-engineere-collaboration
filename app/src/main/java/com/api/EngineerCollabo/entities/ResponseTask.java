@@ -10,7 +10,7 @@ public class ResponseTask {
 
     private String name;
 
-    private Boolean isDone;
+    private Date doneAt;
 
     private Date deadline;
 
