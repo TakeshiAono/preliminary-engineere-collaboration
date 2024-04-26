@@ -32,14 +32,14 @@ public class TaskController {
     @PostMapping("/create")
     public void createTask(@RequestBody Task requestTask) {
         String name = requestTask.getName();
-        Boolean isDone = requestTask.getIsDone();
+        Date doneAt = requestTask.getDoneAt();
         Integer projectId = requestTask.getProjectId();
         Date deadline = requestTask.getDeadline();
         String description = requestTask.getDescription();
         Integer inChargeUserId = requestTask.getInChargeUserId();
 
         if (inChargeUserId != null && projectId != null) {
-            taskService.createTask(name, isDone, projectId, deadline, description, inChargeUserId);
+            taskService.createTask(name, doneAt, projectId, deadline, description, inChargeUserId);
         }
     }
 
@@ -70,9 +70,9 @@ public class TaskController {
                 task.setDescription(description);
             }
 
-            Boolean idDone = requestTask.getIsDone();
+            Date idDone = requestTask.getDoneAt();
             if (idDone != null) {
-                task.setIsDone(idDone);
+                task.setDoneAt(idDone);
             }
 
             Date deadline = requestTask.getDeadline();
