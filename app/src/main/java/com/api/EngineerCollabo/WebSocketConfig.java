@@ -1,26 +1,31 @@
 package com.api.EngineerCollabo;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
-import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
-import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import org.springframework.web.socket.WebSocketHandler;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+/**
+ * WebSocketの管理
+ */
 
-@Configuration
-@EnableWebSocketMessageBroker
-public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-
-    @Override
-    public void configureMessageBroker(MessageBrokerRegistry config) {
-        // 受信エンドポイントの設定
-        config.enableSimpleBroker("/receive");
-        // 送信エンドポイントの設定（プレフィクス定義）
-        config.setApplicationDestinationPrefixes("/send");
-    }
-
-    @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
-        // 初回WebSocket通信開始時のエンドポイントの設定
-        registry.addEndpoint("/websocket").withSockJS();
-    }
-}
+ @Configuration
+ @EnableWebSocket
+ public class WebSocketConfig implements WebSocketConfigurer {
+   /**
+    * WebSocketの登録
+    */
+   @Override
+     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+         registry.addHandler(messageHandler(),"/test").setAllowedOrigins("*");
+     }
+   /**
+    * WebSocketHandler（コントロールするクラス）を定義
+    * @return WebSocketHandler
+    */
+     @Bean
+     public WebSocketHandler messageHandler() {
+         return new MessageHandler();
+     }
+ }
