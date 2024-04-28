@@ -6,6 +6,13 @@ import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+import org.springframework.web.socket.server.HandshakeHandler;
+import org.springframework.web.socket.sockjs.transport.handler.WebSocketTransportHandler;
+
+import com.api.EngineerCollabo.websocket.MessageHandler;
+
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 /**
  * WebSocketの管理
  */
@@ -18,14 +25,15 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
     */
    @Override
      public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-         registry.addHandler(messageHandler(),"/test").setAllowedOrigins("*");
+        registry.addHandler(messageHandler(),"/websocket")
+        .setAllowedOrigins("*");
      }
-   /**
-    * WebSocketHandler（コントロールするクラス）を定義
-    * @return WebSocketHandler
-    */
-     @Bean
-     public WebSocketHandler messageHandler() {
-         return new MessageHandler();
-     }
+    /**
+      * WebSocketHandler（コントロールするクラス）を定義
+      * @return WebSocketHandler
+      */
+    @Bean
+    public WebSocketHandler messageHandler() {
+        return new MessageHandler();
+    }
  }
