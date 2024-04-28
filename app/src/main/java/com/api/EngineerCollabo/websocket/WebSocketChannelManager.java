@@ -17,7 +17,10 @@ public class WebSocketChannelManager {
     private List<WebSocketSession> sessions = new ArrayList<WebSocketSession>();
 
     public void setSessions(WebSocketSession session) {
-      this.sessions.add(session);
+      boolean isExistSession =  this.sessions.stream().anyMatch(value -> value == session);
+      if (!isExistSession) {
+        this.sessions.add(session);
+      }
     }
 
     public List<WebSocketSession> getSessions() {

@@ -45,9 +45,7 @@ public class MessageHandler extends TextWebSocketHandler {
         this.myId = session.getId();
         System.out.println("WebSocketの接続が確立しました。セッションIDは" + session.getId() + "です");
         System.out.println("セッション" + session);
-        // this.webSocketChannelManager.setSessions(session);
-        // this.webSocketChannelManager.addSessionToChannel("aoao",session.getId());
-        TextMessage outputMessage = new TextMessage(this.myId );
+        TextMessage outputMessage = new TextMessage(this.myId);
         session.sendMessage(outputMessage);
     }
     /**
@@ -75,6 +73,7 @@ public class MessageHandler extends TextWebSocketHandler {
         TextMessage outputMessage = new TextMessage(requestBody.getPayload());
 
         Set<String> currentChannelSessionIds = this.webSocketChannelManager.getSessionsInChannel(channelId);
+        System.out.println(this.webSocketChannelManager.getSessions());
         this.webSocketChannelManager.getSessions().stream().forEach(sessiona -> {
             if(currentChannelSessionIds.contains(sessiona.getId())){
                 try {
