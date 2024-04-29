@@ -9,7 +9,7 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
-import com.api.EngineerCollabo.controllers.MessageController;
+import com.api.EngineerCollabo.controllers.WebsocketController;
 import com.api.EngineerCollabo.entities.WebSocketRequestObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class MessageHandler extends TextWebSocketHandler {
 
     @Autowired
-    private MessageController messageController;
+    private WebsocketController websocketController;
 
     // @Autowired
     private WebSocketChannelManager webSocketChannelManager = new WebSocketChannelManager();
@@ -69,7 +69,7 @@ public class MessageHandler extends TextWebSocketHandler {
         // TODO: 受け取ったものをそのまま同一channelのuserに返信する。、
         TextMessage outputMessage = new TextMessage(requestBody.getPayload());
         try {
-            this.messageController.saveMessage(messageObject);
+            this.websocketController.saveMessage(messageObject);
         } catch (Exception e) {
             // 例外を処理するコードを記述するか、例外を再スローする
             e.printStackTrace(); // 例外のスタックトレースを出力するなど
