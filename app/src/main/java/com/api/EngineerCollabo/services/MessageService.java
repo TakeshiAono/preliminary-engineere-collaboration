@@ -61,17 +61,15 @@ public class MessageService {
         return responseMessages;
     }
 
-
-
-    // public ResponseMessage changeResponseMessage(Message message) {
-    //     ResponseMessage responseMessage = new ResponseMessage();
-    //     responseMessage.setId(message.getId());
-    //     responseMessage.setText(message.getText());
-    //     responseMessage.setContent(message.getContent());
-    //     responseMessage.setUserId(message.getUser().getId());
-    //     responseMessage.setChannelId(message.getChannel().getId());
-    //     responseMessage.setCreatedAt(message.getCreatedAt());
-    //     responseMessage.setUpdatedAt(message.getUpdatedAt());
-    //     return responseMessage;
-    // }
+    public ResponseMessage changeResponseMessage(Message message) {
+        ResponseMessage responseMessage = new ResponseMessage();
+        responseMessage.setId(message.getId());
+        responseMessage.setText(message.getText());
+        responseMessage.setContent(message.getContent());
+        responseMessage.setUserId(message.getUser().getId());
+        responseMessage.setChannelId(message.getChannel().getId());
+        responseMessage.setCreatedAt(message.getCreatedAt());
+        responseMessage.setUpdatedAt(message.getUpdatedAt());
+        return responseMessage;
+    }
 }
