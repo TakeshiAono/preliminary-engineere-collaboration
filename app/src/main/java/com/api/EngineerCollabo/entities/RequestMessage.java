@@ -1,9 +1,11 @@
 package com.api.EngineerCollabo.entities;
 
+import org.springframework.stereotype.Component;
 import lombok.Data;
 
 @Data
-public class WebSocketRequestObject {
+@Component
+public class RequestMessage {
     private String userId;
     private String channelId;
     private String message;
