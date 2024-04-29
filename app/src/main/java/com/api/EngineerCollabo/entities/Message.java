@@ -57,4 +57,13 @@ public class Message {
     @JoinColumn(name = "channel_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
     private Channel channel;
 
+    public Message() {
+    }
+
+    public Message(String text, String content,Integer userId, Integer channelId) {
+        this.text = text;
+        this.content = content;
+        this.userId = userId;
+        this.channelId = channelId;
+    }
 }
