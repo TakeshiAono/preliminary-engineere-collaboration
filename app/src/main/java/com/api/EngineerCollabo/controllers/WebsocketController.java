@@ -7,7 +7,7 @@ import com.api.EngineerCollabo.repositories.MessageRepository;
 import com.api.EngineerCollabo.services.MessageService;
 
 @Configuration
-public class MessageController {
+public class WebsocketController {
 
     @Autowired
     MessageService messageService;
