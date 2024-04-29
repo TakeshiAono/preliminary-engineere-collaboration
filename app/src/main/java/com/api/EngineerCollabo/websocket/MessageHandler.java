@@ -1,22 +1,16 @@
 package com.api.EngineerCollabo.websocket;
 
 import java.io.IOException;
-import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.codec.json.Jackson2JsonDecoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
-
 import com.api.EngineerCollabo.controllers.MessageController;
 import com.api.EngineerCollabo.entities.WebSocketRequestObject;
-
-import jakarta.servlet.http.HttpServletRequest;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -54,15 +48,18 @@ public class MessageHandler extends TextWebSocketHandler {
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage requestBody) {
         ObjectMapper objectMapper = new ObjectMapper();
+        WebSocketRequestObject messageObject = null;
         String userId = "";
         String channelId = "";
         String message = "";
+        String content = "";
         try {
-            WebSocketRequestObject messageObject = objectMapper.readValue(requestBody.getPayload(), WebSocketRequestObject.class);
+            messageObject = objectMapper.readValue(requestBody.getPayload(), WebSocketRequestObject.class);
             userId = messageObject.getUserId();
             channelId = messageObject.getChannelId();
             message = messageObject.getMessage();
-            System.out.println("ReceiveRequestCode" + " UserID:" + userId + " ChannelID:" + channelId + " ChannelID:" + channelId);
+            content = messageObject.getContent();
+            System.out.println("ReceiveRequestCode" + " UserID:" + userId + " ChannelID:" + channelId + " message:" + message + " content:" + content);
         } catch (JsonProcessingException e) {
             e.printStackTrace(); // or logger.error("Error processing JSON", e);
         }
@@ -71,6 +68,13 @@ public class MessageHandler extends TextWebSocketHandler {
         Set<String> sessionIds = this.webSocketChannelManager.getSessionsInChannel(channelId);
         // TODO: 受け取ったものをそのまま同一channelのuserに返信する。、
         TextMessage outputMessage = new TextMessage(requestBody.getPayload());
+        try {
+            this.messageController.saveMessage(messageObject);
+        } catch (Exception e) {
+            // 例外を処理するコードを記述するか、例外を再スローする
+            e.printStackTrace(); // 例外のスタックトレースを出力するなど
+        }
+        // this.messageController.saveMessage(messageObject);
 
         Set<String> currentChannelSessionIds = this.webSocketChannelManager.getSessionsInChannel(channelId);
         System.out.println(this.webSocketChannelManager.getSessions());
