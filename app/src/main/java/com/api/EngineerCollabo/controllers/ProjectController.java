@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.api.EngineerCollabo.entities.Member;
+// import com.api.EngineerCollabo.entities.Member;
 import com.api.EngineerCollabo.entities.Project;
-import com.api.EngineerCollabo.entities.RequestMembers;
+// import com.api.EngineerCollabo.entities.RequestMembers;
 import com.api.EngineerCollabo.entities.ResponseProject;
 import com.api.EngineerCollabo.entities.User;
-import com.api.EngineerCollabo.repositories.MemberRepository;
+// import com.api.EngineerCollabo.repositories.MemberRepository;
 import com.api.EngineerCollabo.repositories.ProjectRepository;
 import com.api.EngineerCollabo.repositories.UserRepository;
 import com.api.EngineerCollabo.services.ProjectService;
@@ -30,6 +30,7 @@ import java.util.List;
 // import static org.mockito.Mockito.description;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.stream.Collectors;
 
 
@@ -47,8 +48,8 @@ public class ProjectController {
     @Autowired
     UserRepository userRepository;
 
-    @Autowired
-    MemberRepository memberRepository;
+    // @Autowired
+    // MemberRepository memberRepository;
 
     @GetMapping("/{id}")
     public ResponseProject responseProject(@PathVariable("id") Optional<Integer> ID) {
@@ -80,6 +81,11 @@ public class ProjectController {
             String description = requestProject.getDescription();
             if (description != null) {
                 project.setDescription(description);
+            }
+
+            Date deadline = requestProject.getDeadline();
+            if (deadline != null) {
+                project.setDeadline(deadline);
             }
             projectRepository.save(project);
         }
@@ -121,53 +127,53 @@ public class ProjectController {
         return responseProjectList;
     }
 
-    @PostMapping("/{id}/members/add")
-    public void addMember(@PathVariable("id") Optional<Integer> ID, @RequestBody RequestMembers requestMembers) {
-        if (ID.isPresent()) {
-            int id = ID.get();
-            Project project = projectRepository.findById(id);
-            List<Integer> userIds = requestMembers.getUserIds();
-            List<Member> joinedMembers = memberRepository.findByProjectId(id);
+    // @PostMapping("/{id}/members/add")
+    // public void addMember(@PathVariable("id") Optional<Integer> ID, @RequestBody RequestMembers requestMembers) {
+    //     if (ID.isPresent()) {
+    //         int id = ID.get();
+    //         Project project = projectRepository.findById(id);
+    //         List<Integer> userIds = requestMembers.getUserIds();
+    //         List<Member> joinedMembers = memberRepository.findByProjectId(id);
 
-            // TODD: 以下の処理をserviceに移設しトランザクション化する。userがnullの場合にエラーをthrowしrollbackするようにする。
-            for(Integer userId : userIds) {
-                Member member = new Member();
-                Optional<User> optionalUser = userRepository.findById(userId);
-                if(!optionalUser.isPresent()) {return;}
-                boolean isUserExist = joinedMembers.stream().anyMatch((memberItem) -> memberItem.getUser().getId() == userId);
-                if(!isUserExist) {
-                    member.setProject(project);
-                    member.setUser(optionalUser.get());
-                    memberRepository.save(member);
-                }
-            }
-        }
-    }
+    //         // TODD: 以下の処理をserviceに移設しトランザクション化する。userがnullの場合にエラーをthrowしrollbackするようにする。
+    //         for(Integer userId : userIds) {
+    //             Member member = new Member();
+    //             Optional<User> optionalUser = userRepository.findById(userId);
+    //             if(!optionalUser.isPresent()) {return;}
+    //             boolean isUserExist = joinedMembers.stream().anyMatch((memberItem) -> memberItem.getUser().getId() == userId);
+    //             if(!isUserExist) {
+    //                 member.setProject(project);
+    //                 member.setUser(optionalUser.get());
+    //                 memberRepository.save(member);
+    //             }
+    //         }
+    //     }
+    // }
 
-    @PatchMapping("/{id}/members/modify")
-    public void modifyMember(@PathVariable("id") Optional<Integer> ID, @RequestBody RequestMembers requestMembers) {
-        // if(requestMembers.getUserIds().isEmpty()) {throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "userIdsが空です。");}
-        if (ID.isPresent()) {
-            int id = ID.get();
-            List<Integer> userIds = requestMembers.getUserIds();
-            for(Integer userId : userIds) {
-                Optional<User> optionalUser = userRepository.findById(userId);
-                if(!optionalUser.isPresent()) {throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "存在しないユーザーをメンバーにはできません。");}
-            }
-            Project project = projectRepository.findById(id);
-            List<Member> joinedMembers = memberRepository.findByProjectId(id);
-            joinedMembers.stream().forEach(joinedMemberItem -> memberRepository.deleteById(joinedMemberItem.getId()));
+    // @PatchMapping("/{id}/members/modify")
+    // public void modifyMember(@PathVariable("id") Optional<Integer> ID, @RequestBody RequestMembers requestMembers) {
+    //     // if(requestMembers.getUserIds().isEmpty()) {throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "userIdsが空です。");}
+    //     if (ID.isPresent()) {
+    //         int id = ID.get();
+    //         List<Integer> userIds = requestMembers.getUserIds();
+    //         for(Integer userId : userIds) {
+    //             Optional<User> optionalUser = userRepository.findById(userId);
+    //             if(!optionalUser.isPresent()) {throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "存在しないユーザーをメンバーにはできません。");}
+    //         }
+    //         Project project = projectRepository.findById(id);
+    //         List<Member> joinedMembers = memberRepository.findByProjectId(id);
+    //         joinedMembers.stream().forEach(joinedMemberItem -> memberRepository.deleteById(joinedMemberItem.getId()));
 
-            // TODD: 以下の処理をserviceに移設しトランザクション化する。userがnullの場合にエラーをthrowしrollbackするようにする。
-            for(Integer userId : userIds) {
-                Member member = new Member();
-                System.out.println(userId);
-                Optional<User> optionalUser = userRepository.findById(userId);
-                if(!optionalUser.isPresent()) {return;}
-                member.setProject(project);
-                member.setUser(optionalUser.get());
-                memberRepository.save(member);
-            }
-        }
-    }
+    //         // TODD: 以下の処理をserviceに移設しトランザクション化する。userがnullの場合にエラーをthrowしrollbackするようにする。
+    //         for(Integer userId : userIds) {
+    //             Member member = new Member();
+    //             System.out.println(userId);
+    //             Optional<User> optionalUser = userRepository.findById(userId);
+    //             if(!optionalUser.isPresent()) {return;}
+    //             member.setProject(project);
+    //             member.setUser(optionalUser.get());
+    //             memberRepository.save(member);
+    //         }
+    //     }
+    // }
 }
