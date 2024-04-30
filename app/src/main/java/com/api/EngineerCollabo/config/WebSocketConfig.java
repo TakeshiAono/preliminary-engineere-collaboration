@@ -1,4 +1,4 @@
-package com.api.EngineerCollabo;
+package com.api.EngineerCollabo.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
