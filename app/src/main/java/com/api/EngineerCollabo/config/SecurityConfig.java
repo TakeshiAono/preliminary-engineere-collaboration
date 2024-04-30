@@ -1,4 +1,4 @@
-package com.api.EngineerCollabo;
+package com.api.EngineerCollabo.config;
 
 
 // 開発中は認証機能をOFFにしている。
