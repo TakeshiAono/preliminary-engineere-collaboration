@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.api.EngineerCollabo.entities.Project;
 import com.api.EngineerCollabo.entities.RequestLogin;
 import com.api.EngineerCollabo.entities.RequestUserRegist;
 import com.api.EngineerCollabo.entities.ResponseLogin;
@@ -24,7 +25,6 @@ import jakarta.transaction.Transactional;
 
 @Service
 @Transactional
-
 public class UserService {
     // 開発中は認証機能をOFFにしている。
     // public class UserService implements UserDetailsService {
@@ -136,6 +136,12 @@ public class UserService {
             userRepository.save(user);
         }
     }
+
+    // public List<User> findByProject(Project project) {
+    //     List<User> users = project.getUsers();
+    // }
+
+    // List<User> findByProject(Project project);
 
     public ResponseUser changeResponseUser(User user) {
         ResponseUser responseUser = new ResponseUser();
