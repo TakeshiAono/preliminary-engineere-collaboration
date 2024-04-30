@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.api.EngineerCollabo.entities.Channel;
 import com.api.EngineerCollabo.entities.Message;
 import com.api.EngineerCollabo.entities.Offer;
+import com.api.EngineerCollabo.entities.Project;
 import com.api.EngineerCollabo.entities.Role;
 import com.api.EngineerCollabo.entities.Skill;
 import com.api.EngineerCollabo.entities.User;
