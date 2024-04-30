@@ -6,6 +6,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -53,10 +55,12 @@ public class Task {
     private Date updatedAt;
 
     @ManyToOne()
+    @JsonIgnore
     @JoinColumn(name = "project_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
     private Project project;
 
     @ManyToOne()
+    @JsonIgnore
     @JoinColumn(name = "in_charge_user_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
     private User user;
 }

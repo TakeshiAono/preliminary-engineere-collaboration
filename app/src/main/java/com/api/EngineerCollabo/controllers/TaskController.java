@@ -1,9 +1,13 @@
 package com.api.EngineerCollabo.controllers;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -15,13 +19,21 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.api.EngineerCollabo.entities.Task;
+import com.api.EngineerCollabo.entities.User;
+import com.api.EngineerCollabo.entities.Project;
+import com.api.EngineerCollabo.entities.ResponseProjectTasks;
 import com.api.EngineerCollabo.entities.ResponseTask;
+import com.api.EngineerCollabo.entities.ResponseTasks;
+import com.api.EngineerCollabo.repositories.ProjectRepository;
 import com.api.EngineerCollabo.repositories.TaskRepository;
+import com.api.EngineerCollabo.repositories.UserRepository;
+import com.api.EngineerCollabo.services.ProjectService;
 import com.api.EngineerCollabo.services.TaskService;
+import com.api.EngineerCollabo.services.UserService;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
-@RequestMapping("/tasks")
+// @RequestMapping("/tasks")
 public class TaskController {
     @Autowired
     TaskRepository taskRepository;
@@ -29,7 +41,22 @@ public class TaskController {
     @Autowired
     TaskService taskService;
 
-    @PostMapping("/create")
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    ProjectRepository projectRepository;
+
+    @Autowired
+    ProjectService projectService;
+
+    // @Autowired
+    // ResponseTasks responseTasks;
+
+    @PostMapping("/tasks/create")
     public void createTask(@RequestBody Task requestTask) {
         String name = requestTask.getName();
         Date doneAt = requestTask.getDoneAt();
@@ -43,7 +70,7 @@ public class TaskController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/tasks/{id}")
     public ResponseTask responseTask(@PathVariable("id") Optional<Integer> ID) {
         if (ID.isPresent()) {
             int id = ID.get();
@@ -54,7 +81,7 @@ public class TaskController {
         }
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/tasks/{id}")
     public void putTask(@PathVariable("id") Optional<Integer> ID, @RequestBody Task requestTask) {
         if (ID.isPresent()) {
             int id = ID.get();
@@ -94,11 +121,34 @@ public class TaskController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/tasks/{id}")
     public void deleteTask(@PathVariable("id") Optional<Integer> ID) {
         if (ID.isPresent()) {
             int id = ID.get();
             taskRepository.deleteById(id);
         }
+    }
+
+    @GetMapping("/projects/{projectId}/users/{userId}/tasks")
+    public ResponseTasks getTasksByProjectAndUser(@PathVariable Integer projectId, @PathVariable Integer userId) {
+        Optional<User> user = userRepository.findById(userId);
+        List<Task>tasks = user.get().getTasks().stream()
+            .filter(task -> task.getProjectId() == projectId)
+            .toList();
+        ResponseTasks responseTasks = new ResponseTasks();
+        responseTasks.setUserId(userId);
+        responseTasks.setProjectId(projectId);
+        responseTasks.setTasks(tasks);
+        return responseTasks;
+    }
+
+    @GetMapping("/projects/{projectId}/tasks")
+    public ResponseProjectTasks getTasksByProject(@PathVariable Integer projectId) {
+        Optional<Project> project = projectRepository.findById(projectId);
+        List<Task>tasks = project.get().getTasks();
+        ResponseProjectTasks responseProjectTasks = new ResponseProjectTasks();
+        responseProjectTasks.setProjectId(projectId);
+        responseProjectTasks.setTasks(tasks);
+        return responseProjectTasks;
     }
 }
