@@ -34,7 +34,7 @@ public class TaskInitializer implements CommandLineRunner {
                 Date randomDate = getRandomDate(startDate, endDate);
                 jdbcTemplate.update(
                     "INSERT INTO tasks (in_charge_user_id, done_at, project_id, deadline, name, description, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                    1, null, 1, randomDate, "バックエンド実装_", "バックエンドの実装をJavaで行う", randomDate, randomDate
+                    2, null, 1, randomDate, "バックエンド実装_", "バックエンドの実装をJavaで行う", randomDate, randomDate
                 );
             }
             for (int i = 1; i <= 100; i++) {
