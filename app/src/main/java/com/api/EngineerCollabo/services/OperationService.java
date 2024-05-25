@@ -3,15 +3,9 @@ package com.api.EngineerCollabo.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.api.EngineerCollabo.entities.Channel;
-import com.api.EngineerCollabo.entities.Message;
-import com.api.EngineerCollabo.entities.ResponseMessage;
 import com.api.EngineerCollabo.entities.ResponseOperation;
 import com.api.EngineerCollabo.entities.Project;
 import com.api.EngineerCollabo.entities.Operation;
-import com.api.EngineerCollabo.repositories.ChannelRepository;
-import com.api.EngineerCollabo.repositories.MessageRepository;
-import com.api.EngineerCollabo.repositories.UserRepository;
 import com.api.EngineerCollabo.repositories.ProjectRepository;
 import com.api.EngineerCollabo.repositories.OperationRepository;
 

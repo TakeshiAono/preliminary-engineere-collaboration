@@ -9,19 +9,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.Optional;
-import java.util.List;
 
 import com.api.EngineerCollabo.repositories.ChannelRepository;
 import com.api.EngineerCollabo.repositories.UserRepository;
 import com.api.EngineerCollabo.services.ChannelService;
 import com.api.EngineerCollabo.entities.ResponseChannel;
 import com.api.EngineerCollabo.entities.Channel;
-import com.api.EngineerCollabo.entities.User;
-import com.api.EngineerCollabo.entities.ChatRoom;
 
 @RestController
 @RequestMapping("/channels")
