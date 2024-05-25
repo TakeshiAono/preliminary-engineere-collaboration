@@ -62,6 +62,12 @@ public class ProjectController {
         }
     }
 
+    @GetMapping
+    public List<ResponseProject> responseProjects() {
+        List<Project> projects = projectRepository.findAll();
+        return projects.stream().map((project) -> projectService.changeResponseProject(project)).toList();
+    }
+
     @PatchMapping("/{id}")
     public void putProject(@PathVariable("id") Optional<Integer> ID, @RequestBody Project requestProject) {
         if (ID.isPresent()) {
