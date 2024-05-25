@@ -1,7 +1,6 @@
 package com.api.EngineerCollabo.entities;
 
 import java.util.Date;
-
 import lombok.Data;
 
 @Data
