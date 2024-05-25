@@ -5,8 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.api.EngineerCollabo.entities.Project;
 import com.api.EngineerCollabo.entities.ProjectNotice;
 
-import java.util.List;
-
 public interface ProjectNoticeRepository extends JpaRepository<ProjectNotice, Integer> {
 
     ProjectNotice findById(int id);

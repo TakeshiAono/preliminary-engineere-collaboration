@@ -25,4 +25,5 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
     List<Project> findByNameLike(String searchWord);
 
     List<Project> findByDescriptionLike(String searchWord);
+
 }

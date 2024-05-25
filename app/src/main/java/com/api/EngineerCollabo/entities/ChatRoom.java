@@ -20,7 +20,6 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Data
 @Entity
