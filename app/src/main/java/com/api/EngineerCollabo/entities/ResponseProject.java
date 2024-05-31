@@ -3,6 +3,7 @@ package com.api.EngineerCollabo.entities;
 import java.util.Date;
 import java.util.List;
 import lombok.Data;
+import com.fasterxml.jackson.databind.JsonNode;
 
 @Data
 public class ResponseProject {
@@ -14,7 +15,15 @@ public class ResponseProject {
 
     private String description;
 
+    private String recruitingText;
+
+    private JsonNode useTechnology;
+
+    private JsonNode recruitingMemberJob;
+
     private Date deadline;
+
+    private Integer ownerId;
 
     private List<Integer> userIds;
 

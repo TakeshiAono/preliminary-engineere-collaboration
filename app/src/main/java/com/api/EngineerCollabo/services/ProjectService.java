@@ -12,12 +12,14 @@ public class ProjectService {
 	public ResponseProject changeResponseProject(Project project) {
 		ResponseProject responseProject = new ResponseProject();
 		responseProject.setId(project.getId());
+		responseProject.setRecruitingMemberJob(project.getRecruitingMemberJob());
+		responseProject.setRecruitingText(project.getRecruitingText());
+		responseProject.setUseTechnology(project.getUseTechnology());
 		responseProject.setName(project.getName());
 		responseProject.setIconUrl(project.getIconUrl());
 		responseProject.setDescription(project.getDescription());
 		responseProject.setDeadline(project.getDeadline());
-		responseProject.setOwnerIds(
-				project.getOwners().stream().map(user -> user.getId()).collect(Collectors.toList()));
+		responseProject.setOwnerId(project.getOwner().getId());
 		responseProject.setProjectNoticeIds(
 				project.getProjectNotices().stream().map(projectNotice -> projectNotice.getId())
 						.collect(Collectors.toList()));

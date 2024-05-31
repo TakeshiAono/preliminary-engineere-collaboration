@@ -88,6 +88,9 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Offer> offers = new ArrayList<>();
 
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    private List<Project> ownerProjects = new ArrayList<>();
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Task> tasks = new ArrayList<>();
 
