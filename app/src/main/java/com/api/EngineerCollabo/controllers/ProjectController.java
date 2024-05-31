@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.stream.Collectors;
+import com.fasterxml.jackson.databind.JsonNode;
 
 
 @RestController
@@ -61,6 +62,7 @@ public class ProjectController {
 
     @PatchMapping("/{id}")
     public void putProject(@PathVariable("id") Optional<Integer> ID, @RequestBody Project requestProject) {
+        // TODO: サービスクラスに以下のロジックを移設したい。
         if (ID.isPresent()) {
             int id = ID.get();
             Project project = projectRepository.findById(id);
@@ -84,6 +86,22 @@ public class ProjectController {
             if (deadline != null) {
                 project.setDeadline(deadline);
             }
+
+            JsonNode recruitingMemberJob = requestProject.getRecruitingMemberJob();
+            if (recruitingMemberJob != null) {
+                project.setRecruitingMemberJob(recruitingMemberJob);
+            }
+
+            JsonNode useTechnology = requestProject.getUseTechnology();
+            if (useTechnology != null) {
+                project.setUseTechnology(useTechnology);
+            }
+
+            String recruitingText = requestProject.getRecruitingText();
+            if (recruitingText != null) {
+                project.setRecruitingText(recruitingText);
+            }
+
             projectRepository.save(project);
         }
     }
