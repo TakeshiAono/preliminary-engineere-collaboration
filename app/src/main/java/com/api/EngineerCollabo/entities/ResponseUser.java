@@ -17,6 +17,8 @@ public class ResponseUser {
 
     private String introduce;
 
+    private Integer ownerProjectIds;
+
     private List<Integer> followerIds;
 
     private List<Integer> skillIds;
