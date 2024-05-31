@@ -10,6 +10,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
@@ -19,9 +20,13 @@ import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.api.EngineerCollabo.converters.JsonNodeConverter;
+import jakarta.persistence.ManyToOne;
 
 @Data
 @Entity
@@ -52,11 +57,20 @@ public class Project {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    // @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    // private List<User> users = new ArrayList<>();
+    @Column(name = "use_technology", columnDefinition = "jsonb") // PostgreSQLの場合
+    @Convert(converter = JsonNodeConverter.class)
+    private JsonNode useTechnology;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    private List<Owner> owners = new ArrayList<>();
+    @Column(name = "recruiting_member_job", columnDefinition = "jsonb") // PostgreSQLの場合
+    @Convert(converter = JsonNodeConverter.class)
+    private JsonNode recruitingMemberJob;
+
+    @Column(name = "recruiting_text", nullable = true, columnDefinition = "TEXT")
+    private String recruitingText;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
+    private User owner;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<ProjectNotice> projectNotices = new ArrayList<>();
