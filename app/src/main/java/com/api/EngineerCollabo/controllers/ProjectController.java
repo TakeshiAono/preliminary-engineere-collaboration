@@ -19,8 +19,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import java.util.Optional;
 import java.util.List;
-
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.stream.Collectors;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -120,20 +122,28 @@ public class ProjectController {
     }
 
     @GetMapping("/search")
-    public List<ResponseProject> searchProject(@RequestParam(value = "name", required = false, defaultValue = "") String name, @RequestParam(value = "description", required = false, defaultValue = "") String description) {
-        // TODO: likeのand検索ができるライブラリがありそうなのでそれを使いたい。
+    public List<ResponseProject> searchProject(
+        @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
+        @RequestParam(value = "selectedSkills", required = false, defaultValue = "") String selectedSkills,
+        
+        @RequestParam(value = "fromDate", required = false, defaultValue = "2000-01-01") String fromDate,
+        @RequestParam(value = "toDate", required = false, defaultValue = "2200-01-01") String toDate,
+        @RequestParam(value = "projectMemberCount", required = false, defaultValue = "0") String projectMemberCount,
+        @RequestParam(value = "selectedMeetingFrequency", required = false, defaultValue = "") String selectedMeetingFrequency
+    ) {
+
+        List<String> selectedSkillsArrayList = Arrays.asList(selectedSkills.split(","));
         List<Project> projectList = null;
         List<ResponseProject> responseProjectList = new ArrayList<>();
-        if(!name.equals("") && !description.equals("")) {
-            projectList = projectRepository.findByNameLike("%"+ name +"%");
-            projectList = projectList.stream().filter(project -> project.getDescription().contains(description)).collect(Collectors.toList());
-        }
-        else if(!name.equals("")) {
-            projectList = projectRepository.findByNameLike("%"+ name +"%");
-        } else if(!description.equals("")) {
-            projectList = projectRepository.findByDescriptionLike("%"+ description +"%");
-        } else {
-            return responseProjectList;
+
+        SimpleDateFormat fromDateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat toDateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date startDate = fromDateFormatter.parse(fromDate);
+            Date endDate = toDateFormatter.parse(toDate);
+            projectList = projectRepository.findProjectSomeParams(keyword, startDate, endDate, Integer.parseInt(projectMemberCount), selectedSkills);
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
 
         for (Project project : projectList) {
