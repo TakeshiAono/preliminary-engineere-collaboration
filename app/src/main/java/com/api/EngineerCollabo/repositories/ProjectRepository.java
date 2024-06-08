@@ -38,14 +38,13 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
                    "LEFT JOIN projects_users pu ON p.id = pu.project_id " +
                    "LEFT JOIN users u ON pu.users_id = u.id " +
                    "WHERE (p.name LIKE %:keyword% OR p.description LIKE %:keyword% OR p.recruiting_text LIKE %:keyword%) " +
-                   "AND p.deadline BETWEEN :startDate AND :endDate AND CAST(p.use_technology AS TEXT) LIKE %:selectedSkills% " +
+                   "AND p.deadline BETWEEN :startDate AND :endDate " +
                    "GROUP BY p.id " +
                    "HAVING COUNT(u.id) >= :userCount", nativeQuery = true)
     List<Project> findProjectSomeParams(
         @Param("keyword") String keyword,
         @Param("startDate") Date startDate,
         @Param("endDate") Date endDate,
-        @Param("userCount") Integer userCount,
-        @Param("selectedSkills") String selectedSkills
+        @Param("userCount") Integer userCount
     );
 }
