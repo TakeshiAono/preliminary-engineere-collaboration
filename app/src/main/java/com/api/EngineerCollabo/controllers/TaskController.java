@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.api.EngineerCollabo.entities.Task;
 import com.api.EngineerCollabo.entities.User;
@@ -64,6 +65,24 @@ public class TaskController {
         if (inChargeUserId != null && projectId != null) {
             taskService.createTask(name, doneAt, projectId, deadline, description, inChargeUserId);
         }
+    }
+
+    @GetMapping("/tasks")
+    public ResponseTasks responseTask(
+            @RequestParam(name = "projectId", required = true) Integer projectId,
+            @RequestParam(name = "userId", required = true) Integer userId,
+            @RequestParam(name = "milestoneId", required = false) Integer milestoneId) {
+
+        Optional<User> user = userRepository.findById(userId);
+        List<Task> tasks = user.get().getTasks().stream()
+                .filter(task -> task.getProjectId().equals(projectId))
+                .filter(task -> task.getMilestoneId().equals(milestoneId) || milestoneId == null)
+                .toList();
+        ResponseTasks responseTasks = new ResponseTasks();
+        responseTasks.setUserId(userId);
+        responseTasks.setProjectId(projectId);
+        responseTasks.setTasks(tasks);
+        return responseTasks;
     }
 
     @GetMapping("/tasks/{id}")
