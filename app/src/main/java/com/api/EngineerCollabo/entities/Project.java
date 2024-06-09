@@ -49,6 +49,9 @@ public class Project {
     @Column(name = "deadline", nullable = true, columnDefinition = "DATE")
     private Date deadline;
 
+    @Column(name = "meeting_frequency_code")
+    private String meetingFrequencyCode;
+
     @CreatedDate
     @Column(name = "created_at", updatable = false)
     private Date createdAt;
