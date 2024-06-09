@@ -18,3 +18,4 @@ INSERT INTO offers (message, scouted_user_id, user_id, created_at, updated_at) V
 -- INSERT INTO owners (project_id, user_id, created_at, updated_at) VALUES (1, 1, date('2024/04/21'), date('2024/04/21')),(1, 2, date('2024/04/21'), date('2024/04/21'));
 INSERT INTO projects_users (project_id, users_id) VALUES (1, 1),(1, 2),(2, 1);
 INSERT INTO operations (project_id, log, created_at, updated_at) VALUES (1, 'ログ1', date('2024/01/15'), date('2024/01/20')),(1, 'ログ2', date('2024/02/15'), date('2024/02/20')),(2, 'ログ3', date('2024/03/15'), date('2024/03/20'));
+INSERT INTO milestones (name, deadline, project_id, created_at, updated_at) VALUES ('Ph1', date('2024/09/30'), 1, date('2024/05/12'), date('2024/05/12')),('Ph2', date('2024/12/31'), 1, date('2024/05/12'), date('2024/05/12')), ('xxxPh1', date('2024/09/30'), 2, date('2024/05/12'), date('2024/05/12'));
