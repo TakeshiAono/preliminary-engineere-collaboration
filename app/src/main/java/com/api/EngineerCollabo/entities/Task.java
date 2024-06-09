@@ -40,6 +40,9 @@ public class Task {
     @Column(name = "in_charge_user_id")
     private Integer inChargeUserId;
 
+    @Column(name = "milestone_id")
+    private Integer milestoneId;
+
     @Column(name = "deadline", nullable = true, columnDefinition = "DATE")
     private Date deadline;
 
@@ -63,4 +66,9 @@ public class Task {
     @JsonIgnore
     @JoinColumn(name = "in_charge_user_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
     private User user;
+
+    @ManyToOne()
+    @JsonIgnore
+    @JoinColumn(name = "milestone_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
+    private Milestone milestone;
 }
