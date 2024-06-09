@@ -43,7 +43,6 @@ public class ProjectController {
 
     // @Autowired
     // MemberRepository memberRepository;
-
     @GetMapping("/{id}")
     public ResponseProject responseProject(@PathVariable("id") Optional<Integer> ID) {
         if (ID.isPresent()) {
@@ -141,7 +140,12 @@ public class ProjectController {
             Date startDate = fromDateFormatter.parse(fromDate);
             Date endDate = toDateFormatter.parse(toDate);
             List<Project> results = projectRepository.findProjectSomeParams(keyword, startDate, endDate, Integer.parseInt(projectMemberCount));
-            projectList = results.stream().filter(record -> selectedSkillsArrayList.stream().allMatch(skill -> record.getUseTechnology().toString().contains(skill))).collect(Collectors.toList());
+            projectList = results.stream()
+                .filter(record -> selectedSkillsArrayList.stream().allMatch(skill -> record.getUseTechnology().toString().contains(skill)))
+                .filter(record -> {
+                    if(selectedMeetingFrequency.equals("")) {return true;}
+                    return record.getMeetingFrequencyCode().equals(selectedMeetingFrequency);})
+                .collect(Collectors.toList());
         } catch (ParseException e) {
             e.printStackTrace();
         }
