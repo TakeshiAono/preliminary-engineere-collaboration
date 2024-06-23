@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 import com.api.EngineerCollabo.entities.ResponseSkill;
 import com.api.EngineerCollabo.entities.Skill;
@@ -18,6 +22,7 @@ import com.api.EngineerCollabo.repositories.SkillRepository;
 import com.api.EngineerCollabo.services.SkillService;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/skills")
 public class SkillController {
 
@@ -26,6 +31,12 @@ public class SkillController {
 
     @Autowired
     SkillService skillService;
+
+    @GetMapping
+    public List<ResponseSkill> ResponseSkills() {
+        List<Skill> skills = skillRepository.findAll();
+        return skills.stream().map((skill) -> skillService.changeResponseSkill(skill)).toList();
+    }
 
     @PostMapping("/create")
     public void createSkill(@RequestBody Skill requestSkill) {

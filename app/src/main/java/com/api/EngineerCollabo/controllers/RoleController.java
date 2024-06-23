@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
+
+import java.util.List;
 
 import com.api.EngineerCollabo.entities.ResponseRole;
 import com.api.EngineerCollabo.entities.Role;
@@ -18,6 +21,7 @@ import com.api.EngineerCollabo.repositories.RoleRepository;
 import com.api.EngineerCollabo.services.RoleService;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/roles")
 public class RoleController {
 
@@ -26,6 +30,12 @@ public class RoleController {
 
     @Autowired
     RoleService roleService;
+
+    @GetMapping
+    public List<ResponseRole> ResponseRoles() {
+        List<Role> roles = roleRepository.findAll();
+        return roles.stream().map((role) -> roleService.changeResponseRole(role)).toList();
+    }
 
     @PostMapping("/create")
     public void createRole(@RequestBody Role requestRole) {
