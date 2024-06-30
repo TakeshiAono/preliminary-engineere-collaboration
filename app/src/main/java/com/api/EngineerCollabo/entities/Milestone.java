@@ -51,6 +51,5 @@ public class Milestone {
     private Project project;
 
     @OneToMany(mappedBy = "milestone", cascade = CascadeType.ALL)
-    @JsonManagedReference
     private List<Task> tasks = new ArrayList<>();
 }
