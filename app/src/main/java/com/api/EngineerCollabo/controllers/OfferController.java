@@ -11,6 +11,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.http.HttpStatus;
+
 
 import com.api.EngineerCollabo.entities.Offer;
 import com.api.EngineerCollabo.entities.ResponseOffer;
@@ -18,6 +23,7 @@ import com.api.EngineerCollabo.repositories.OfferRepository;
 import com.api.EngineerCollabo.services.OfferService;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/offers")
 public class OfferController {
 
@@ -28,14 +34,19 @@ public class OfferController {
     OfferService offerService;
 
     @PostMapping("/create")
-    public void createOffer(@RequestBody Offer requestOffer) {
+    public ResponseEntity<String> createOffer(@RequestBody Offer requestOffer) {
+        System.out.println("Received offer message: " + requestOffer.getMessage());
+
         String message = requestOffer.getMessage();
         Integer userId = requestOffer.getUserId();
         Integer scoutedUserId = requestOffer.getScoutedUserId();
 
         if (userId != null && scoutedUserId != null) {
             offerService.createOffer(message, userId, scoutedUserId);
-        }
+        return ResponseEntity.ok("Offer created successfully");
+    } else {
+        return ResponseEntity.badRequest().body("Invalid userId or scoutedUserId");
+    }
     }
 
     @GetMapping("/{id}")
