@@ -7,7 +7,6 @@ services:
     volumes:
       - ./app:/app
     tty: true
-    tty: true
     working_dir: /app
     command: ./gradlew bootrun
 
