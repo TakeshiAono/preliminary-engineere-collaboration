@@ -7,7 +7,9 @@ services:
     volumes:
       - ./app:/app
     tty: true
+    tty: true
     working_dir: /app
+    command: ./gradlew bootrun
 
   db:
     image: postgres:15.4-bullseye
