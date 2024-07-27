@@ -3,6 +3,8 @@ package com.api.EngineerCollabo.controllers;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Collections;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -67,17 +69,34 @@ public class TaskController {
         }
     }
 
+    // TODO ユーザーが所属していないプロジェクト･グループのタスクを取得できてしまうので､修正が必要
     @GetMapping("/tasks")
     public ResponseTasks responseTask(
-            @RequestParam(name = "projectId", required = true) Integer projectId,
-            @RequestParam(name = "userId", required = true) Integer userId,
+            @RequestParam(name = "projectId", required = false) Integer projectId,
+            @RequestParam(name = "userId", required = false) Integer userId,
             @RequestParam(name = "milestoneId", required = false) Integer milestoneId) {
 
-        Optional<User> user = userRepository.findById(userId);
-        List<Task> tasks = user.get().getTasks().stream()
-                .filter(task -> task.getProjectId().equals(projectId))
-                .filter(task -> task.getMilestoneId().equals(milestoneId) || milestoneId == null)
-                .toList();
+        List<Task> tasks = taskRepository.findAll();
+
+        if (userId != null) {
+            Optional<User> user = userRepository.findById(userId);
+            if (user.isPresent()) {
+                tasks = user.get().getTasks();
+            }
+        }
+        
+        if (projectId != null) {
+            tasks = tasks.stream()
+                    .filter(task -> task.getProjectId().equals(projectId))
+                    .collect(Collectors.toList());
+        }
+
+        if (milestoneId != null) {
+            tasks = tasks.stream()
+                    .filter(task -> task.getMilestoneId().equals(milestoneId))
+                    .collect(Collectors.toList());
+        }
+
         ResponseTasks responseTasks = new ResponseTasks();
         responseTasks.setUserId(userId);
         responseTasks.setProjectId(projectId);
