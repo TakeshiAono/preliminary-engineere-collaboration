@@ -35,6 +35,9 @@ public class Offer {
     @Column(name = "scouted_user_id")
     private Integer scoutedUserId;
 
+    @Column(name = "project_id")
+    private Integer projectId;
+
     @CreatedDate
     @Column(name = "created_at", updatable = false)
     private Date createdAt;
@@ -50,4 +53,8 @@ public class Offer {
     @ManyToOne()
     @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
     private User user;
+    
+    @ManyToOne()
+    @JoinColumn(name = "project_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
+    private Project project;
 }
