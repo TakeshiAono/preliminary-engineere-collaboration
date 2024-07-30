@@ -12,4 +12,6 @@ public class ResponseOffer {
 
     private Integer scoutedUserId;
 
+    private Integer projectId;
+
 }

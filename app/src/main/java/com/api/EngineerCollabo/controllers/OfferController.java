@@ -40,9 +40,10 @@ public class OfferController {
         String message = requestOffer.getMessage();
         Integer userId = requestOffer.getUserId();
         Integer scoutedUserId = requestOffer.getScoutedUserId();
+        Integer projectId = requestOffer.getProjectId();
 
         if (userId != null && scoutedUserId != null) {
-            offerService.createOffer(message, userId, scoutedUserId);
+            offerService.createOffer(message, userId, scoutedUserId, projectId);
         return ResponseEntity.ok("Offer created successfully");
     } else {
         return ResponseEntity.badRequest().body("Invalid userId or scoutedUserId");
