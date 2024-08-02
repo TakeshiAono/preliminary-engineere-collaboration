@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.api.EngineerCollabo.entities.Project;
+import com.api.EngineerCollabo.entities.User;
 import com.api.EngineerCollabo.entities.ResponseProject;
 import com.api.EngineerCollabo.repositories.ProjectRepository;
 import com.api.EngineerCollabo.repositories.UserRepository;
@@ -17,6 +18,7 @@ import com.api.EngineerCollabo.services.ProjectService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.http.ResponseEntity;
 import java.util.Optional;
 import java.util.List;
 import java.text.ParseException;
@@ -26,6 +28,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.stream.Collectors;
 import com.fasterxml.jackson.databind.JsonNode;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @RestController
 @RequestMapping("/projects")
@@ -37,12 +41,33 @@ public class ProjectController {
 
     @Autowired
     ProjectService projectService;
-
+    
     @Autowired
     UserRepository userRepository;
 
     // @Autowired
     // MemberRepository memberRepository;
+
+     // ユーザーが特定のプロジェクトに参加しているか確認するエンドポイント
+    @GetMapping("/users/{userId}/project/{projectId}/participates")
+    public ResponseEntity<Boolean> isUserParticipatesInProject(
+            @PathVariable("userId") Integer userId,
+            @PathVariable("projectId") Integer projectId) {
+
+        // ユーザーとプロジェクトの取得
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new EntityNotFoundException("Project not found"));
+
+        // ユーザーがプロジェクトに参加しているか確認
+        boolean isParticipates = user.getProjects().stream()
+                .anyMatch(p -> p.getId().equals(projectId));
+
+        return ResponseEntity.ok(isParticipates);
+    }
+
     @GetMapping("/{id}")
     public ResponseProject responseProject(@PathVariable("id") Optional<Integer> ID) {
         if (ID.isPresent()) {
