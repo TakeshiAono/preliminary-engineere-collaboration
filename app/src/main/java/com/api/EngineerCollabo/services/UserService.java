@@ -15,10 +15,8 @@ import com.api.EngineerCollabo.entities.ResponseUser;
 import com.api.EngineerCollabo.entities.ResponseUserRegist;
 import com.api.EngineerCollabo.entities.User;
 import com.api.EngineerCollabo.repositories.UserRepository;
-import com.api.EngineerCollabo.repositories.ProjectRepository;
 import com.api.EngineerCollabo.util.PasswordUtil;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 // 開発中は認証機能をOFFにしている。
 // import org.springframework.security.core.userdetails.UserDetails;
@@ -34,17 +32,6 @@ public class UserService {
     // リポジトリクラスの依存性注入
     @Autowired
     UserRepository userRepository;
-
-    @Autowired
-    private ProjectRepository projectRepository;
-
-    // ユーザーがプロジェクトに参加しているか確認するメソッド
-    public boolean isUserPartOfProject(Integer userId, Integer projectId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
-
-        return user.getProjects().stream().anyMatch(project -> project.getId().equals(projectId));
-    }
 
     /**
      * ユーザ登録する情報のDBインサート処理

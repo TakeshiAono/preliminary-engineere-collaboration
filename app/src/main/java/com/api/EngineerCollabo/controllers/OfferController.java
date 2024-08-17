@@ -21,7 +21,6 @@ import com.api.EngineerCollabo.entities.Offer;
 import com.api.EngineerCollabo.entities.ResponseOffer;
 import com.api.EngineerCollabo.repositories.OfferRepository;
 import com.api.EngineerCollabo.services.OfferService;
-import com.api.EngineerCollabo.services.UserService;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
@@ -34,12 +33,10 @@ public class OfferController {
     @Autowired
     OfferService offerService;
 
-    @Autowired
-    UserService userService;
-
     @PostMapping("/create")
-public ResponseEntity<String> createOffer(@RequestBody Offer requestOffer) {
-    try {
+    public ResponseEntity<String> createOffer(@RequestBody Offer requestOffer) {
+        System.out.println("Received offer message: " + requestOffer.getMessage());
+
         String message = requestOffer.getMessage();
         Integer userId = requestOffer.getUserId();
         Integer scoutedUserId = requestOffer.getScoutedUserId();
@@ -47,51 +44,44 @@ public ResponseEntity<String> createOffer(@RequestBody Offer requestOffer) {
 
         if (userId != null && scoutedUserId != null) {
             offerService.createOffer(message, userId, scoutedUserId, projectId);
-            return ResponseEntity.ok("Offer created successfully");
-        } else {
-            return ResponseEntity.badRequest().body("Invalid userId or scoutedUserId");
-        }
-    } catch (IllegalArgumentException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+        return ResponseEntity.ok("Offer created successfully");
+    } else {
+        return ResponseEntity.badRequest().body("Invalid userId or scoutedUserId");
     }
-}
+    }
 
     @GetMapping("/{id}")
-    public ResponseOffer responseOffer(@PathVariable("id") Integer id) {
-        Offer offer = offerRepository.findById(id).orElse(null);
-        if (offer != null) {
+    public ResponseOffer responseOffer(@PathVariable("id") Optional<Integer> ID) {
+        if (ID.isPresent()) {
+            int id = ID.get();
+            Offer offer = offerRepository.findById(id);
             return offerService.changResponseOffer(offer);
         } else {
             return null;
         }
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<String> putOffer(@PathVariable("id") Integer id, @RequestBody Offer requestOffer) {
-        Offer offer = offerRepository.findById(id).orElse(null);
-        if (offer != null) {
+    @PatchMapping("{id}")
+    public void putOffer(@PathVariable("id") Optional<Integer> ID, @RequestBody Offer requestOffer) {
+        if (ID.isPresent()) {
+            int id = ID.get();
+            Offer offer = offerRepository.findById(id);
+
             String message = requestOffer.getMessage();
             if (message != null) {
                 offer.setMessage(message);
-                offerRepository.save(offer);
-                return ResponseEntity.ok("Offer updated successfully");
-            } else {
-                return ResponseEntity.badRequest().body("Invalid message");
             }
-        } else {
-            return ResponseEntity.notFound().build();
+
+            offerRepository.save(offer);
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteOffer(@PathVariable("id") Integer id) {
-        if (offerRepository.existsById(id)) {
+    @DeleteMapping("{id}")
+    public void deleteOffer(@PathVariable("id") Optional<Integer> ID) {
+        if (ID.isPresent()) {
+            int id = ID.get();
             offerRepository.deleteById(id);
-            return ResponseEntity.ok("Offer deleted successfully");
-        } else {
-            return ResponseEntity.notFound().build();
         }
     }
+
 }
