@@ -8,7 +8,11 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.api.EngineerCollabo.entities.Directory;
+import com.api.EngineerCollabo.entities.File;
 import com.api.EngineerCollabo.entities.Project;
+import com.api.EngineerCollabo.entities.ResponseDirectory;
 import com.api.EngineerCollabo.entities.ResponseProject;
 import com.api.EngineerCollabo.repositories.ProjectRepository;
 import com.api.EngineerCollabo.repositories.UserRepository;
@@ -24,7 +28,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import com.fasterxml.jackson.databind.JsonNode;
 
 @RestController
@@ -58,6 +65,35 @@ public class ProjectController {
     public List<ResponseProject> responseProjects() {
         List<Project> projects = projectRepository.findAll();
         return projects.stream().map((project) -> projectService.changeResponseProject(project)).toList();
+    }
+
+    @GetMapping("/{id}/files")
+    public HashMap<String, Object> responseFiles(@PathVariable("id") Optional<Integer> ID) {
+        if (ID.isPresent()) {
+            int id = ID.get();
+            Project project = projectRepository.findById(id);
+            List<HashMap<String, Object>> directoriesList = project.getDirectories().stream().map(directory -> {
+                List<File> files = directory.getFiles();
+                List<HashMap<String, Object>> fileMaps = files.stream().map(file -> 
+                    new HashMap<String, Object>() {{
+                        put("file_id", file.getId());
+                        put("updated_at", file.getUpdatedAt());
+                        put("name", file.getName());
+                        put("file", file.getName());
+                    }}
+                ).collect(Collectors.toList());
+                return new HashMap<String, Object>() {{
+                    put("directory_id", directory.getId());
+                    put("name", directory.getName());
+                    put("file", fileMaps);
+                }};
+            }).collect(Collectors.toList());
+            HashMap<String, Object> result = new HashMap<>();
+            result.put("directories", directoriesList);
+            return result;
+        } else {
+            return null;
+        }
     }
 
     @PatchMapping("/{id}")
