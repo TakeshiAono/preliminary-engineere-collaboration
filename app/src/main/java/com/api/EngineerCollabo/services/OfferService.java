@@ -10,6 +10,7 @@ import com.api.EngineerCollabo.entities.Project;
 import com.api.EngineerCollabo.repositories.OfferRepository;
 import com.api.EngineerCollabo.repositories.UserRepository;
 import com.api.EngineerCollabo.repositories.ProjectRepository;
+import com.api.EngineerCollabo.services.UserNoticeService;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -25,6 +26,9 @@ public class OfferService {
     @Autowired
     private OfferRepository offerRepository;
 
+    @Autowired
+    private UserNoticeService userNoticeService;
+
     public Offer createOffer(String message, Integer userId, Integer scoutedUserId, Integer projectId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
         User scoutedUser = userRepository.findById(scoutedUserId)
@@ -37,7 +41,12 @@ public class OfferService {
         offer.setScoutedUserId(scoutedUser.getId());
         offer.setProjectId(project.getId());
 
-        return offerRepository.save(offer);
+        Offer savedOffer = offerRepository.save(offer);
+
+        // オファーを受信したユーザーに通知を作成
+        userNoticeService.createOfferReceivedNotice(scoutedUser.getId(), savedOffer.getId());
+
+        return savedOffer;
     }
 
     public ResponseOffer changResponseOffer(Offer offer) {
