@@ -18,6 +18,10 @@ import com.api.EngineerCollabo.repositories.UserNoticeRepository;
 import com.api.EngineerCollabo.services.UserNoticeService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+import org.springframework.http.ResponseEntity;
+import jakarta.persistence.EntityNotFoundException;
+
+
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/userNotices")
@@ -32,22 +36,20 @@ public class UserNoticeController {
     public void createUserNotice(@RequestBody UserNotice requestUserNotice) {
         String log = requestUserNotice.getLog();
         Integer userId = requestUserNotice.getUserId();
+        Integer offerId = requestUserNotice.getOfferId();
 
         if (userId != null) {
-            userNoticeService.createUserNotice(log, userId);
+            userNoticeService.createUserNotice(log, userId, offerId);
         }
     }
 
-    @GetMapping("{id}")
-    public ResponseUserNotice responseUserNotice(@PathVariable("id") Optional<Integer> ID) {
-        if (ID.isPresent()) {
-            int id = ID.get();
-            UserNotice userNotice = userNoticeRepository.findById(id);
-            return userNoticeService.changResponseUserNotice(userNotice);
-        } else {
-            return null;
-        }
-    }
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseUserNotice> getUserNoticeById(@PathVariable("id") Integer id) {
+    UserNotice userNotice = userNoticeRepository.findById(id)
+        .orElseThrow(() -> new EntityNotFoundException("UserNotice not found"));
+    ResponseUserNotice response = new ResponseUserNotice(userNotice);
+    return ResponseEntity.ok(response);
+}
 
     @PatchMapping("{id}")
     public void putUserNotice(@PathVariable("id") Optional<Integer> ID,
