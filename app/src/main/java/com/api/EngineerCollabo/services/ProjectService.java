@@ -34,5 +34,5 @@ public class ProjectService {
 		responseProject.setTaskIds(
 				project.getTasks().stream().map(task -> task.getId()).collect(Collectors.toList()));
 		return responseProject;
-    }
+	}
 }
