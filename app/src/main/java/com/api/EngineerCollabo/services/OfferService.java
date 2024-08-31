@@ -56,6 +56,11 @@ public class OfferService {
         responseOffer.setUserId(offer.getUser().getId());
         responseOffer.setScoutedUserId(offer.getScoutedUser().getId());
         responseOffer.setProjectId(offer.getProject().getId());
+
+        // プロジェクト名とユーザー名を設定
+        responseOffer.setUserName(offer.getUser().getName());
+        responseOffer.setProjectName(offer.getProject().getName());
+        
         return responseOffer;
     }
 
