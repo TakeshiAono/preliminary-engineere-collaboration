@@ -49,6 +49,12 @@ public class OfferController {
         return ResponseEntity.badRequest().body("Invalid userId or scoutedUserId");
     }
     }
+    
+    @PostMapping("/accept/{id}")
+        public ResponseEntity<String> acceptOffer(@PathVariable("id") Integer offerId) {
+            offerService.acceptOffer(offerId);
+            return ResponseEntity.ok("User successfully added to project");
+    }
 
     @GetMapping("/{id}")
     public ResponseOffer responseOffer(@PathVariable("id") Optional<Integer> ID) {
