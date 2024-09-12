@@ -64,4 +64,18 @@ public class OfferService {
         return responseOffer;
     }
 
+    public void acceptOffer(Integer offerId) {
+        Offer offer = offerRepository.findById(offerId)
+            .orElseThrow(() -> new EntityNotFoundException("Offer not found"));
+
+        Project project = offer.getProject();
+        User scoutedUser = offer.getScoutedUser();
+
+        // プロジェクトにユーザーが既に参加していないか確認
+        if (!project.getUsers().contains(scoutedUser)) {
+            project.getUsers().add(scoutedUser);
+            projectRepository.save(project);  // プロジェクトを保存
+        }
+    }
+
 }
