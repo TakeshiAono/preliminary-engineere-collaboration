@@ -76,6 +76,8 @@ public class OfferService {
             project.getUsers().add(scoutedUser);
             projectRepository.save(project);  // プロジェクトを保存
         }
+        offer.setIsAccepted(true); 
+        offerRepository.save(offer);
     }
 
 }
