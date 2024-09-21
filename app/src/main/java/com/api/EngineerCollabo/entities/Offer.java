@@ -38,6 +38,9 @@ public class Offer {
 
     @Column(name = "project_id")
     private Integer projectId;
+    
+    @Column(name = "is_accepted", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private Boolean isAccepted = false;
 
     @CreatedDate
     @Column(name = "created_at", updatable = false)

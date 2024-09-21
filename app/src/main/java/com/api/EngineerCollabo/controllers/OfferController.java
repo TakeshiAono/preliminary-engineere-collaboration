@@ -82,7 +82,10 @@ public class OfferController {
         if (ID.isPresent()) {
             int id = ID.get();
             Offer offer = offerRepository.findById(id);
-            return offerService.changResponseOffer(offer);
+            
+            ResponseOffer responseOffer = offerService.changResponseOffer(offer);
+            responseOffer.setIsAccepted(offer.getIsAccepted()); // isAcceptedをレスポンスに追加
+            return responseOffer;
         } else {
             return null;
         }

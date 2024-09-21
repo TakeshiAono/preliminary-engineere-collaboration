@@ -14,7 +14,10 @@ public class ResponseOffer {
 
     private Integer projectId;
 
-    private String userName; // 追加
-    private String projectName; // 追加
+    private String userName;
+
+    private String projectName; 
+
+    private Boolean isAccepted;
 
 }
