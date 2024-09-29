@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.http.ResponseEntity;
+import jakarta.persistence.EntityNotFoundException;
 
 import com.api.EngineerCollabo.entities.Task;
 import com.api.EngineerCollabo.entities.User;
@@ -108,7 +110,8 @@ public class TaskController {
     public ResponseTask responseTask(@PathVariable("id") Optional<Integer> ID) {
         if (ID.isPresent()) {
             int id = ID.get();
-            Task task = taskRepository.findById(id);
+            Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Task not found"));
             return taskService.changeResponseTask(task);
         } else {
             return null;
@@ -116,43 +119,43 @@ public class TaskController {
     }
 
     @PatchMapping("/tasks/{id}")
-    public void putTask(@PathVariable("id") Optional<Integer> ID, @RequestBody Task requestTask) {
-        if (ID.isPresent()) {
-            int id = ID.get();
-            Task task = taskRepository.findById(id);
+    public ResponseEntity<Task> patchTask(@PathVariable("id") Integer id, @RequestBody Task requestTask) {
+        Task task = taskRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Task not found"));
 
-            String name = requestTask.getName();
-            if (name != null) {
-                task.setName(name);
-            }
-
-            String description = requestTask.getDescription();
-            if (description != null) {
-                task.setDescription(description);
-            }
-
-            Date idDone = requestTask.getDoneAt();
-            if (idDone != null) {
-                task.setDoneAt(idDone);
-            }
-
-            Date deadline = requestTask.getDeadline();
-            if (deadline != null) {
-                task.setDeadline(deadline);
-            }
-
-            Integer projectId = requestTask.getProjectId();
-            if (projectId != null) {
-                task.setProjectId(projectId);
-            }
-
-            Integer userId = requestTask.getInChargeUserId();
-            if (userId != null) {
-                task.setInChargeUserId(userId);
-            }
-
-            taskRepository.save(task);
+        String name = requestTask.getName();
+        if (name != null) {
+            task.setName(name);
         }
+
+        String description = requestTask.getDescription();
+        if (description != null) {
+            task.setDescription(description);
+        }
+
+        Date idDone = requestTask.getDoneAt();
+        if (idDone != null) {
+            task.setDoneAt(idDone);
+        }
+
+        Date deadline = requestTask.getDeadline();
+        if (deadline != null) {
+            task.setDeadline(deadline);
+        }
+
+        Integer projectId = requestTask.getProjectId();
+        if (projectId != null) {
+            task.setProjectId(projectId);
+        }
+
+        Integer userId = requestTask.getInChargeUserId();
+        if (userId != null) {
+            task.setInChargeUserId(userId);
+        }
+
+        taskRepository.save(task);
+        
+        return ResponseEntity.ok(task);
     }
 
     @DeleteMapping("/tasks/{id}")
