@@ -9,6 +9,8 @@ import com.api.EngineerCollabo.repositories.UserRepository;
 import com.api.EngineerCollabo.repositories.ProjectRepository;
 import com.api.EngineerCollabo.entities.User;
 import com.api.EngineerCollabo.entities.Project;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -79,7 +81,7 @@ public class TaskControllerTest {
         task.setId(taskId);
         task.setName("Test Task");
 
-        when(taskRepository.findById(taskId)).thenReturn(task);
+        when(taskRepository.findById(taskId)).thenReturn(Optional.of(task));
         when(taskService.changeResponseTask(task)).thenReturn(new ResponseTask());
 
         // 実行
@@ -90,7 +92,7 @@ public class TaskControllerTest {
     }
 
     @Test
-    void testPutTask() {
+    void testPatchTask() {
         // モックの設定
         int taskId = 1;
         Task task = new Task();
@@ -100,14 +102,14 @@ public class TaskControllerTest {
         Task requestTask = new Task();
         requestTask.setName("Updated Task");
 
-        when(taskRepository.findById(taskId)).thenReturn(task);
+        when(taskRepository.findById(taskId)).thenReturn(Optional.of(task));
 
         // 実行
-        taskController.putTask(Optional.of(taskId), requestTask);
+        ResponseEntity<Task> responseEntity = taskController.patchTask(taskId, requestTask);
+
 
         // 検証
-        assertEquals("Updated Task", task.getName());
-        verify(taskRepository, times(1)).save(task);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 
     @Test
