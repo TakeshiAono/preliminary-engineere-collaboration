@@ -45,18 +45,19 @@ public class UserNoticeController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ResponseUserNotice> getUserNoticeById(@PathVariable("id") Integer id) {
-    UserNotice userNotice = userNoticeRepository.findById(id)
-        .orElseThrow(() -> new EntityNotFoundException("UserNotice not found"));
-    ResponseUserNotice response = new ResponseUserNotice(userNotice);
-    return ResponseEntity.ok(response);
-}
+        UserNotice userNotice = userNoticeRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("UserNotice not found"));
+        ResponseUserNotice response = new ResponseUserNotice(userNotice);
+        return ResponseEntity.ok(response);
+    }
 
     @PatchMapping("{id}")
     public void putUserNotice(@PathVariable("id") Optional<Integer> ID,
             @RequestBody UserNotice requestUserNotice) {
         if (ID.isPresent()) {
             int id = ID.get();
-            UserNotice userNotice = userNoticeRepository.findById(id);
+            UserNotice userNotice = userNoticeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("UserNotice not found"));
 
             String log = requestUserNotice.getLog();
             if (log != null) {
