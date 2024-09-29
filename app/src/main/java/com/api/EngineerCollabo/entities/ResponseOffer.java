@@ -14,4 +14,10 @@ public class ResponseOffer {
 
     private Integer projectId;
 
+    private String userName;
+
+    private String projectName; 
+
+    private Boolean isAccepted;
+
 }

@@ -14,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -31,6 +32,9 @@ public class UserNotice {
 
     @Column(name = "user_id")
     private Integer userId;
+
+    @Column(name = "offer_id")
+    private Integer offerId;
     
     @CreatedDate
     @Column(name = "created_at", updatable = false)
@@ -43,4 +47,8 @@ public class UserNotice {
     @ManyToOne()
     @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
     private User user;
+    
+    @OneToOne
+    @JoinColumn(name = "offer_id", referencedColumnName = "id", insertable = false, updatable = false)
+    private Offer offer;
 }

@@ -9,7 +9,5 @@ import java.util.List;
 
 public interface UserNoticeRepository extends JpaRepository<UserNotice, Integer> {
 
-    UserNotice findById(int id);
-
     List<UserNotice> findByUser(User user);
 }
