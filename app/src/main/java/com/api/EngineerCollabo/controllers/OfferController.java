@@ -1,6 +1,8 @@
 package com.api.EngineerCollabo.controllers;
 
 import java.util.Optional;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,9 +20,12 @@ import org.springframework.http.HttpStatus;
 
 
 import com.api.EngineerCollabo.entities.Offer;
+import com.api.EngineerCollabo.entities.Project;
 import com.api.EngineerCollabo.entities.ResponseOffer;
+import com.api.EngineerCollabo.entities.ResponseProject;
 import com.api.EngineerCollabo.repositories.OfferRepository;
 import com.api.EngineerCollabo.services.OfferService;
+import com.api.EngineerCollabo.services.ProjectService;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
@@ -32,6 +37,9 @@ public class OfferController {
 
     @Autowired
     OfferService offerService;
+
+    @Autowired
+    ProjectService projectService;
 
     @PostMapping("/create")
     public ResponseEntity<String> createOffer(@RequestBody Offer requestOffer) {
@@ -49,13 +57,35 @@ public class OfferController {
         return ResponseEntity.badRequest().body("Invalid userId or scoutedUserId");
     }
     }
+    
+    @PostMapping("/accept/{id}")
+    public ResponseEntity<Map<String, Object>> acceptOffer(@PathVariable("id") Integer offerId) {
+        // オファーを受け入れる処理
+        offerService.acceptOffer(offerId);
+        
+        // プロジェクトデータを取得
+        Project project = projectService.getProjectByOfferId(offerId);
+        
+        // プロジェクトデータをResponseProjectに変換
+        ResponseProject responseProject = projectService.changeResponseProject(project);
+        
+        // レスポンスデータを作成
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "User successfully added to project");
+        response.put("project", responseProject);
+        
+        return ResponseEntity.ok(response);
+    }
 
     @GetMapping("/{id}")
     public ResponseOffer responseOffer(@PathVariable("id") Optional<Integer> ID) {
         if (ID.isPresent()) {
             int id = ID.get();
             Offer offer = offerRepository.findById(id);
-            return offerService.changResponseOffer(offer);
+            
+            ResponseOffer responseOffer = offerService.changResponseOffer(offer);
+            responseOffer.setIsAccepted(offer.getIsAccepted()); // isAcceptedをレスポンスに追加
+            return responseOffer;
         } else {
             return null;
         }

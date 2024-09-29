@@ -12,6 +12,8 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -37,30 +39,30 @@ public class UserNoticeControllerTest {
         UserNotice requestUserNotice = new UserNotice();
         requestUserNotice.setLog("Test Log");
         requestUserNotice.setUserId(1);
+        requestUserNotice.setOfferId(1);
 
         // 実行
         userNoticeController.createUserNotice(requestUserNotice);
 
         // 検証
-        verify(userNoticeService, times(1)).createUserNotice("Test Log", 1);
+        verify(userNoticeService, times(1)).createUserNotice("Test Log", 1, 1);
     }
 
-    @Test
-    void testResponseUserNotice() {
+     @Test
+    void testGetUserNoticeById() {
         // モックの設定
         int userNoticeId = 1;
         UserNotice userNotice = new UserNotice();
         userNotice.setId(userNoticeId);
         userNotice.setLog("Test Log");
 
-        when(userNoticeRepository.findById(userNoticeId)).thenReturn(userNotice);
-        when(userNoticeService.changResponseUserNotice(userNotice)).thenReturn(new ResponseUserNotice());
+        when(userNoticeRepository.findById(userNoticeId)).thenReturn(Optional.of(userNotice));
 
         // 実行
-        ResponseUserNotice responseUserNotice = userNoticeController.responseUserNotice(Optional.of(userNoticeId));
+        ResponseEntity<ResponseUserNotice> responseEntity = userNoticeController.getUserNoticeById(userNoticeId);
 
         // 検証
-        assertEquals(new ResponseUserNotice(), responseUserNotice);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 
     @Test
@@ -74,7 +76,7 @@ public class UserNoticeControllerTest {
         UserNotice requestUserNotice = new UserNotice();
         requestUserNotice.setLog("Updated Log");
 
-        when(userNoticeRepository.findById(userNoticeId)).thenReturn(userNotice);
+        when(userNoticeRepository.findById(userNoticeId)).thenReturn(Optional.of(userNotice));
 
         // 実行
         userNoticeController.putUserNotice(Optional.of(userNoticeId), requestUserNotice);
