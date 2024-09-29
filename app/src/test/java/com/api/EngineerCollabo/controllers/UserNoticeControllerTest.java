@@ -42,7 +42,7 @@ public class UserNoticeControllerTest {
         userNoticeController.createUserNotice(requestUserNotice);
 
         // 検証
-        verify(userNoticeService, times(1)).createUserNotice("Test Log", 1);
+        verify(userNoticeService, times(1)).createUserNotice("Test Log", 1, 1);
     }
 
     @Test
