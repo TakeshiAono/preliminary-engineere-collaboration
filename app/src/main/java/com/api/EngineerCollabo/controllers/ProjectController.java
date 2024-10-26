@@ -31,8 +31,22 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.Map;
+import java.time.Duration;
 
 import com.fasterxml.jackson.databind.JsonNode;
+
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
+import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
+import software.amazon.awssdk.services.s3.model.S3Object;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @RestController
 @RequestMapping("/projects")
@@ -67,34 +81,6 @@ public class ProjectController {
         return projects.stream().map((project) -> projectService.changeResponseProject(project)).toList();
     }
 
-    @GetMapping("/{id}/files")
-    public HashMap<String, Object> responseFiles(@PathVariable("id") Optional<Integer> ID) {
-        if (ID.isPresent()) {
-            int id = ID.get();
-            Project project = projectRepository.findById(id);
-            List<HashMap<String, Object>> directoriesList = project.getDirectories().stream().map(directory -> {
-                List<File> files = directory.getFiles();
-                List<HashMap<String, Object>> fileMaps = files.stream().map(file -> 
-                    new HashMap<String, Object>() {{
-                        put("file_id", file.getId());
-                        put("updated_at", file.getUpdatedAt());
-                        put("name", file.getName());
-                        put("file", file.getName());
-                    }}
-                ).collect(Collectors.toList());
-                return new HashMap<String, Object>() {{
-                    put("directory_id", directory.getId());
-                    put("name", directory.getName());
-                    put("file", fileMaps);
-                }};
-            }).collect(Collectors.toList());
-            HashMap<String, Object> result = new HashMap<>();
-            result.put("directories", directoriesList);
-            return result;
-        } else {
-            return null;
-        }
-    }
 
     @PatchMapping("/{id}")
     public void putProject(@PathVariable("id") Optional<Integer> ID, @RequestBody Project requestProject) {
@@ -139,6 +125,24 @@ public class ProjectController {
             }
 
             projectRepository.save(project);
+        }
+    }
+
+    @GetMapping("/{id}/files")
+    public List getFiles(@PathVariable("projectName") Optional<Integer> ID) {
+        try (S3Client s3Client = S3Client.builder().region(Region.US_EAST_1).build()) {
+            // リクエストを作成してオブジェクト一覧を取得
+            ListObjectsV2Request listObjectsRequest = ListObjectsV2Request.builder()
+                    .bucket("test9898989")
+                    .build();
+
+            ListObjectsV2Response response = s3Client.listObjectsV2(listObjectsRequest);
+            
+            // オブジェクトのキー（ファイル名）をリストにして返す
+            System.out.println(response);
+            return response.contents().stream()
+                    .map(S3Object::key)
+                    .collect(Collectors.toList());
         }
     }
 

@@ -6,6 +6,7 @@ services:
       - 8080:8080
     volumes:
       - ./app:/app
+      - ./.aws:/root/.aws
     tty: true
     working_dir: /app
 
