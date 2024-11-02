@@ -17,12 +17,14 @@ import com.api.EngineerCollabo.entities.ResponseProject;
 import com.api.EngineerCollabo.repositories.ProjectRepository;
 import com.api.EngineerCollabo.repositories.UserRepository;
 import com.api.EngineerCollabo.services.ProjectService;
+import com.api.EngineerCollabo.util.HashUtil;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import java.util.Optional;
 import java.util.List;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import java.util.Map;
 import java.time.Duration;
 
@@ -47,6 +50,9 @@ import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignReques
 import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
+import software.amazon.awssdk.services.s3.model.CreateBucketResponse;
+import software.amazon.awssdk.services.s3.model.S3Exception;
 
 @RestController
 @RequestMapping("/projects")
@@ -129,11 +135,32 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}/files")
-    public List getFiles(@PathVariable("projectName") Optional<Integer> ID) {
+    public List getFiles(@PathVariable("id") Optional<Integer> ID) {
+        if (!ID.isPresent()) {
+            System.err.println("IDが存在しません");
+            return new ArrayList<>();  // 空のリストを返す
+        }
+
         try (S3Client s3Client = S3Client.builder().region(Region.US_EAST_1).build()) {
+            Project project = projectRepository.findById(ID.get())
+            .orElseThrow(() -> new RuntimeException("プロジェクトが見つかりませんでした: " + ID.get()));
+
+            String hashName;
+            try {
+                hashName = HashUtil.hashAndAdjustForBucketName(project.getName())
+                    .toLowerCase()
+                    .replace("/", "-")  // スラッシュをハイフンに置き換え
+                    .replace("+", "a")  // プラスを別の文字（例: "a"）に置き換え
+                    .replace("=", "");  // イコールを削除（Base64の末尾によくある）
+            } catch (NoSuchAlgorithmException e) {
+                System.err.println("ハッシュ生成中にエラーが発生しました: " + e.getMessage());
+                e.printStackTrace();
+                return new ArrayList<>();
+            }
+
             // リクエストを作成してオブジェクト一覧を取得
             ListObjectsV2Request listObjectsRequest = ListObjectsV2Request.builder()
-                    .bucket("test9898989")
+                    .bucket(hashName)
                     .build();
 
             ListObjectsV2Response response = s3Client.listObjectsV2(listObjectsRequest);
@@ -144,6 +171,61 @@ public class ProjectController {
                     .map(S3Object::key)
                     .collect(Collectors.toList());
         }
+    }
+
+    @PostMapping("/{id}/use-share-files/{bucketName}")
+    public void createBucket(@PathVariable("id") Optional<Integer>id, @PathVariable("bucketName") String bucketName) {
+        Project project = projectRepository.findById(id.get())
+                .orElseThrow(() -> new RuntimeException("プロジェクトが見つかりませんでした: " + id.get()));
+
+        try (S3Client s3Client = S3Client.builder().region(Region.US_EAST_1).build()) {
+            // バケット作成リクエストを作成
+            CreateBucketRequest createBucketRequest;
+            try {
+                createBucketRequest = CreateBucketRequest.builder()
+                    .bucket(HashUtil.hashAndAdjustForBucketName(project.getName()).toLowerCase()
+                        .replace("/", "-") // スラッシュをハイフンに置き換え
+                        .replace("+", "a") // プラスを別の文字（例: "a"）に置き換え
+                        .replace("=", "")) // イコールを削除（Base64の末尾によくある）)
+                    .build();
+            } catch (Exception e) {
+                System.err.println("バケット名の暗号化中にエラーが発生しました: " + e.getMessage());
+                e.printStackTrace();
+                return; // 暗号化に失敗した場合、処理を中断
+            }
+
+            // バケットを作成
+            CreateBucketResponse createBucketResponse = s3Client.createBucket(createBucketRequest);
+            System.out.println("バケットが作成されました: " + createBucketResponse.location());
+        } catch (S3Exception e) {
+            System.err.println("バケット作成エラー: " + e.awsErrorDetails().errorMessage());
+        }
+    }
+
+    @GetMapping("/{id}/use-share-files")
+    public boolean isCreatedBucket(@PathVariable("id") Optional<Integer> id) {
+        S3Client s3Client = S3Client.builder().region(Region.US_EAST_1).build();
+        
+        Project project = projectRepository.findById(id.get())
+            .orElseThrow(() -> new RuntimeException("プロジェクトが見つかりませんでした: " + id.get()));
+
+        String hashName;
+        try {
+            hashName = HashUtil.hashAndAdjustForBucketName(project.getName())
+                .toLowerCase()
+                .replace("/", "-")  // スラッシュをハイフンに置き換え
+                .replace("+", "a")  // プラスを別の文字（例: "a"）に置き換え
+                .replace("=", "");  // イコールを削除（Base64の末尾によくある）
+        } catch (NoSuchAlgorithmException e) {
+            System.err.println("ハッシュ生成中にエラーが発生しました: " + e.getMessage());
+            e.printStackTrace();
+            return false;  // ハッシュ生成に失敗した場合、存在しないと判断
+        }
+
+        // バケットが存在するか確認
+        boolean exists = s3Client.listBuckets().buckets().stream()
+                .anyMatch(bucket -> bucket.name().equals(hashName));
+        return exists;
     }
 
     @DeleteMapping("/{id}")
