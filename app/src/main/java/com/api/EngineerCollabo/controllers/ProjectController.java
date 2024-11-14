@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.List;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
@@ -135,7 +136,7 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}/files")
-    public List getFiles(@PathVariable("id") Optional<Integer> ID) {
+    public List<String> getFiles(@PathVariable("id") Optional<Integer> ID) {
         if (!ID.isPresent()) {
             System.err.println("IDが存在しません");
             return new ArrayList<>();  // 空のリストを返す
@@ -143,60 +144,70 @@ public class ProjectController {
 
         try (S3Client s3Client = S3Client.builder().region(Region.US_EAST_1).build()) {
             Project project = projectRepository.findById(ID.get())
-            .orElseThrow(() -> new RuntimeException("プロジェクトが見つかりませんでした: " + ID.get()));
+                .orElseThrow(() -> new RuntimeException("プロジェクトが見つかりませんでした: " + ID.get()));
 
-            String hashName;
-            try {
-                hashName = HashUtil.hashAndAdjustForBucketName(project.getName())
-                    .toLowerCase()
-                    .replace("/", "-")  // スラッシュをハイフンに置き換え
-                    .replace("+", "a")  // プラスを別の文字（例: "a"）に置き換え
-                    .replace("=", "");  // イコールを削除（Base64の末尾によくある）
-            } catch (NoSuchAlgorithmException e) {
-                System.err.println("ハッシュ生成中にエラーが発生しました: " + e.getMessage());
-                e.printStackTrace();
-                return new ArrayList<>();
+            // `AtomicReference` を使用して `hashName` の代わりにする
+            AtomicReference<String> hashNameRef = new AtomicReference<>("");
+            this.createHashName(project.getName()).ifPresentOrElse(
+                hashNameRef::set,
+                () -> {
+                    System.err.println("バケット名の生成に失敗しました。");
+                }
+            );
+
+            // 生成されたバケット名が空でないことを確認
+            String hashName = hashNameRef.get();
+            if (hashName.isEmpty()) {
+                return new ArrayList<>(); // ハッシュ生成に失敗した場合は空のリストを返す
             }
 
             // リクエストを作成してオブジェクト一覧を取得
             ListObjectsV2Request listObjectsRequest = ListObjectsV2Request.builder()
-                    .bucket(hashName)
-                    .build();
+                .bucket(hashName)
+                .build();
 
             ListObjectsV2Response response = s3Client.listObjectsV2(listObjectsRequest);
             
             // オブジェクトのキー（ファイル名）をリストにして返す
             System.out.println(response);
             return response.contents().stream()
-                    .map(S3Object::key)
-                    .collect(Collectors.toList());
+                .map(S3Object::key)
+                .collect(Collectors.toList());
+        } catch (S3Exception e) {
+            System.err.println("S3エラー: " + e.awsErrorDetails().errorMessage());
+            return new ArrayList<>();  // エラー時は空のリストを返す
         }
     }
 
     @PostMapping("/{id}/use-share-files/{bucketName}")
-    public void createBucket(@PathVariable("id") Optional<Integer>id, @PathVariable("bucketName") String bucketName) {
+    public void createBucket(@PathVariable("id") Optional<Integer> id, @PathVariable("bucketName") String bucketName) {
         Project project = projectRepository.findById(id.get())
                 .orElseThrow(() -> new RuntimeException("プロジェクトが見つかりませんでした: " + id.get()));
 
         try (S3Client s3Client = S3Client.builder().region(Region.US_EAST_1).build()) {
-            // バケット作成リクエストを作成
-            CreateBucketRequest createBucketRequest;
-            try {
-                createBucketRequest = CreateBucketRequest.builder()
-                    .bucket(HashUtil.hashAndAdjustForBucketName(project.getName()).toLowerCase()
-                        .replace("/", "-") // スラッシュをハイフンに置き換え
-                        .replace("+", "a") // プラスを別の文字（例: "a"）に置き換え
-                        .replace("=", "")) // イコールを削除（Base64の末尾によくある）)
-                    .build();
-            } catch (Exception e) {
-                System.err.println("バケット名の暗号化中にエラーが発生しました: " + e.getMessage());
-                e.printStackTrace();
-                return; // 暗号化に失敗した場合、処理を中断
-            }
+            // `AtomicReference` を使用して、ラムダ式内で `createBucketRequest` を設定可能にする
+            AtomicReference<CreateBucketRequest> createBucketRequestRef = new AtomicReference<>();
 
-            // バケットを作成
-            CreateBucketResponse createBucketResponse = s3Client.createBucket(createBucketRequest);
-            System.out.println("バケットが作成されました: " + createBucketResponse.location());
+            this.createHashName(project.getName()).ifPresentOrElse(
+                (hashName) -> {
+                    System.out.println("バケット名: " + hashName);
+                    createBucketRequestRef.set(CreateBucketRequest.builder()
+                        .bucket(hashName)
+                        .build());
+                },
+                () -> {
+                    System.err.println("バケット名の生成に失敗しました。");
+                }
+            );
+
+            // バケットの作成リクエストが存在する場合のみバケットを作成
+            CreateBucketRequest createBucketRequest = createBucketRequestRef.get();
+            if (createBucketRequest != null) {
+                CreateBucketResponse createBucketResponse = s3Client.createBucket(createBucketRequest);
+                System.out.println("バケットが作成されました: " + createBucketResponse.location());
+            } else {
+                System.err.println("バケット作成に必要な情報が不足しています。");
+            }
         } catch (S3Exception e) {
             System.err.println("バケット作成エラー: " + e.awsErrorDetails().errorMessage());
         }
@@ -208,10 +219,30 @@ public class ProjectController {
         
         Project project = projectRepository.findById(id.get())
             .orElseThrow(() -> new RuntimeException("プロジェクトが見つかりませんでした: " + id.get()));
+    
+        // `AtomicReference` を使用して `encryptResult` の代わりにする
+        AtomicReference<String> encryptResultRef = new AtomicReference<>("");
+    
+        this.createHashName(project.getName()).ifPresentOrElse(
+            (hashName) -> {
+                System.out.println("バケット名: " + hashName);
+                encryptResultRef.set(hashName);
+            },
+            () -> {
+                System.err.println("バケット名の生成に失敗しました。");
+            }
+        );
+    
+        // バケットが存在するか確認
+        boolean exists = s3Client.listBuckets().buckets().stream()
+                .anyMatch(bucket -> bucket.name().equals(encryptResultRef.get()));
+        return exists;
+    }
 
+    private Optional<String> createHashName(String name) {
         String hashName;
         try {
-            hashName = HashUtil.hashAndAdjustForBucketName(project.getName())
+            hashName = HashUtil.hashAndAdjustForBucketName(name)
                 .toLowerCase()
                 .replace("/", "-")  // スラッシュをハイフンに置き換え
                 .replace("+", "a")  // プラスを別の文字（例: "a"）に置き換え
@@ -219,13 +250,9 @@ public class ProjectController {
         } catch (NoSuchAlgorithmException e) {
             System.err.println("ハッシュ生成中にエラーが発生しました: " + e.getMessage());
             e.printStackTrace();
-            return false;  // ハッシュ生成に失敗した場合、存在しないと判断
+            return Optional.empty();  // ハッシュ生成に失敗した場合、存在しないと判断
         }
-
-        // バケットが存在するか確認
-        boolean exists = s3Client.listBuckets().buckets().stream()
-                .anyMatch(bucket -> bucket.name().equals(hashName));
-        return exists;
+        return Optional.of(hashName);
     }
 
     @DeleteMapping("/{id}")
