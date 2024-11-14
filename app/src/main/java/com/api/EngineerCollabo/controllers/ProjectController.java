@@ -328,6 +328,58 @@ public class ProjectController {
         return responseProjectList;
     }
 
+    // TODO: そのファイルをダウンロードできるか資格があるかどうか認可が必ず必要
+    // TODO: 必要最低限のポリシーでIAMを設定する
+    @GetMapping("{id}/files/{fileName}/upload-signature-url")
+    public String responseUploadSignatureUrl(
+        @PathVariable("id")
+        Optional<Integer> id,
+        @PathVariable("fileName")
+        String fileName,
+        @RequestParam
+        String fileType,
+        @RequestParam
+        String directoryName
+    ) {
+        Map<String, String> metadata = new HashMap<>();
+        metadata.put("Content-Type", fileType);
+
+        String joinFileName;
+        if(directoryName.equals("undefined")) {
+            joinFileName = fileName;
+        } else {
+            joinFileName = directoryName + "/" + fileName;
+        }
+
+        Project project = projectRepository.findById(id.get())
+            .orElseThrow(() -> new RuntimeException("プロジェクトが見つかりませんでした: " + id.get()));
+
+        System.out.println("かくにん");
+        System.out.println(this.createHashName(project.getName()).get());
+        return this.createPresignedUrl(this.createHashName(project.getName()).get(), joinFileName, metadata);
+    }
+
+    public String createPresignedUrl(String bucketName, String keyName, Map<String, String> metadata) {
+        try (S3Presigner presigner = S3Presigner.create()) {
+            PutObjectRequest objectRequest = PutObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(keyName)
+                    .contentType(metadata.get("Content-Type"))
+                    // .metadata(metadata)
+                    .build();
+
+            PutObjectPresignRequest presignRequest = PutObjectPresignRequest.builder()
+                    .signatureDuration(Duration.ofMinutes(10))  // The URL expires in 10 minutes.
+                    .putObjectRequest(objectRequest)
+                    .build();
+
+            PresignedPutObjectRequest presignedRequest = presigner.presignPutObject(presignRequest);
+            String myURL = presignedRequest.url().toString();
+
+            return presignedRequest.url().toExternalForm();
+        }
+    }
+
     // @PostMapping("/{id}/members/add")
     // public void addMember(@PathVariable("id") Optional<Integer> ID, @RequestBody RequestMembers requestMembers) {
     //     if (ID.isPresent()) {
