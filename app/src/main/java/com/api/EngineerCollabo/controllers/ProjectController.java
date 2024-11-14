@@ -54,6 +54,8 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
 import software.amazon.awssdk.services.s3.model.CreateBucketResponse;
 import software.amazon.awssdk.services.s3.model.S3Exception;
+import software.amazon.awssdk.services.s3.model.PutBucketCorsRequest;
+import software.amazon.awssdk.services.s3.model.CORSRule;
 
 @RestController
 @RequestMapping("/projects")
@@ -205,6 +207,26 @@ public class ProjectController {
             if (createBucketRequest != null) {
                 CreateBucketResponse createBucketResponse = s3Client.createBucket(createBucketRequest);
                 System.out.println("バケットが作成されました: " + createBucketResponse.location());
+
+                // CORSルールを定義
+                List<CORSRule> corsRules = Arrays.asList(
+                    CORSRule.builder()
+                        .allowedHeaders("*")
+                        .allowedMethods("GET", "PUT")
+                        .allowedOrigins("*")
+                        .exposeHeaders() // 必要であればここにヘッダーを追加
+                        .build()
+                );
+
+                // CORS設定リクエストを作成
+                PutBucketCorsRequest putBucketCorsRequest = PutBucketCorsRequest.builder()
+                    .bucket(createBucketRequest.bucket())
+                    .corsConfiguration(builder -> builder.corsRules(corsRules))
+                    .build();
+
+                // バケットにCORS設定を適用
+                s3Client.putBucketCors(putBucketCorsRequest);
+                System.out.println("CORS設定が適用されました。");
             } else {
                 System.err.println("バケット作成に必要な情報が不足しています。");
             }
