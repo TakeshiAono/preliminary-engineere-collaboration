@@ -49,6 +49,7 @@ import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
@@ -330,6 +331,58 @@ public class ProjectController {
 
     // TODO: そのファイルをダウンロードできるか資格があるかどうか認可が必ず必要
     // TODO: 必要最低限のポリシーでIAMを設定する
+    @GetMapping("{id}/files/{fileName}/download-signature-url")
+    public String responseDownloadSignatureUrl(
+        @PathVariable("id")
+        Optional<Integer> id,
+        @PathVariable("fileName")
+        String name,
+        @RequestParam
+        String directoryName
+    ) {
+        Map<String, String> metadata = new HashMap<>();
+        String joinFileName;
+        if(directoryName.equals("undefined")) {
+            joinFileName = "/" + name;
+        } else {
+            directoryName = directoryName.replace("undefined", "");
+            if (directoryName.startsWith("/")) {
+                joinFileName = directoryName.substring(1) + "/" + name;
+            } else {
+                joinFileName = directoryName + "/" + name;
+            }
+        }
+        Project project = projectRepository.findById(id.get())
+            .orElseThrow(() -> new RuntimeException("プロジェクトが見つかりませんでした: " + id.get()));
+
+            System.out.println(this.createHashName(project.getName()).get());
+            System.out.println(joinFileName);
+
+        return this.createPresignedGetUrl(this.createHashName(project.getName()).get(), joinFileName);
+    }
+
+    private String createPresignedGetUrl(String bucketName, String keyName) {
+        try (S3Presigner presigner = S3Presigner.builder().region(Region.US_EAST_1).build()) {
+            GetObjectRequest objectRequest = GetObjectRequest.builder()
+                .bucket(bucketName)
+                .key(keyName)
+                // .contentType(metadata.get("Content-Type"))
+                .build();
+
+            GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
+                .signatureDuration(Duration.ofMinutes(1))  // The URL will expire in 10 minutes.
+                .getObjectRequest(objectRequest)
+                .build();
+
+            PresignedGetObjectRequest presignedRequest = presigner.presignGetObject(presignRequest);
+            System.out.println("Presigned URL:");
+            System.out.println(presignedRequest.url());
+            return presignedRequest.url().toExternalForm();
+        }
+    }
+
+    // TODO: そのファイルをダウンロードできるか資格があるかどうか認可が必ず必要
+    // TODO: 必要最低限のポリシーでIAMを設定する
     @GetMapping("{id}/files/{fileName}/upload-signature-url")
     public String responseUploadSignatureUrl(
         @PathVariable("id")
@@ -354,8 +407,6 @@ public class ProjectController {
         Project project = projectRepository.findById(id.get())
             .orElseThrow(() -> new RuntimeException("プロジェクトが見つかりませんでした: " + id.get()));
 
-        System.out.println("かくにん");
-        System.out.println(this.createHashName(project.getName()).get());
         return this.createPresignedUrl(this.createHashName(project.getName()).get(), joinFileName, metadata);
     }
 
