@@ -1,6 +1,8 @@
 package com.api.EngineerCollabo.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -57,6 +59,7 @@ import software.amazon.awssdk.services.s3.model.CreateBucketResponse;
 import software.amazon.awssdk.services.s3.model.S3Exception;
 import software.amazon.awssdk.services.s3.model.PutBucketCorsRequest;
 import software.amazon.awssdk.services.s3.model.CORSRule;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 
 @RestController
 @RequestMapping("/projects")
@@ -428,6 +431,62 @@ public class ProjectController {
             String myURL = presignedRequest.url().toString();
 
             return presignedRequest.url().toExternalForm();
+        }
+    }
+
+    // TODO: ファイル削除が許可されているかどうか認可チェックを行う
+    // TODO: 必要最低限のIAMポリシーでIAMを設定する
+    @DeleteMapping("{id}/files/{fileName}")
+    public ResponseEntity<String> deleteFile(
+        @PathVariable("id") Optional<Integer> id,
+        @PathVariable("fileName") String name,
+        @RequestParam String directoryName
+    ) {
+        // ファイルパスの作成
+        String joinFileName;
+        if (directoryName.equals("undefined")) {
+            joinFileName = "/" + name;
+        } else {
+            directoryName = directoryName.replace("undefined", "");
+            if (directoryName.startsWith("/")) {
+                joinFileName = directoryName.substring(1) + "/" + name;
+            } else {
+                joinFileName = directoryName + "/" + name;
+            }
+        }
+
+        // プロジェクトの存在確認
+        Project project = projectRepository.findById(id.get())
+            .orElseThrow(() -> new RuntimeException("プロジェクトが見つかりませんでした: " + id.get()));
+
+        // バケット名の取得
+        String bucketName = this.createHashName(project.getName())
+            .orElseThrow(() -> new RuntimeException("バケット名の作成に失敗しました"));
+
+        // ファイル削除処理
+        boolean isDeleted = deleteFileFromS3(bucketName, joinFileName);
+        if (isDeleted) {
+            return ResponseEntity.ok("ファイルが削除されました: " + joinFileName);
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("ファイル削除中にエラーが発生しました: " + joinFileName);
+        }
+    }
+
+    private boolean deleteFileFromS3(String bucketName, String keyName) {
+        try (S3Client s3Client = S3Client.builder().region(Region.US_EAST_1).build()) {
+            DeleteObjectRequest deleteRequest = DeleteObjectRequest.builder()
+                .bucket(bucketName)
+                .key(keyName)
+                .build();
+            
+            // 削除リクエストを実行
+            s3Client.deleteObject(deleteRequest);
+            System.out.println("ファイルが削除されました: " + keyName);
+            return true;
+        } catch (S3Exception e) {
+            System.err.println("ファイル削除エラー: " + e.awsErrorDetails().errorMessage());
+            return false;
         }
     }
 
