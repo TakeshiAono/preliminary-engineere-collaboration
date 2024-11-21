@@ -490,6 +490,64 @@ public class ProjectController {
         }
     }
 
+    @DeleteMapping("{id}/directories")
+    public ResponseEntity<String> deleteDirectory(
+        @PathVariable("id") Integer projectId,
+        @RequestParam("directoryName") String directoryName
+    ) {
+    // directoryNameの先頭のスラッシュを削除
+    if (directoryName.startsWith("/")) {
+        directoryName = directoryName.replaceFirst("^/", "");
+    }
+        Project project = projectRepository.findById(projectId)
+            .orElseThrow(() -> new RuntimeException("プロジェクトが見つかりませんでした: " + projectId));
+        String bucketName = this.createHashName(project.getName())
+            .orElseThrow(() -> new RuntimeException("バケット名の作成に失敗しました"));
+
+        // ディレクトリ内のすべてのファイルを削除
+        boolean isDeleted = deleteAllObjectsInDirectory(bucketName, directoryName);
+
+        if (isDeleted) {
+            return ResponseEntity.ok("ディレクトリ内のファイルが正常に削除されました: " + directoryName);
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("ディレクトリ内のファイル削除中にエラーが発生しました: " + directoryName);
+        }
+    }
+
+    public boolean deleteAllObjectsInDirectory(String bucketName, String directoryPrefix) {
+        try (S3Client s3Client = S3Client.builder().region(Region.US_EAST_1).build()) {
+            // ディレクトリ内のすべてのオブジェクトを取得
+            ListObjectsV2Request listRequest = ListObjectsV2Request.builder()
+                .bucket(bucketName)
+                .prefix(directoryPrefix) // 削除したいディレクトリのプレフィックス（例: "a/b/"）
+                .build();
+    
+            ListObjectsV2Response listResponse = s3Client.listObjectsV2(listRequest);
+    
+            // オブジェクトを一括削除するためのリクエストを作成
+            for (S3Object object : listResponse.contents()) {
+                System.out.println("削除対象オブジェクト: " + object.key());
+    
+                // 削除リクエストを作成してオブジェクトを削除
+                DeleteObjectRequest deleteRequest = DeleteObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(object.key())
+                    .build();
+    
+                s3Client.deleteObject(deleteRequest);
+                System.out.println("削除済み: " + object.key());
+            }
+    
+            System.out.println("すべてのオブジェクトが削除されました: " + directoryPrefix);
+            return true;
+        } catch (S3Exception e) {
+            System.err.println("エラーが発生しました: " + e.awsErrorDetails().errorMessage());
+            return false;
+        }
+    }
+    
+
     // @PostMapping("/{id}/members/add")
     // public void addMember(@PathVariable("id") Optional<Integer> ID, @RequestBody RequestMembers requestMembers) {
     //     if (ID.isPresent()) {
