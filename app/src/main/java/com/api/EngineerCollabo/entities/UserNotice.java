@@ -33,8 +33,11 @@ public class UserNotice {
     @Column(name = "user_id")
     private Integer userId;
 
-    @Column(name = "offer_id")
+    @Column(name = "offer_id", nullable = true)
     private Integer offerId;
+
+    @Column(name = "application_id", nullable = true)
+    private Integer applicationId;
     
     @CreatedDate
     @Column(name = "created_at", updatable = false)
