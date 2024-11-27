@@ -2,6 +2,8 @@ package com.api.EngineerCollabo.entities;
 
 import java.util.Date;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -57,5 +59,6 @@ public class UserNotice {
 
     @OneToOne
     @JoinColumn(name = "application_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE) // 応募削除時に関連通知も削除(不要？)
     private Application application;
 }

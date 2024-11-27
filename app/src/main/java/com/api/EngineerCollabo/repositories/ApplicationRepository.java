@@ -14,6 +14,8 @@ public interface ApplicationRepository extends JpaRepository<Application, Intege
 
     Application findByMessage(String message);
 
+    void deleteById(int id);
+
     List<Application> findByUser(User user);
 
     List<Application> findByProject(Project project);
