@@ -37,9 +37,10 @@ public class UserNoticeController {
         String log = requestUserNotice.getLog();
         Integer userId = requestUserNotice.getUserId();
         Integer offerId = requestUserNotice.getOfferId();
+        Integer applicationId = requestUserNotice.getApplicationId();
 
         if (userId != null) {
-            userNoticeService.createUserNotice(log, userId, offerId);
+            userNoticeService.createUserNotice(log, userId, offerId, applicationId);
         }
     }
 

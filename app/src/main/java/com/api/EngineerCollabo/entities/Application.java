@@ -2,8 +2,6 @@ package com.api.EngineerCollabo.entities;
 
 import java.util.Date;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -23,24 +21,24 @@ import lombok.Data;
 @Data
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "user_notices")
-public class UserNotice {
+@Table(name = "applications")
+public class Application {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "log", nullable = false)
-    private String log;
+    @Column(name = "message", nullable = false, columnDefinition = "TEXT")
+    private String message;
 
     @Column(name = "user_id")
     private Integer userId;
 
-    @Column(name = "offer_id", nullable = true)
-    private Integer offerId;
-
-    @Column(name = "application_id", nullable = true)
-    private Integer applicationId;
+    @Column(name = "project_id")
+    private Integer projectId;
     
+    @Column(name = "is_accepted", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private Boolean isAccepted = false;
+
     @CreatedDate
     @Column(name = "created_at", updatable = false)
     private Date createdAt;
@@ -53,12 +51,10 @@ public class UserNotice {
     @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
     private User user;
     
-    @OneToOne
-    @JoinColumn(name = "offer_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private Offer offer;
+    @ManyToOne()
+    @JoinColumn(name = "project_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
+    private Project project;
 
-    @OneToOne
-    @JoinColumn(name = "application_id", referencedColumnName = "id", insertable = false, updatable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE) // 応募削除時に関連通知も削除(不要？)
-    private Application application;
+    @OneToOne(mappedBy = "application")
+    private UserNotice userNotice;
 }
