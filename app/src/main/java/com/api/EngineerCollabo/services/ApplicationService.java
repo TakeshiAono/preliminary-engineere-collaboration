@@ -41,7 +41,7 @@ public class ApplicationService {
         Application savedApplication = applicationRepository.save(application);
 
         // Applicationを受信したPJオーナーに通知を作成
-        userNoticeService.createApplicationReceivedNotice(user.getId(), savedApplication.getId());
+        userNoticeService.createApplicationReceivedNotice(project.getOwner().getId(), savedApplication.getId());
 
         return savedApplication;
     }
