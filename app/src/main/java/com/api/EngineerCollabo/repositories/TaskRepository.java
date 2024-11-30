@@ -8,10 +8,5 @@ import com.api.EngineerCollabo.entities.Task;
 import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task, Integer> {
-
-    Task findById(int id);
-
-    // List<Task> findByUser(User user);
-
     List<Task> findByProject(Project project);
 }

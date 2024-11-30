@@ -3,12 +3,19 @@ package com.api.EngineerCollabo.services;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.api.EngineerCollabo.repositories.ProjectRepository;
 
 import com.api.EngineerCollabo.entities.Project;
 import com.api.EngineerCollabo.entities.ResponseProject;
 
 @Service
 public class ProjectService {
+
+	@Autowired
+    private ProjectRepository projectRepository;
+
 	public ResponseProject changeResponseProject(Project project) {
 		ResponseProject responseProject = new ResponseProject();
 		responseProject.setId(project.getId());
@@ -34,5 +41,9 @@ public class ProjectService {
 		responseProject.setTaskIds(
 				project.getTasks().stream().map(task -> task.getId()).collect(Collectors.toList()));
 		return responseProject;
-	}
+    }
+
+	public Project getProjectByOfferId(Integer offerId) {
+        return projectRepository.findProjectByOfferId(offerId);
+    }
 }
