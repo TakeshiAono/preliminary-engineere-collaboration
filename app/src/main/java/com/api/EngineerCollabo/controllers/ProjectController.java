@@ -154,7 +154,7 @@ public class ProjectController {
 
             // `AtomicReference` を使用して `hashName` の代わりにする
             AtomicReference<String> hashNameRef = new AtomicReference<>("");
-            this.createHashName(project.getName()).ifPresentOrElse(
+            this.createHashName(project.getName() + project.getId() + project.getCreatedAt()).ifPresentOrElse(
                 hashNameRef::set,
                 () -> {
                     System.err.println("バケット名の生成に失敗しました。");
@@ -194,7 +194,7 @@ public class ProjectController {
             // `AtomicReference` を使用して、ラムダ式内で `createBucketRequest` を設定可能にする
             AtomicReference<CreateBucketRequest> createBucketRequestRef = new AtomicReference<>();
 
-            this.createHashName(project.getName()).ifPresentOrElse(
+            this.createHashName(project.getName() + project.getId() + project.getCreatedAt()).ifPresentOrElse(
                 (hashName) -> {
                     System.out.println("バケット名: " + hashName);
                     createBucketRequestRef.set(CreateBucketRequest.builder()
@@ -249,7 +249,7 @@ public class ProjectController {
         // `AtomicReference` を使用して `encryptResult` の代わりにする
         AtomicReference<String> encryptResultRef = new AtomicReference<>("");
     
-        this.createHashName(project.getName()).ifPresentOrElse(
+        this.createHashName(project.getName() + project.getId() + project.getCreatedAt()).ifPresentOrElse(
             (hashName) -> {
                 System.out.println("バケット名: " + hashName);
                 encryptResultRef.set(hashName);
@@ -358,10 +358,10 @@ public class ProjectController {
         Project project = projectRepository.findById(id.get())
             .orElseThrow(() -> new RuntimeException("プロジェクトが見つかりませんでした: " + id.get()));
 
-            System.out.println(this.createHashName(project.getName()).get());
+            System.out.println(this.createHashName(project.getName() + project.getId() + project.getCreatedAt()).get());
             System.out.println(joinFileName);
 
-        return this.createPresignedGetUrl(this.createHashName(project.getName()).get(), joinFileName);
+        return this.createPresignedGetUrl(this.createHashName(project.getName() + project.getId() + project.getCreatedAt()).get(), joinFileName);
     }
 
     private String createPresignedGetUrl(String bucketName, String keyName) {
@@ -410,7 +410,7 @@ public class ProjectController {
         Project project = projectRepository.findById(id.get())
             .orElseThrow(() -> new RuntimeException("プロジェクトが見つかりませんでした: " + id.get()));
 
-        return this.createPresignedUrl(this.createHashName(project.getName()).get(), joinFileName, metadata);
+        return this.createPresignedUrl(this.createHashName(project.getName() + project.getId() + project.getCreatedAt()).get(), joinFileName, metadata);
     }
 
     public String createPresignedUrl(String bucketName, String keyName, Map<String, String> metadata) {
@@ -460,7 +460,7 @@ public class ProjectController {
             .orElseThrow(() -> new RuntimeException("プロジェクトが見つかりませんでした: " + id.get()));
 
         // バケット名の取得
-        String bucketName = this.createHashName(project.getName())
+        String bucketName = this.createHashName(project.getName() + project.getId() + project.getCreatedAt())
             .orElseThrow(() -> new RuntimeException("バケット名の作成に失敗しました"));
 
         // ファイル削除処理
@@ -501,7 +501,7 @@ public class ProjectController {
     }
         Project project = projectRepository.findById(projectId)
             .orElseThrow(() -> new RuntimeException("プロジェクトが見つかりませんでした: " + projectId));
-        String bucketName = this.createHashName(project.getName())
+        String bucketName = this.createHashName(project.getName() + project.getId() + project.getCreatedAt())
             .orElseThrow(() -> new RuntimeException("バケット名の作成に失敗しました"));
 
         // ディレクトリ内のすべてのファイルを削除
