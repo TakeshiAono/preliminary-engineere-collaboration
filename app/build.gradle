@@ -38,14 +38,19 @@ dependencies {
 	implementation 'org.webjars:jquery:3.1.+'
 	implementation 'software.amazon.awssdk:s3:2.20.+' // S3 モジュール
 	implementation 'software.amazon.awssdk:apache-client:2.20.+'
-	
-	// 開発中は認証機能をOFFにしている。
-	// implementation 'org.springframework.boot:spring-boot-starter-security'
-	// implementation 'org.springframework.security:spring-security-config'
+
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.security:spring-security-config'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
+	// JWTライブラリの追加
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+	implementation 'org.springframework.security:spring-security-oauth2-jose'
 	// テスト用の依存関係
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'com.h2database:h2'

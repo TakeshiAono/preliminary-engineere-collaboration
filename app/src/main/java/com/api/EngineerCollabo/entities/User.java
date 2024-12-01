@@ -24,6 +24,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 @Entity
@@ -71,37 +72,48 @@ public class User {
     private Date updatedAt;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @ToString.Exclude // 双方向リレーションを無視して無限ループを防ぐ
     private List<UserNotice> userNotices = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @ToString.Exclude // 双方向リレーションを無視して無限ループを防ぐ
     private List<Message> messages = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @ToString.Exclude // 双方向リレーションを無視して無限ループを防ぐ
     private List<Skill> skills = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @ToString.Exclude // 双方向リレーションを無視して無限ループを防ぐ
     private List<Role> roles = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @ToString.Exclude // 双方向リレーションを無視して無限ループを防ぐ
     private List<Channel> channels = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @ToString.Exclude // 双方向リレーションを無視して無限ループを防ぐ
     private List<Offer> offers = new ArrayList<>();
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    @ToString.Exclude // 双方向リレーションを無視して無限ループを防ぐ
     private List<Project> ownerProjects = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @ToString.Exclude // 双方向リレーションを無視して無限ループを防ぐ
     private List<Task> tasks = new ArrayList<>();
 
     @OneToMany(mappedBy = "scoutedUser", cascade = CascadeType.ALL)
+    @ToString.Exclude // 双方向リレーションを無視して無限ループを防ぐ
     private List<Offer> scoutedOffers = new ArrayList<>();
 
     @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL)
+    @ToString.Exclude // 双方向リレーションを無視して無限ループを防ぐ
     private List<Follower> followers = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "projects_users", joinColumns = @JoinColumn(name = "users_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"))
+    @ToString.Exclude // 双方向リレーションを無視して無限ループを防ぐ
     private List<Project> projects = new ArrayList<>();
 
     @PrePersist

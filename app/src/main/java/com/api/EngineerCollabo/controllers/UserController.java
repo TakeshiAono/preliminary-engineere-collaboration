@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.HttpHeaders;
+import java.time.Duration;
 
 import com.api.EngineerCollabo.entities.RequestLogin;
 import com.api.EngineerCollabo.entities.RequestUserRegist;
@@ -15,13 +18,17 @@ import com.api.EngineerCollabo.entities.ResponseUser;
 import com.api.EngineerCollabo.entities.User;
 import com.api.EngineerCollabo.repositories.UserRepository;
 import com.api.EngineerCollabo.services.UserService;
+import com.api.EngineerCollabo.util.JwtUtil;
 
 /**
  * UserControllerクラス
  * ユーザ関連のAPI
  */
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(
+    origins = "http://localhost:5173",
+    allowCredentials = "true"
+)
 public class UserController {
 
     // サービスクラスの依存性注入
@@ -30,6 +37,9 @@ public class UserController {
 
     @Autowired
     UserRepository userRepository;
+    
+    @Autowired
+    JwtUtil jwtUtil;
 
     /**
      * ユーザ登録API
@@ -43,7 +53,6 @@ public class UserController {
         ResponseUserRegist responseUserRegist = null;
         // サービスクラスのユーザ登録処理呼び出し
         try {
-            // TODO: handle exception
             responseUserRegist = userService.insertUser(requestUserRegist);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -61,12 +70,25 @@ public class UserController {
      * @return responseLogin ログインAPIのレスポンスボディ
      */
     @PostMapping("/login")
-    public ResponseEntity<?>  login(@RequestBody RequestLogin requestLogin) {
+    public ResponseEntity<?> login(@RequestBody RequestLogin requestLogin) {
         // サービスクラスのログイン処理呼び出し
         ResponseLogin responseLogin = userService.login(requestLogin);
-        // APIレスポンス
-        if(responseLogin.getStatus() != "error") {
-            return ResponseEntity.ok(responseLogin);
+        if (!responseLogin.getStatus().equals("error")) {
+            // JWTトークンを生成
+            String token = jwtUtil.generateToken(responseLogin.getEmail());
+            
+            // Cookieの作成
+            ResponseCookie jwtCookie = ResponseCookie.from("jwt_token", token)
+                .httpOnly(true)          // JavaScriptからアクセス不可
+                .secure(true)            // HTTPS接続のみ
+                .sameSite("Strict")      // CSRF対策
+                .path("/")               // 全てのパスで利用可能
+                .build();
+
+            // ヘッダーにトークンを追加してレスポンス
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                    .body(responseLogin);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -74,13 +96,17 @@ public class UserController {
 
     /* profile api */
     @GetMapping("/users/{id}")
-    public ResponseUser getUser(@PathVariable("id") Optional<Integer> ID) {
-        if (ID.isPresent()) {
-            int id = ID.get();
-            User user = userRepository.findById(id);
-            return userService.changeResponseUser(user);
+    public ResponseEntity<ResponseUser> getUser(@PathVariable("id") Integer id) {
+
+        Optional<User> userOptional = userRepository.findById(id);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            ResponseUser responseUser = userService.changeResponseUser(user);
+            
+            return ResponseEntity.ok(responseUser);
         } else {
-            return null;
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
