@@ -63,7 +63,6 @@ import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 
 @RestController
 @RequestMapping("/projects")
-@CrossOrigin(origins = "http://localhost:5173")
 public class ProjectController {
 
     @Autowired

@@ -33,7 +33,7 @@ import com.api.EngineerCollabo.services.TaskService;
 import com.api.EngineerCollabo.services.UserService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
+
 // @RequestMapping("/tasks")
 public class TaskController {
     @Autowired

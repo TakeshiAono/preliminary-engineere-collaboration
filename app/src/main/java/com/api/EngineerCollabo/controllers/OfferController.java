@@ -28,7 +28,6 @@ import com.api.EngineerCollabo.services.OfferService;
 import com.api.EngineerCollabo.services.ProjectService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/offers")
 public class OfferController {
 

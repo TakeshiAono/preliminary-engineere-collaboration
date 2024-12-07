@@ -21,7 +21,6 @@ import com.api.EngineerCollabo.entities.ResponseChatRoom;
 
 @RestController
 @RequestMapping("/chatRooms")
-@CrossOrigin(origins = "http://localhost:5173")
 public class ChatRoomController {
 
     @Autowired

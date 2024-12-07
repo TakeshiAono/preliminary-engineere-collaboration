@@ -21,7 +21,6 @@ import com.api.EngineerCollabo.repositories.RoleRepository;
 import com.api.EngineerCollabo.services.RoleService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/roles")
 public class RoleController {
 

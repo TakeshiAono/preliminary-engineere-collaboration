@@ -19,7 +19,6 @@ import com.api.EngineerCollabo.repositories.OperationRepository;
 import com.api.EngineerCollabo.services.OperationService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/operations")
 public class OperationController {
     @Autowired
