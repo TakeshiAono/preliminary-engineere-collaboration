@@ -23,6 +23,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.http.HttpMethod;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Cookie;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
@@ -67,7 +68,18 @@ public class SecurityConfig {
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // JWT認証なので､セッション管理をステートレスに設定
         )
         .oauth2ResourceServer(oauth2 -> oauth2
-            .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())) // JWT 設定
+            .bearerTokenResolver(request -> {
+                Cookie[] cookies = request.getCookies();
+                if (cookies != null) {
+                    for (Cookie cookie : cookies) {
+                        if ("jwt_token".equals(cookie.getName())) {
+                            return cookie.getValue();
+                        }
+                    }
+                }
+                return null;
+            })
+            .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
         );
 
         return http.build();
