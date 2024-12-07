@@ -95,8 +95,10 @@ public class SecurityConfig {
         configuration.addAllowedMethod("GET");
         configuration.addAllowedMethod("POST");
         configuration.addAllowedMethod("PUT");
+        configuration.addAllowedMethod("PATCH");
         configuration.addAllowedMethod("DELETE");
-        configuration.addAllowedMethod("OPTIONS");        configuration.addAllowedHeader("*"); // 許可するヘッダー
+        configuration.addAllowedMethod("OPTIONS");
+        configuration.addAllowedHeader("*"); // 許可するヘッダー
         configuration.setAllowCredentials(true); // 認証情報を許可
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
