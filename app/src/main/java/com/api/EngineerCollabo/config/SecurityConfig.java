@@ -27,6 +27,9 @@ import jakarta.servlet.http.Cookie;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 
 import com.api.EngineerCollabo.services.UserService;
 
@@ -82,7 +85,33 @@ public class SecurityConfig {
                 return null;
             })
             .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
-        );
+        )
+        .logout()
+            .logoutUrl("/auth/logout")
+            .logoutSuccessHandler((request, response, authentication) -> {
+                // クッキーの削除
+                ResponseCookie accessTokenCookie = ResponseCookie.from("access_token", "")
+                    .httpOnly(true)
+                    .secure(true)
+                    .sameSite("Strict")
+                    .path("/")
+                    .maxAge(0)
+                    .build();
+                
+                ResponseCookie refreshTokenCookie = ResponseCookie.from("refresh_token", "")
+                    .httpOnly(true)
+                    .secure(true)
+                    .sameSite("Strict")
+                    .path("/")
+                    .maxAge(0)
+                    .build();
+
+                response.addHeader(HttpHeaders.SET_COOKIE, accessTokenCookie.toString());
+                response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
+                response.setStatus(HttpStatus.OK.value());
+            })
+            .invalidateHttpSession(true)
+            .clearAuthentication(true);
 
         return http.build();
     }
