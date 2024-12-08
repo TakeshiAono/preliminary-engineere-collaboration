@@ -70,7 +70,7 @@ public class UserControllerTest {
         response.setEmail("test@example.com");  // JWTトークン生成に必要
         
         // JwtUtilのモック追加
-        when(jwtUtil.generateToken(anyString())).thenReturn("dummy-token");
+        when(jwtUtil.generateAccessToken(anyString())).thenReturn("dummy-token");
         
         // モックの設定
         when(userService.login(any(RequestLogin.class))).thenReturn(response);
@@ -86,7 +86,7 @@ public class UserControllerTest {
         
         // サービスメソッドが呼ばれたことを確認
         verify(userService, times(1)).login(any(RequestLogin.class));
-        verify(jwtUtil, times(1)).generateToken(anyString());
+        verify(jwtUtil, times(1)).generateAccessToken(anyString());
     }
 
     @Test
