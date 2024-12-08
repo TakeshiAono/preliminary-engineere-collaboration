@@ -33,7 +33,7 @@ import com.api.EngineerCollabo.services.TaskService;
 import com.api.EngineerCollabo.services.UserService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
+
 // @RequestMapping("/tasks")
 public class TaskController {
     @Autowired
@@ -120,42 +120,46 @@ public class TaskController {
 
     @PatchMapping("/tasks/{id}")
     public ResponseEntity<Task> patchTask(@PathVariable("id") Integer id, @RequestBody Task requestTask) {
-        Task task = taskRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Task not found"));
+        try {
+            Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("タスクID: " + id + " が見つかりません"));
 
-        String name = requestTask.getName();
-        if (name != null) {
-            task.setName(name);
+            String name = requestTask.getName();
+            if (name != null) {
+                task.setName(name);
+            }
+
+            String description = requestTask.getDescription();
+            if (description != null) {
+                task.setDescription(description);
+            }
+
+            Date idDone = requestTask.getDoneAt();
+            if (idDone != null) {
+                task.setDoneAt(idDone);
+            }
+
+            Date deadline = requestTask.getDeadline();
+            if (deadline != null) {
+                task.setDeadline(deadline);
+            }
+
+            Integer projectId = requestTask.getProjectId();
+            if (projectId != null) {
+                task.setProjectId(projectId);
+            }
+
+            Integer userId = requestTask.getInChargeUserId();
+            if (userId != null) {
+                task.setInChargeUserId(userId);
+            }
+
+            Task savedTask = taskRepository.save(task);
+            return ResponseEntity.ok(savedTask);
+
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
         }
-
-        String description = requestTask.getDescription();
-        if (description != null) {
-            task.setDescription(description);
-        }
-
-        Date idDone = requestTask.getDoneAt();
-        if (idDone != null) {
-            task.setDoneAt(idDone);
-        }
-
-        Date deadline = requestTask.getDeadline();
-        if (deadline != null) {
-            task.setDeadline(deadline);
-        }
-
-        Integer projectId = requestTask.getProjectId();
-        if (projectId != null) {
-            task.setProjectId(projectId);
-        }
-
-        Integer userId = requestTask.getInChargeUserId();
-        if (userId != null) {
-            task.setInChargeUserId(userId);
-        }
-
-        taskRepository.save(task);
-        
-        return ResponseEntity.ok(task);
     }
 
     @DeleteMapping("/tasks/{id}")

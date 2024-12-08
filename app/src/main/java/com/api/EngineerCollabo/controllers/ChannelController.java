@@ -21,7 +21,6 @@ import com.api.EngineerCollabo.entities.Channel;
 
 @RestController
 @RequestMapping("/channels")
-@CrossOrigin(origins = "http://localhost:5173")
 public class ChannelController {
 
     @Autowired

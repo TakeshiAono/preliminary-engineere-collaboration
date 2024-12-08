@@ -23,7 +23,6 @@ import jakarta.persistence.EntityNotFoundException;
 
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/userNotices")
 public class UserNoticeController {
     @Autowired

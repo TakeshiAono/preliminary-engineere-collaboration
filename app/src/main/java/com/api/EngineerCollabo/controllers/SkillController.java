@@ -22,7 +22,6 @@ import com.api.EngineerCollabo.repositories.SkillRepository;
 import com.api.EngineerCollabo.services.SkillService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/skills")
 public class SkillController {
 

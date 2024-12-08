@@ -9,6 +9,8 @@ services:
       - ./.aws:/root/.aws
     tty: true
     working_dir: /app
+    env_file:
+      - .env
 
   db:
     image: postgres:15.4-bullseye
