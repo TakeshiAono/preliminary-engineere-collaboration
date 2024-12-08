@@ -14,6 +14,12 @@ import org.springframework.http.ResponseCookie;
 
 import java.time.Duration;
 import com.api.EngineerCollabo.util.JwtUtil;
+import com.api.EngineerCollabo.entities.User;
+import com.api.EngineerCollabo.repositories.UserRepository;
+import com.api.EngineerCollabo.services.UserService;
+import com.api.EngineerCollabo.entities.ResponseUser;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
@@ -21,6 +27,12 @@ public class AuthController {
     
     @Autowired
     private JwtUtil jwtUtil;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/check")
     public ResponseEntity<?> checkAuth(HttpServletRequest request) {
@@ -43,7 +55,11 @@ public class AuthController {
         
         String email = jwtUtil.extractUsername(accessToken);
         if (jwtUtil.validateAccessToken(accessToken, email)) {
-            return ResponseEntity.ok().build();
+            Optional<User> userOpt = userRepository.findByEmail(email);
+            if (userOpt.isPresent()) {
+                ResponseUser responseUser = userService.changeResponseUser(userOpt.get());
+                return ResponseEntity.ok().body(responseUser);
+            }
         }
         
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
