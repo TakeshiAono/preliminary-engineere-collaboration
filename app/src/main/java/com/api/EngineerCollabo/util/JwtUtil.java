@@ -17,6 +17,17 @@ public class JwtUtil {
     @Value("${jwt.expiration}")
     private long EXPIRATION_TIME;
 
+    @Value("${jwt.refresh.expiration}")
+    private long REFRESH_EXPIRATION_TIME;
+
+    public long getExpirationTime() {
+        return EXPIRATION_TIME;
+    }
+
+    public long getRefreshExpirationTime() {
+        return REFRESH_EXPIRATION_TIME;
+    }
+
     private Key getSigningKey() {
         // SECRET_KEYの長さが足りなければエラーを投げる
         if (SECRET_KEY.length() < 32) { // HS256の場合、256ビット(32バイト)が必要
@@ -25,13 +36,24 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     }
 
-    // トークンの生成
-    public String generateToken(String email) {
+    // アクセストークンの生成
+    public String generateAccessToken(String email) {
         return Jwts.builder()
                 .setSubject(email)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    // リフレッシュトークンの生成
+    public String generateRefreshToken(String email) {
+        return Jwts.builder()
+                .setSubject(email)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_EXPIRATION_TIME))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .claim("type", "refresh")
                 .compact();
     }
 
@@ -45,10 +67,21 @@ public class JwtUtil {
         return parseClaims(token).getExpiration().before(new Date());
     }
 
-    // トークンの検証
-    public boolean validateToken(String token, String email) {
+    // アクセストークンの検証
+    public boolean validateAccessToken(String token, String email) {
         final String extractedEmail = extractUsername(token);
         return (extractedEmail.equals(email) && !isTokenExpired(token));
+    }
+
+    // リフレッシュトークンの検証
+    public boolean validateRefreshToken(String token) {
+        try {
+            Claims claims = parseClaims(token);
+            return claims.get("type", String.class).equals("refresh") 
+                   && !isTokenExpired(token);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
   private Claims parseClaims(String token) {

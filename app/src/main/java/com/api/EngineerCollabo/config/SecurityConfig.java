@@ -62,6 +62,8 @@ public class SecurityConfig {
         .authorizeHttpRequests((requests) -> requests
             .requestMatchers("/login").permitAll() // `/login` エンドポイントを認証不要にする
             .requestMatchers("/authenticate", "/register").permitAll() // 認証および登録エンドポイントを公開
+            .requestMatchers("/auth/check").permitAll()    // チェックエンドポイントも許可
+            .requestMatchers("/auth/refresh").permitAll()  // リフレッシュトークンのエンドポイントを許可
             .anyRequest().authenticated() // 他のリクエストには認証が必要となる
         )
         .sessionManagement(session -> session
@@ -72,7 +74,7 @@ public class SecurityConfig {
                 Cookie[] cookies = request.getCookies();
                 if (cookies != null) {
                     for (Cookie cookie : cookies) {
-                        if ("jwt_token".equals(cookie.getName())) {
+                        if ("access_token".equals(cookie.getName())) {
                             return cookie.getValue();
                         }
                     }

@@ -70,25 +70,36 @@ public class UserController {
      * @return responseLogin ログインAPIのレスポンスボディ
      */
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody RequestLogin requestLogin) {
-        // サービスクラスのログイン処理呼び出し
-        ResponseLogin responseLogin = userService.login(requestLogin);
+    public ResponseEntity<?> login(@RequestBody RequestLogin request) {
+        ResponseLogin responseLogin = userService.login(request);
+        
         if (!responseLogin.getStatus().equals("error")) {
-            // JWTトークンを生成
-            String token = jwtUtil.generateToken(responseLogin.getEmail());
+            // アクセストークンとリフレッシュトークンを生成
+            String accessToken = jwtUtil.generateAccessToken(responseLogin.getEmail());
+            String refreshToken = jwtUtil.generateRefreshToken(responseLogin.getEmail());
             
-            // Cookieの作成
-            ResponseCookie jwtCookie = ResponseCookie.from("jwt_token", token)
-                .httpOnly(true)          // JavaScriptからアクセス不可
-                .secure(true)            // HTTPS接続のみ
-                .sameSite("Strict")      // CSRF対策
-                .path("/")               // 全てのパスで利用可能
+            // アクセストークンのクッキー
+            ResponseCookie accessTokenCookie = ResponseCookie.from("access_token", accessToken)
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("Strict")
+                .path("/")
+                .maxAge(Duration.ofMillis(jwtUtil.getExpirationTime()))
+                .build();
+            
+            // リフレッシュトークンのクッキー
+            ResponseCookie refreshTokenCookie = ResponseCookie.from("refresh_token", refreshToken)
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("Strict")
+                .path("/")
+                .maxAge(Duration.ofMillis(jwtUtil.getRefreshExpirationTime()))
                 .build();
 
-            // ヘッダーにトークンを追加してレスポンス
             return ResponseEntity.ok()
-                    .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-                    .body(responseLogin);
+                .header(HttpHeaders.SET_COOKIE, accessTokenCookie.toString())
+                .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
+                .body(responseLogin);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
