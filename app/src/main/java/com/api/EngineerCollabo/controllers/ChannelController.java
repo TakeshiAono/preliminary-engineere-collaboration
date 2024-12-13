@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.api.EngineerCollabo.repositories.ChannelRepository;
@@ -52,6 +54,18 @@ public class ChannelController {
             return channelService.changeResponseChannel(channel);
         } else {
             return null;
+        }
+    }
+
+    @GetMapping
+    public List<ResponseChannel> responseChannels(@RequestParam("ids") Optional<List<Integer>> ids) {
+        if (ids.isPresent()) {
+            List<Channel> channels = channelRepository.findAllById(ids.get());
+            return channels.stream()
+                        .map(channelService::changeResponseChannel)
+                        .toList();
+        } else {
+            return List.of(); // 空のリストを返す
         }
     }
 
