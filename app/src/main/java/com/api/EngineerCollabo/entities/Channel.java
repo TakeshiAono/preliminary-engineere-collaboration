@@ -57,4 +57,7 @@ public class Channel {
 
     @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL)
     private List<Message> messages = new ArrayList<>();
+
+    @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL)
+    private List<ChannelMember> channelMembers = new ArrayList<>();
 }
