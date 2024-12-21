@@ -33,6 +33,11 @@ public class ApplicationService {
         User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new EntityNotFoundException("Project not found"));
 
+        // ユーザーが既にプロジェクトのメンバーかチェック
+        if (project.getUsers().contains(user)) {
+            throw new IllegalStateException("既にプロジェクトのメンバーです");
+        }
+
         Application application = new Application();
         application.setMessage(message);
         application.setUserId(user.getId());
