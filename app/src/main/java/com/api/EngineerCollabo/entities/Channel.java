@@ -40,6 +40,9 @@ public class Channel {
     @Column(name = "chat_room_id")
     private Integer chatRoomId;
 
+    @Column(name = "project_id", nullable = false)
+    private Integer projectId;
+
     @CreatedDate
     @Column(name = "created_at", updatable = false)
     private Date createdAt;
@@ -53,8 +56,8 @@ public class Channel {
     private User owner;
 
     @ManyToOne()
-    @JoinColumn(name = "chat_room_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
-    private ChatRoom chatRoom;
+    @JoinColumn(name = "project_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
+    private Project project;
 
     @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL)
     private List<Message> messages = new ArrayList<>();
