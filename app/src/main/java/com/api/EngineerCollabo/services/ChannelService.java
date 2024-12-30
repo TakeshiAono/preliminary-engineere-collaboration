@@ -26,13 +26,14 @@ public class ChannelService {
     @Autowired
     private ChannelRepository channelRepository;
 
-    public Channel createChannel(String name, Integer userId, Integer chatRoomId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
+    public Channel createChannel(String name, Integer chatRoomId, Integer ownerId) {
+        User owner = userRepository.findById(ownerId).orElseThrow(() -> new EntityNotFoundException("User not found"));
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
                 .orElseThrow(() -> new EntityNotFoundException("ChatRoom not found"));
         Channel channel = new Channel();
+
         channel.setName(name);
-        channel.setUserId(user.getId());
+        channel.setOwnerId(owner.getId());
         channel.setChatRoomId(chatRoom.getId());
 
         return channelRepository.save(channel);
@@ -42,7 +43,7 @@ public class ChannelService {
         ResponseChannel responseChannel = new ResponseChannel();
         responseChannel.setId(channel.getId());
         responseChannel.setName(channel.getName());
-        responseChannel.setUserId(channel.getUser().getId());
+        responseChannel.setOwnerId(channel.getOwner().getId());
         responseChannel.setChatRoomId(channel.getChatRoom().getId());
         responseChannel.setMessageIds(
                 channel.getMessages().stream().map(message -> message.getId()).collect(Collectors.toList()));

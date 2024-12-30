@@ -12,7 +12,7 @@ public interface ChannelRepository extends JpaRepository<Channel, Integer> {
 
     Channel findById(int id);
 
-    List<Channel> findByUser(User user);
+    List<Channel> findByOwner(User owner);
 
     Channel findByMessages(Message message);
 }

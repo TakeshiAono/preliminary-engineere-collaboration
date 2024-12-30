@@ -9,7 +9,7 @@ public class ResponseChannel {
 
     private String name;
 
-    private Integer userId;
+    private Integer ownerId;
 
     private Integer chatRoomId;
     
