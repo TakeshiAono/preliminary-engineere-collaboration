@@ -32,8 +32,6 @@ public class ProjectService {
 						.collect(Collectors.toList()));
 		responseProject.setDirectoryIds(
 				project.getDirectories().stream().map(directory -> directory.getId()).collect(Collectors.toList()));
-		responseProject.setChatRoomIds(
-				project.getChatRooms().stream().map(chatRoom -> chatRoom.getId()).collect(Collectors.toList()));
 		responseProject.setUserIds(
 				project.getUsers().stream().map(user -> user.getId()).collect(Collectors.toList()));
 		responseProject.setOperationIds(

@@ -6,11 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.api.EngineerCollabo.entities.Channel;
-import com.api.EngineerCollabo.entities.ChatRoom;
 import com.api.EngineerCollabo.entities.ResponseChannel;
 import com.api.EngineerCollabo.entities.User;
 import com.api.EngineerCollabo.repositories.ChannelRepository;
-import com.api.EngineerCollabo.repositories.ChatRoomRepository;
 import com.api.EngineerCollabo.repositories.UserRepository;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -21,20 +19,14 @@ public class ChannelService {
     private UserRepository userRepository;
 
     @Autowired
-    private ChatRoomRepository chatRoomRepository;
-
-    @Autowired
     private ChannelRepository channelRepository;
 
     public Channel createChannel(String name, Integer chatRoomId, Integer ownerId) {
         User owner = userRepository.findById(ownerId).orElseThrow(() -> new EntityNotFoundException("User not found"));
-        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
-                .orElseThrow(() -> new EntityNotFoundException("ChatRoom not found"));
         Channel channel = new Channel();
 
         channel.setName(name);
         channel.setOwnerId(owner.getId());
-        channel.setChatRoomId(chatRoom.getId());
 
         return channelRepository.save(channel);
     }
@@ -44,7 +36,6 @@ public class ChannelService {
         responseChannel.setId(channel.getId());
         responseChannel.setName(channel.getName());
         responseChannel.setOwnerId(channel.getOwner().getId());
-        responseChannel.setChatRoomId(channel.getChatRoom().getId());
         responseChannel.setMessageIds(
                 channel.getMessages().stream().map(message -> message.getId()).collect(Collectors.toList()));
         return responseChannel;

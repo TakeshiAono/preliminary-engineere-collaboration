@@ -10,7 +10,7 @@ INSERT INTO skills (name, count_log, user_id, created_at, updated_at) VALUES ('s
 INSERT INTO roles (name, count_log, user_id, created_at, updated_at) VALUES ('role1', 1, 1, date('2024/04/21'), date('2024/04/21')),('role2', 2, 1, date('2024/04/21'), date('2024/04/21'));
 INSERT INTO chat_rooms (name, project_id, created_at, updated_at) VALUES ('chat_room1', 1, date('2024/04/21'), date('2024/04/21')),('chat_room1', 1, date('2024/04/21'), date('2024/04/21'));
 -- INSERT INTO channels (name, chat_room_id, user_id, created_at, updated_at) VALUES ('chat_room1', 1, 1),('chat_room2', 1, 1);
-INSERT INTO channels (name, chat_room_id, owner_id, project_id, created_at, updated_at) VALUES ('channel1', 1, 1, 1, date('2024/04/21'), date('2024/04/21')),('channel2', 1, 1, 1 date('2024/04/21'), date('2024/04/21'));
+INSERT INTO channels (name, owner_id, project_id, created_at, updated_at) VALUES ('channel1', 1, 1, date('2024/04/21'), date('2024/04/21')),('channel2', 1, 1, date('2024/04/21'), date('2024/04/21'));
 -- INSERT INTO messages (text, content, user_id, chat_room_id, channel_id, created_at, updated_at) VALUES ('message1', 'content1', 1, 1, 1),('message2', 'content2', 1, 1, 1);
 INSERT INTO messages (text, content, user_id, channel_id, created_at, updated_at) VALUES ('message1', 'content1', 1, 1, date('2024/02/10'), date('2024/02/11')),('message2', 'content2', 1, 1, date('2024/01/15'), date('2024/01/20'));
 INSERT INTO followers (user_id, following_user_id, created_at, updated_at) VALUES (1, 2, date('2024/04/21'), date('2024/04/21')),(1, 3, date('2024/04/21'), date('2024/04/21')),(2, 1, date('2024/04/21'), date('2024/04/21'));
