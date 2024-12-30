@@ -6,19 +6,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.api.EngineerCollabo.entities.Directory;
-import com.api.EngineerCollabo.entities.File;
+import com.api.EngineerCollabo.entities.Channel;
 import com.api.EngineerCollabo.entities.Project;
-import com.api.EngineerCollabo.entities.ResponseDirectory;
+import com.api.EngineerCollabo.entities.ResponseChannel;
 import com.api.EngineerCollabo.entities.ResponseProject;
 import com.api.EngineerCollabo.repositories.ProjectRepository;
 import com.api.EngineerCollabo.repositories.UserRepository;
+import com.api.EngineerCollabo.repositories.ChannelRepository;
+import com.api.EngineerCollabo.services.ChannelService;
 import com.api.EngineerCollabo.services.ProjectService;
+import com.api.EngineerCollabo.util.ChannelUtil;
 import com.api.EngineerCollabo.util.HashUtil;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +36,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import java.util.Map;
 import java.time.Duration;
@@ -73,6 +73,15 @@ public class ProjectController {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    ChannelRepository channelRepository;
+
+    @Autowired
+    ChannelUtil channelUtil;
+
+    @Autowired
+    ChannelService channelService;
 
     // @Autowired
     // MemberRepository memberRepository;
@@ -545,7 +554,21 @@ public class ProjectController {
             return false;
         }
     }
-    
+
+    @GetMapping("{id}/channels")
+    public List<ResponseChannel> responseChannels(
+        @PathVariable("id") Integer projectId,
+        @RequestParam("userId") Integer userId
+    ) {
+        // プロジェクトに紐づくチャンネルを全て取得
+        List<Channel> channels = channelRepository.findByProjectId(projectId);
+
+        // メンバーであるチャンネルのみをフィルタリングして返す
+        return channels.stream()
+            .filter(channel -> channelUtil.isMember(channel, userId))
+            .map(channelService::changeResponseChannel)
+            .collect(Collectors.toList());
+    }
 
     // @PostMapping("/{id}/members/add")
     // public void addMember(@PathVariable("id") Optional<Integer> ID, @RequestBody RequestMembers requestMembers) {

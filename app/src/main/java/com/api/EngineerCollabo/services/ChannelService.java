@@ -21,8 +21,8 @@ public class ChannelService {
     @Autowired
     private ChannelRepository channelRepository;
 
-    public Channel createChannel(String name, Integer chatRoomId, Integer ownerId) {
-        User owner = userRepository.findById(ownerId).orElseThrow(() -> new EntityNotFoundException("User not found"));
+    public Channel createChannel(String name, Integer ownerId) {
+        User owner = userRepository.findById(ownerId).orElseThrow(() -> new EntityNotFoundException("Owner not found"));
         Channel channel = new Channel();
 
         channel.setName(name);

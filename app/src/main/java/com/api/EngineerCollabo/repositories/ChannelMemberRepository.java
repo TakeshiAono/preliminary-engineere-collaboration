@@ -9,9 +9,6 @@ import java.util.Optional;
 
 public interface ChannelMemberRepository extends JpaRepository<ChannelMember, Integer> {
 
-    // 特定のチャンネルに所属するメンバーを取得
-    List<ChannelMember> findByChannelId(Integer channelId);
-
     // 特定のユーザーがメンバーであるチャンネルを取得
     List<ChannelMember> findByUserId(Integer userId);
 

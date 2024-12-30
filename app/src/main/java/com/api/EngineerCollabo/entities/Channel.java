@@ -37,9 +37,6 @@ public class Channel {
     @Column(name = "owner_id", nullable = false)
     private Integer ownerId;
 
-    @Column(name = "chat_room_id")
-    private Integer chatRoomId;
-
     @Column(name = "project_id", nullable = false)
     private Integer projectId;
 

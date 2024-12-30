@@ -15,4 +15,6 @@ public interface ChannelRepository extends JpaRepository<Channel, Integer> {
     List<Channel> findByOwner(User owner);
 
     Channel findByMessages(Message message);
+
+    List<Channel> findByProjectId(Integer projectId);
 }

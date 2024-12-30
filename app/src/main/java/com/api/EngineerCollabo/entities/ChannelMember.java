@@ -6,7 +6,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
@@ -35,13 +34,14 @@ public class ChannelMember {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    // Userエンティティとのリレーション
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
+    @Column(name = "user_id", insertable = false, updatable = false)
+    private Integer userId;
+
+    @ManyToOne()
+    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
     private User user;
 
-    // Channelエンティティとのリレーション
-    @ManyToOne
-    @JoinColumn(name = "channel_id", nullable = false, referencedColumnName = "id")
+    @ManyToOne()
+    @JoinColumn(name = "channel_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
     private Channel channel;
 }
