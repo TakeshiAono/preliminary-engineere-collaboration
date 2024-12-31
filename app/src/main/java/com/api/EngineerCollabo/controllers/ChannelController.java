@@ -1,12 +1,14 @@
 package com.api.EngineerCollabo.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,9 +19,9 @@ import com.api.EngineerCollabo.repositories.ChannelMemberRepository;
 import com.api.EngineerCollabo.repositories.ChannelRepository;
 import com.api.EngineerCollabo.repositories.UserRepository;
 import com.api.EngineerCollabo.services.ChannelService;
+import com.api.EngineerCollabo.util.ChannelUtil;
 import com.api.EngineerCollabo.entities.ResponseChannel;
 import com.api.EngineerCollabo.entities.Channel;
-import com.api.EngineerCollabo.util.ChannelUtil;
 
 @RestController
 @RequestMapping("/channels")
@@ -82,10 +84,22 @@ public class ChannelController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteChannel(@PathVariable("id") Optional<Integer> ID) {
-        if (ID.isPresent()) {
-            int id = ID.get();
-            channelRepository.deleteById(id);
+    public void deleteChannel(
+        @PathVariable("id") Optional<Integer> ID,
+        @RequestParam("userId") Optional<Integer> userId
+    ) {
+        if (ID.isPresent() || userId.isPresent()) {
+            int channelId = ID.get();
+            int targetUserId = userId.get();
+
+            Channel channel = channelRepository.findById(channelId);
+            if (channelUtil.isOwner(channel, targetUserId)) {
+                channelRepository.deleteById(channelId);
+            } else {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not the owner of the channel");
+            }
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "'id' or 'userId' parameters are required");
         }
     }
 }
