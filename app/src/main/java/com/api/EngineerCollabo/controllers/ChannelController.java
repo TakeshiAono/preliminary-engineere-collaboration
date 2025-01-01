@@ -24,6 +24,7 @@ import com.api.EngineerCollabo.util.ChannelUtil;
 import com.api.EngineerCollabo.entities.ResponseChannel;
 import com.api.EngineerCollabo.entities.Channel;
 import com.api.EngineerCollabo.entities.ChannelMember;
+import com.api.EngineerCollabo.entities.DeleteChannelRequest;
 import com.api.EngineerCollabo.entities.RequestCreateChannel;
 
 @RestController
@@ -98,21 +99,18 @@ public class ChannelController {
 
     @DeleteMapping("/{id}")
     public void deleteChannel(
-        @PathVariable("id") Optional<Integer> ID,
-        @RequestParam("userId") Optional<Integer> userId
+        @PathVariable("id") Integer channelId,
+        @RequestBody DeleteChannelRequest request
     ) {
-        if (ID.isPresent() || userId.isPresent()) {
-            int channelId = ID.get();
-            int targetUserId = userId.get();
-
-            Channel channel = channelRepository.findById(channelId);
-            if (channelUtil.isOwner(channel, targetUserId)) {
-                channelRepository.deleteById(channelId);
-            } else {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not the owner of the channel");
-            }
-        } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "'id' or 'userId' parameters are required");
+        Integer ownerId = request.getOwnerId();
+        if (channelId == null || ownerId == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "'id' and 'ownerId' are required");
         }
+        Channel channel = channelRepository.findById(channelId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Channel not found"));
+        if (!channelUtil.isOwner(channel, ownerId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not the owner of the channel");
+        }
+        channelRepository.deleteById(channelId);
     }
 }
