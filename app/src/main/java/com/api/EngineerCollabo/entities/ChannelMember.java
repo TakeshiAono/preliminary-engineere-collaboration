@@ -34,14 +34,17 @@ public class ChannelMember {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    @Column(name = "user_id", insertable = false, updatable = false)
+    @Column(name = "channel_id", nullable = false)
+    private Integer channelId;
+
+    @Column(name = "user_id", nullable = false)
     private Integer userId;
 
-    @ManyToOne()
-    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false)
     private User user;
 
-    @ManyToOne()
-    @JoinColumn(name = "channel_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
+    @ManyToOne
+    @JoinColumn(name = "channel_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Channel channel;
 }
