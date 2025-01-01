@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.api.EngineerCollabo.repositories.ChannelMemberRepository;
@@ -22,6 +23,8 @@ import com.api.EngineerCollabo.services.ChannelService;
 import com.api.EngineerCollabo.util.ChannelUtil;
 import com.api.EngineerCollabo.entities.ResponseChannel;
 import com.api.EngineerCollabo.entities.Channel;
+import com.api.EngineerCollabo.entities.ChannelMember;
+import com.api.EngineerCollabo.entities.RequestCreateChannel;
 
 @RestController
 @RequestMapping("/channels")
@@ -43,15 +46,25 @@ public class ChannelController {
     ChannelUtil channelUtil;
 
     @PostMapping("/create")
-    public void createChannel(@RequestBody Channel requestChannel) {
+    public ResponseChannel createChannel(
+        @RequestBody RequestCreateChannel requestChannel
+    ) {
         String name = requestChannel.getName();
         Integer ownerId = requestChannel.getOwnerId();
+        Integer projectId = requestChannel.getProjectId();
+        List<Integer> userIds = requestChannel.getUserIds();
 
         if(ownerId != null){
-            channelService.createChannel(name, ownerId);
-            // TODO: チャンネルメンバーレコードに登録する機能を追加する
-            // ChannelMember channelMember = ;
-            // channelMemberRepository.save(channelMember);
+            Channel channel = channelService.createChannel(name, ownerId, projectId);
+            userIds.stream().forEach(userId -> {
+                ChannelMember channelMember = new ChannelMember();
+                channelMember.setUserId(userId);
+                channelMember.setChannelId(channel.getId());
+                channelMemberRepository.save(channelMember);
+            });
+            return channelService.changeResponseChannel(channel);
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "'ownerId' parameter is required");
         }
     }
 

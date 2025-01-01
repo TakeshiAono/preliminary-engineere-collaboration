@@ -21,12 +21,13 @@ public class ChannelService {
     @Autowired
     private ChannelRepository channelRepository;
 
-    public Channel createChannel(String name, Integer ownerId) {
+    public Channel createChannel(String name, Integer ownerId, Integer projectId) {
         User owner = userRepository.findById(ownerId).orElseThrow(() -> new EntityNotFoundException("Owner not found"));
         Channel channel = new Channel();
 
         channel.setName(name);
         channel.setOwnerId(owner.getId());
+        channel.setProjectId(projectId);
 
         return channelRepository.save(channel);
     }
@@ -35,9 +36,7 @@ public class ChannelService {
         ResponseChannel responseChannel = new ResponseChannel();
         responseChannel.setId(channel.getId());
         responseChannel.setName(channel.getName());
-        responseChannel.setOwnerId(channel.getOwner().getId());
-        responseChannel.setMessageIds(
-                channel.getMessages().stream().map(message -> message.getId()).collect(Collectors.toList()));
+        responseChannel.setOwnerId(channel.getOwnerId());
         return responseChannel;
     }
 }

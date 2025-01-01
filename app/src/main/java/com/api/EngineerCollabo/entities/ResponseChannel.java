@@ -10,9 +10,4 @@ public class ResponseChannel {
     private String name;
 
     private Integer ownerId;
-
-    private Integer chatRoomId;
-    
-    private List<Integer> messageIds;
-
 }
