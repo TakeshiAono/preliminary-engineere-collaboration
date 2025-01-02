@@ -87,7 +87,7 @@ public class User {
     @ToString.Exclude // 双方向リレーションを無視して無限ループを防ぐ
     private List<Role> roles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     @ToString.Exclude // 双方向リレーションを無視して無限ループを防ぐ
     private List<Channel> channels = new ArrayList<>();
 

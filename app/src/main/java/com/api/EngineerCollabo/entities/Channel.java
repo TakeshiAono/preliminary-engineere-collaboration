@@ -18,6 +18,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -33,11 +34,11 @@ public class Channel {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "user_id")
-    private Integer userId;
+    @Column(name = "owner_id", nullable = false)
+    private Integer ownerId;
 
-    @Column(name = "chat_room_id")
-    private Integer chatRoomId;
+    @Column(name = "project_id", nullable = false)
+    private Integer projectId;
 
     @CreatedDate
     @Column(name = "created_at", updatable = false)
@@ -47,14 +48,17 @@ public class Channel {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    @ManyToOne()
-    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
-    private User user;
+    @OneToOne()
+    @JoinColumn(name = "owner_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
+    private User owner;
 
     @ManyToOne()
-    @JoinColumn(name = "chat_room_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
-    private ChatRoom chatRoom;
+    @JoinColumn(name = "project_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
+    private Project project;
 
     @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL)
     private List<Message> messages = new ArrayList<>();
+
+    @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL)
+    private List<ChannelMember> channelMembers = new ArrayList<>();
 }

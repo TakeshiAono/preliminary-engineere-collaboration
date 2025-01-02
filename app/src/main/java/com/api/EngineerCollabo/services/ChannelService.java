@@ -6,11 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.api.EngineerCollabo.entities.Channel;
-import com.api.EngineerCollabo.entities.ChatRoom;
 import com.api.EngineerCollabo.entities.ResponseChannel;
 import com.api.EngineerCollabo.entities.User;
 import com.api.EngineerCollabo.repositories.ChannelRepository;
-import com.api.EngineerCollabo.repositories.ChatRoomRepository;
 import com.api.EngineerCollabo.repositories.UserRepository;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -21,19 +19,15 @@ public class ChannelService {
     private UserRepository userRepository;
 
     @Autowired
-    private ChatRoomRepository chatRoomRepository;
-
-    @Autowired
     private ChannelRepository channelRepository;
 
-    public Channel createChannel(String name, Integer userId, Integer chatRoomId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
-        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
-                .orElseThrow(() -> new EntityNotFoundException("ChatRoom not found"));
+    public Channel createChannel(String name, Integer ownerId, Integer projectId) {
+        User owner = userRepository.findById(ownerId).orElseThrow(() -> new EntityNotFoundException("Owner not found"));
         Channel channel = new Channel();
+
         channel.setName(name);
-        channel.setUserId(user.getId());
-        channel.setChatRoomId(chatRoom.getId());
+        channel.setOwnerId(owner.getId());
+        channel.setProjectId(projectId);
 
         return channelRepository.save(channel);
     }
@@ -42,10 +36,7 @@ public class ChannelService {
         ResponseChannel responseChannel = new ResponseChannel();
         responseChannel.setId(channel.getId());
         responseChannel.setName(channel.getName());
-        responseChannel.setUserId(channel.getUser().getId());
-        responseChannel.setChatRoomId(channel.getChatRoom().getId());
-        responseChannel.setMessageIds(
-                channel.getMessages().stream().map(message -> message.getId()).collect(Collectors.toList()));
+        responseChannel.setOwnerId(channel.getOwnerId());
         return responseChannel;
     }
 }
