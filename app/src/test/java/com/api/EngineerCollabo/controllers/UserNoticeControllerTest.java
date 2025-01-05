@@ -40,12 +40,13 @@ public class UserNoticeControllerTest {
         requestUserNotice.setLog("Test Log");
         requestUserNotice.setUserId(1);
         requestUserNotice.setOfferId(1);
+        requestUserNotice.setApplicationId(1);
 
         // 実行
         userNoticeController.createUserNotice(requestUserNotice);
 
         // 検証
-        verify(userNoticeService, times(1)).createUserNotice("Test Log", 1, 1);
+        verify(userNoticeService, times(1)).createUserNotice("Test Log", 1, 1, 1);
     }
 
      @Test
