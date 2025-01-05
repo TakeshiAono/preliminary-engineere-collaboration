@@ -12,8 +12,6 @@ public class ResponseUserNotice {
 
     private Integer offerId;
 
-    private Integer applicationId;
-
     // 引数なしのコンストラクタ
     public ResponseUserNotice() {}
 
@@ -23,7 +21,6 @@ public class ResponseUserNotice {
         this.log = userNotice.getLog();
         this.userId = userNotice.getUserId();
         this.offerId = userNotice.getOfferId();
-        this.applicationId = userNotice.getApplicationId();
     }
 
 }

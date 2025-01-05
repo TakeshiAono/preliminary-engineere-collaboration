@@ -27,7 +27,6 @@ import com.api.EngineerCollabo.entities.Milestone;
 import com.api.EngineerCollabo.repositories.ProjectRepository;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
 public class MilestoneController {
     @Autowired
     ProjectRepository projectRepository;

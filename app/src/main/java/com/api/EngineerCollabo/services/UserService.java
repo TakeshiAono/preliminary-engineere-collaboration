@@ -3,6 +3,7 @@ package com.api.EngineerCollabo.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,17 +19,13 @@ import com.api.EngineerCollabo.repositories.UserRepository;
 import com.api.EngineerCollabo.util.PasswordUtil;
 
 import jakarta.transaction.Transactional;
-// 開発中は認証機能をOFFにしている。
-// import org.springframework.security.core.userdetails.UserDetails;
-// import org.springframework.security.core.userdetails.UserDetailsService;
-// import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @Service
 @Transactional
-public class UserService {
-    // 開発中は認証機能をOFFにしている。
-    // public class UserService implements UserDetailsService {
-
+public class UserService implements UserDetailsService {
     // リポジトリクラスの依存性注入
     @Autowired
     UserRepository userRepository;
@@ -77,23 +74,29 @@ public class UserService {
     public ResponseLogin login(RequestLogin requestLogin) {
         User loginUser = new User();
         loginUser = CreateUser(requestLogin);
-        List<User> userList = new ArrayList<User>();
-        userList = userRepository.findByEmail(loginUser.getEmail());
+        Optional<User> userOptional = userRepository.findByEmail(loginUser.getEmail());
 
         ResponseLogin responseLogin = new ResponseLogin();
-        if (userList.size() == 0) {
+        if (userOptional.isEmpty()) {
             responseLogin.setStatus("error");
-        } else if (!(loginUser.getPassword().equals(userList.get(0).getPassword()))) {
+
+            return responseLogin;
+        } 
+
+        User user = userOptional.get();
+        if (!loginUser.getPassword().equals(user.getPassword())) {
             responseLogin.setStatus("error");
-        } else {
-            responseLogin.setStatus("success");
-            responseLogin.setId(userList.get(0).getId());
-            responseLogin.setName(userList.get(0).getName());
-            responseLogin.setEmail(userList.get(0).getEmail());
-            // responseLogin.setPassword(userList.get(0).getPassword());
+
+            return responseLogin;
         }
+
+        responseLogin.setStatus("success");
+        responseLogin.setId(user.getId());
+        responseLogin.setName(user.getName());
+        responseLogin.setEmail(user.getEmail());
+
         return responseLogin;
-    };
+    }
 
     /**
      * ログインするユーザ情報の作成処理
@@ -111,24 +114,22 @@ public class UserService {
         return user;
     };
 
-    // 開発中は認証機能をOFFにしている。
-    // @Override
-    // public UserDetails loadUserByUsername(String username) throws
-    // UsernameNotFoundException {
-    // // データベースからユーザー情報を取得
-    // User user = userRepository.findByName(username);
-    // // データベースから取得したユーザー情報がnullの場合、例外をスロー
-    // if (user == null) {
-    // throw new UsernameNotFoundException("User not found");
-    // }
+    @Override
+    public UserDetails loadUserByUsername(String email) throws
+    UsernameNotFoundException {
+    // データベースからユーザー情報を取得
+        Optional<User> userOptional = userRepository.findByEmail(email);
 
-    // // UserDetailsオブジェクトに変換して返す
-    // return org.springframework.security.core.userdetails.User
-    // .withUsername(user.getName())
-    // .password(user.getPassword())
-    // .roles("USER") // ユーザーのロールを指定
-    // .build();
-    // }
+        // データベースから取得したユーザー情報がnullの場合、例外をスロー
+        User user = userOptional.orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        // UserDetailsオブジェクトに変換して返す
+        return org.springframework.security.core.userdetails.User
+        .withUsername(user.getName())
+        .password(user.getPassword())
+        .roles("USER") // ユーザーのロールを指定
+        .build();
+    }
 
     public void updateUser(Integer id, User user) {
         if (userRepository.findById(id).get() != null) {
@@ -170,5 +171,4 @@ public class UserService {
 
         return responseUser;
     }
-
 }

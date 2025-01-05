@@ -25,18 +25,24 @@
 - docker-compose.yml と同じ階層に cd で移動して、docker-compose up を実行
 - db コンテナ,api コンテナが作成完了できる。(docker desktop にもコンテナが表示されているはず)
 
-# コンテナへのログイン
+# Web サーバーの立ち上げ方
+
+### 1. api サーバーコンテナに入る
+
+```bash
+docker exec -it <コンテナ名> bash
+```
 
 - docker ps コマンドでコンテナの名前を確認する。
 - docker exec -it `コンテナ名` bash コマンドを実行
   > https://zenn.dev/sickleaf/articles/99884a12b0489cf21d45#docker-ps%E3%81%AE%E3%82%B5%E3%83%B3%E3%83%97%E3%83%AB の names カラムのところに書いてあるのがコンテナ名
 
-# Web サーバーの立ち上げ方
+### 2. /app ディレクトリ上で 以下のコマンドを実行
 
-    1. apiサーバーコンテナへログインする
-    2. /app ディレクトリ上で ./gradlew bootRunコマンドを実行
-    3. 手順2とは別のshellを立ち上げ、/app ディレクトリ上で ./gradlew build --continuousコマンドを実行(コード変更を検知して自動ビルドをしてくれる)
-    3. ブラウザでlocalhost:8080に入れればOK(2023/10/28時点ではエラーページが出力されればOK)
+```bash
+./gradlew bootRun &
+./gradlew build --continuous
+```
 
 # 推奨の拡張機能(vscode)
 
