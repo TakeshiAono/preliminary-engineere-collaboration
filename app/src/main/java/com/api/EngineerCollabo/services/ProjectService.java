@@ -44,4 +44,8 @@ public class ProjectService {
 	public Project getProjectByOfferId(Integer offerId) {
         return projectRepository.findProjectByOfferId(offerId);
     }
+
+	public Project getProjectByApplicationId(Integer applicationId) {
+        return projectRepository.findProjectByApplicationId(applicationId);
+    }
 }
