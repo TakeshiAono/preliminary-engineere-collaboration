@@ -47,4 +47,10 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
         @Param("endDate") Date endDate,
         @Param("userCount") Integer userCount
     );
+
+    @Query("SELECT p FROM Project p JOIN p.offers o WHERE o.id = :offerId")
+    Project findProjectByOfferId(@Param("offerId") Integer offerId);
+
+    @Query("SELECT p FROM Project p JOIN p.applications o WHERE o.id = :applicationId")
+    Project findProjectByApplicationId(@Param("applicationId") Integer applicationId);
 }

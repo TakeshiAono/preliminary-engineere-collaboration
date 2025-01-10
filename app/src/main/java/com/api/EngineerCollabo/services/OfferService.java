@@ -6,8 +6,11 @@ import org.springframework.stereotype.Service;
 import com.api.EngineerCollabo.entities.Offer;
 import com.api.EngineerCollabo.entities.ResponseOffer;
 import com.api.EngineerCollabo.entities.User;
+import com.api.EngineerCollabo.entities.Project;
 import com.api.EngineerCollabo.repositories.OfferRepository;
 import com.api.EngineerCollabo.repositories.UserRepository;
+import com.api.EngineerCollabo.repositories.ProjectRepository;
+import com.api.EngineerCollabo.services.UserNoticeService;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -18,19 +21,32 @@ public class OfferService {
     private UserRepository userRepository;
 
     @Autowired
+    private ProjectRepository projectRepository;
+
+    @Autowired
     private OfferRepository offerRepository;
 
-    public Offer createOffer(String message, Integer userId, Integer scoutedUserId) {
+    @Autowired
+    private UserNoticeService userNoticeService;
+
+    public Offer createOffer(String message, Integer userId, Integer scoutedUserId, Integer projectId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
         User scoutedUser = userRepository.findById(scoutedUserId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        Project project = projectRepository.findById(projectId).orElseThrow(() -> new EntityNotFoundException("Project not found"));
 
         Offer offer = new Offer();
         offer.setMessage(message);
         offer.setUserId(user.getId());
         offer.setScoutedUserId(scoutedUser.getId());
+        offer.setProjectId(project.getId());
 
-        return offerRepository.save(offer);
+        Offer savedOffer = offerRepository.save(offer);
+
+        // オファーを受信したユーザーに通知を作成
+        userNoticeService.createOfferReceivedNotice(scoutedUser.getId(), savedOffer.getId());
+
+        return savedOffer;
     }
 
     public ResponseOffer changResponseOffer(Offer offer) {
@@ -39,7 +55,29 @@ public class OfferService {
         responseOffer.setMessage(offer.getMessage());
         responseOffer.setUserId(offer.getUser().getId());
         responseOffer.setScoutedUserId(offer.getScoutedUser().getId());
+        responseOffer.setProjectId(offer.getProject().getId());
+
+        // プロジェクト名とユーザー名を設定
+        responseOffer.setUserName(offer.getUser().getName());
+        responseOffer.setProjectName(offer.getProject().getName());
+        
         return responseOffer;
+    }
+
+    public void acceptOffer(Integer offerId) {
+        Offer offer = offerRepository.findById(offerId)
+            .orElseThrow(() -> new EntityNotFoundException("Offer not found"));
+
+        Project project = offer.getProject();
+        User scoutedUser = offer.getScoutedUser();
+
+        // プロジェクトにユーザーが既に参加していないか確認
+        if (!project.getUsers().contains(scoutedUser)) {
+            project.getUsers().add(scoutedUser);
+            projectRepository.save(project);  // プロジェクトを保存
+        }
+        offer.setIsAccepted(true); 
+        offerRepository.save(offer);
     }
 
 }

@@ -19,7 +19,6 @@ import com.api.EngineerCollabo.repositories.MessageRepository;
 import com.api.EngineerCollabo.services.MessageService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/messages")
 public class MessageController {
     @Autowired

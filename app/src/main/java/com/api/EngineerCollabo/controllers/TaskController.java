@@ -3,6 +3,8 @@ package com.api.EngineerCollabo.controllers;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Collections;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.http.ResponseEntity;
+import jakarta.persistence.EntityNotFoundException;
 
 import com.api.EngineerCollabo.entities.Task;
 import com.api.EngineerCollabo.entities.User;
@@ -29,7 +33,7 @@ import com.api.EngineerCollabo.services.TaskService;
 import com.api.EngineerCollabo.services.UserService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
+
 // @RequestMapping("/tasks")
 public class TaskController {
     @Autowired
@@ -67,17 +71,34 @@ public class TaskController {
         }
     }
 
+    // TODO ユーザーが所属していないプロジェクト･グループのタスクを取得できてしまうので､修正が必要
     @GetMapping("/tasks")
     public ResponseTasks responseTask(
-            @RequestParam(name = "projectId", required = true) Integer projectId,
-            @RequestParam(name = "userId", required = true) Integer userId,
+            @RequestParam(name = "projectId", required = false) Integer projectId,
+            @RequestParam(name = "userId", required = false) Integer userId,
             @RequestParam(name = "milestoneId", required = false) Integer milestoneId) {
 
-        Optional<User> user = userRepository.findById(userId);
-        List<Task> tasks = user.get().getTasks().stream()
-                .filter(task -> task.getProjectId().equals(projectId))
-                .filter(task -> task.getMilestoneId().equals(milestoneId) || milestoneId == null)
-                .toList();
+        List<Task> tasks = taskRepository.findAll();
+
+        if (userId != null) {
+            Optional<User> user = userRepository.findById(userId);
+            if (user.isPresent()) {
+                tasks = user.get().getTasks();
+            }
+        }
+        
+        if (projectId != null) {
+            tasks = tasks.stream()
+                    .filter(task -> task.getProjectId().equals(projectId))
+                    .collect(Collectors.toList());
+        }
+
+        if (milestoneId != null) {
+            tasks = tasks.stream()
+                    .filter(task -> task.getMilestoneId().equals(milestoneId))
+                    .collect(Collectors.toList());
+        }
+
         ResponseTasks responseTasks = new ResponseTasks();
         responseTasks.setUserId(userId);
         responseTasks.setProjectId(projectId);
@@ -89,7 +110,8 @@ public class TaskController {
     public ResponseTask responseTask(@PathVariable("id") Optional<Integer> ID) {
         if (ID.isPresent()) {
             int id = ID.get();
-            Task task = taskRepository.findById(id);
+            Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Task not found"));
             return taskService.changeResponseTask(task);
         } else {
             return null;
@@ -97,10 +119,10 @@ public class TaskController {
     }
 
     @PatchMapping("/tasks/{id}")
-    public void putTask(@PathVariable("id") Optional<Integer> ID, @RequestBody Task requestTask) {
-        if (ID.isPresent()) {
-            int id = ID.get();
-            Task task = taskRepository.findById(id);
+    public ResponseEntity<Task> patchTask(@PathVariable("id") Integer id, @RequestBody Task requestTask) {
+        try {
+            Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("タスクID: " + id + " が見つかりません"));
 
             String name = requestTask.getName();
             if (name != null) {
@@ -132,7 +154,11 @@ public class TaskController {
                 task.setInChargeUserId(userId);
             }
 
-            taskRepository.save(task);
+            Task savedTask = taskRepository.save(task);
+            return ResponseEntity.ok(savedTask);
+
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
         }
     }
 

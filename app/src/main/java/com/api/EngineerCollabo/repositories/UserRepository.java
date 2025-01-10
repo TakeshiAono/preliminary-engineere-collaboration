@@ -1,6 +1,7 @@
 package com.api.EngineerCollabo.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -12,12 +13,9 @@ import com.api.EngineerCollabo.entities.Skill;
 import com.api.EngineerCollabo.entities.User;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
-
-    User findById(int id);
-
     User findByName(String name);
 
-    List<User> findByEmail(String email);
+    Optional<User> findByEmail(String email);
 
     // List<User> findByProject(Project project);
 

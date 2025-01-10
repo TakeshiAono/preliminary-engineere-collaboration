@@ -14,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -35,6 +36,12 @@ public class Offer {
     @Column(name = "scouted_user_id")
     private Integer scoutedUserId;
 
+    @Column(name = "project_id")
+    private Integer projectId;
+    
+    @Column(name = "is_accepted", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private Boolean isAccepted = false;
+
     @CreatedDate
     @Column(name = "created_at", updatable = false)
     private Date createdAt;
@@ -50,4 +57,11 @@ public class Offer {
     @ManyToOne()
     @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
     private User user;
+    
+    @ManyToOne()
+    @JoinColumn(name = "project_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
+    private Project project;
+
+    @OneToOne(mappedBy = "offer")
+    private UserNotice userNotice;
 }

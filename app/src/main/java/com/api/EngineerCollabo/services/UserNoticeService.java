@@ -20,14 +20,33 @@ public class UserNoticeService {
     @Autowired
     private UserNoticeRepository userNoticeRepository;
 
-    public UserNotice createUserNotice(String log, Integer userId) {
+    public UserNotice createUserNotice(String log, Integer userId, Integer offerId, Integer applicationId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
         UserNotice userNotice = new UserNotice();
         userNotice.setLog(log);
         userNotice.setUserId(user.getId());
+        
+        if(offerId != null){
+            userNotice.setOfferId(offerId);
+        }
+        if(applicationId != null){
+            userNotice.setApplicationId(applicationId);
+        }
 
         return userNoticeRepository.save(userNotice);
+    }
+
+    // オファー受信通知を作成する
+    public void createOfferReceivedNotice(Integer userId, Integer offerId) {
+        String log = "オファーが届きました";
+        createUserNotice(log, userId, offerId, null);
+    }
+
+    // Application受信通知を作成する
+    public void createApplicationReceivedNotice(Integer userId, Integer applicationId) {
+        String log = "参加リクエストが届きました";
+        createUserNotice(log, userId, null, applicationId);
     }
 
     public ResponseUserNotice changResponseUserNotice(UserNotice userNotice) {
