@@ -38,7 +38,7 @@ public class UserService implements UserDetailsService {
      */
     public ResponseUserRegist insertUser(RequestUserRegist requestUserRegist) {
         User user = new User();
-        user = CreateUser(requestUserRegist);
+        user = createUser(requestUserRegist);
         userRepository.save(user);
         ResponseUserRegist responseUserRegist = new ResponseUserRegist();
         responseUserRegist.setId(user.getId());
@@ -54,13 +54,14 @@ public class UserService implements UserDetailsService {
      * @param RequestUserRegist ユーザ登録APIのリクエストボディ
      * @return user ユーザ情報
      */
-    private User CreateUser(RequestUserRegist requestUserRegist) {
+    private User createUser(RequestUserRegist requestUserRegist) {
         String hashPw;
         User user = new User();
         hashPw = PasswordUtil.hashSHA256(requestUserRegist.getPassword());
         // user.setName(requestUserRegist.getName());
         user.setPassword(hashPw);
         user.setEmail(requestUserRegist.getEmail());
+        user.setName(requestUserRegist.getName());
 
         return user;
     };

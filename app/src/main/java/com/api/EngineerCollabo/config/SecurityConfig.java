@@ -64,6 +64,7 @@ public class SecurityConfig {
         .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests((requests) -> requests
             .requestMatchers("/login").permitAll() // `/login` エンドポイントを認証不要にする
+            .requestMatchers("/account").permitAll() // `/account` エンドポイントを認証不要にする
             .requestMatchers("/authenticate", "/register").permitAll() // 認証および登録エンドポイントを公開
             .requestMatchers("/auth/check").permitAll()    // チェックエンドポイントも許可
             .requestMatchers("/auth/refresh").permitAll()  // リフレッシュトークンのエンドポイントを許可

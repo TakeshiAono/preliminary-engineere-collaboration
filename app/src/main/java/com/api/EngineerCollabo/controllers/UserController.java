@@ -1,5 +1,6 @@
 package com.api.EngineerCollabo.controllers;
 
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,8 +59,12 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        // APIレスポンス
-        return ResponseEntity.ok(responseUserRegist);
+        Map<String, ResponseCookie> cookies = this.generateTokenCookies(responseUserRegist.getEmail());
+
+        return ResponseEntity.ok()
+            .header(HttpHeaders.SET_COOKIE, cookies.get("access_token").toString())
+            .header(HttpHeaders.SET_COOKIE, cookies.get("refresh_token").toString())
+            .body(responseUserRegist);
     }
 
     /**
@@ -74,35 +79,47 @@ public class UserController {
         ResponseLogin responseLogin = userService.login(request);
         
         if (!responseLogin.getStatus().equals("error")) {
-            // アクセストークンとリフレッシュトークンを生成
-            String accessToken = jwtUtil.generateAccessToken(responseLogin.getEmail());
-            String refreshToken = jwtUtil.generateRefreshToken(responseLogin.getEmail());
-            
-            // アクセストークンのクッキー
-            ResponseCookie accessTokenCookie = ResponseCookie.from("access_token", accessToken)
-                .httpOnly(true)
-                .secure(true)
-                .sameSite("Strict")
-                .path("/")
-                .maxAge(Duration.ofMillis(jwtUtil.getExpirationTime()))
-                .build();
-            
-            // リフレッシュトークンのクッキー
-            ResponseCookie refreshTokenCookie = ResponseCookie.from("refresh_token", refreshToken)
-                .httpOnly(true)
-                .secure(true)
-                .sameSite("Strict")
-                .path("/")
-                .maxAge(Duration.ofMillis(jwtUtil.getRefreshExpirationTime()))
-                .build();
+            Map<String, ResponseCookie> cookies = this.generateTokenCookies(responseLogin.getEmail());
 
             return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, accessTokenCookie.toString())
-                .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
+                .header(HttpHeaders.SET_COOKIE, cookies.get("access_token").toString())
+                .header(HttpHeaders.SET_COOKIE, cookies.get("refresh_token").toString())
                 .body(responseLogin);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+    }
+
+    public Map<String, ResponseCookie> generateTokenCookies(String email) {
+        // アクセストークンを生成
+        String accessToken = jwtUtil.generateAccessToken(email);
+
+        // リフレッシュトークンを生成
+        String refreshToken = jwtUtil.generateRefreshToken(email);
+
+        // アクセストークンのクッキー
+        ResponseCookie accessTokenCookie = ResponseCookie.from("access_token", accessToken)
+            .httpOnly(true)
+            .secure(true)
+            .sameSite("Strict")
+            .path("/")
+            .maxAge(Duration.ofMillis(jwtUtil.getExpirationTime()))
+            .build();
+
+        // リフレッシュトークンのクッキー
+        ResponseCookie refreshTokenCookie = ResponseCookie.from("refresh_token", refreshToken)
+            .httpOnly(true)
+            .secure(true)
+            .sameSite("Strict")
+            .path("/")
+            .maxAge(Duration.ofMillis(jwtUtil.getRefreshExpirationTime()))
+            .build();
+
+        // クッキーをマップに格納して返す
+        return Map.of(
+            "access_token", accessTokenCookie,
+            "refresh_token", refreshTokenCookie
+        );
     }
 
     /* profile api */
