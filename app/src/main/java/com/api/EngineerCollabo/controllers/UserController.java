@@ -42,6 +42,12 @@ public class UserController {
     @Autowired
     JwtUtil jwtUtil;
 
+    // ヘルスチェック用のエンドポイント
+    @GetMapping("/health")
+    public ResponseEntity<String> healthCheck() {
+        return ResponseEntity.ok("OK");
+    }
+
     /**
      * ユーザ登録API
      * POST /user/regist
