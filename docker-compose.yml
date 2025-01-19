@@ -12,6 +12,20 @@ services:
     env_file:
       - .env
 
+  api-prod:
+    image: eclipse-temurin:17
+    ports:
+      - 8080:8080
+    volumes:
+      - ./app:/app
+      - ./.aws:/root/.aws
+    tty: true
+    working_dir: /app
+    env_file:
+      - .env.production
+    profiles:
+      - prod
+
   db:
     image: postgres:15.4-bullseye
     environment:
@@ -21,6 +35,19 @@ services:
       - postgres_volume:/var/lib/postgresql
     ports:
       - 3300:5432
+
+  db-prod:
+    image: postgres:15.4-bullseye
+    environment:
+      - POSTGRES_PASSWORD=aokim
+      - POSTGRES_USER=root
+    volumes:
+      - postgres_volume:/var/lib/postgresql
+    ports:
+      - 3300:5432
+    profiles:
+      - prod
+
 
 volumes:
   postgres_volume:

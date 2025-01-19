@@ -49,6 +49,9 @@ public class SecurityConfig {
     @Value("${spring.security.oauth2.resourceserver.jwt.secret-key}")
     private String jwtSecret;
 
+    @Value("${cors.allowed.origins}")
+    private String allowedOrigins;
+
     @Bean
     public JwtDecoder jwtDecoder() {
         byte[] keyBytes = jwtSecret.getBytes(); // シークレットキーをバイト配列に変換
@@ -56,13 +59,13 @@ public class SecurityConfig {
         return NimbusJwtDecoder.withSecretKey(secretKey).build(); // SecretKeyを渡してデコーダーを作成
     }
 
-
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
         .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS 設定
         .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests((requests) -> requests
+            .requestMatchers("/health").permitAll() // `/health` エンドポイントを認証不要にする
             .requestMatchers("/login").permitAll() // `/login` エンドポイントを認証不要にする
             .requestMatchers("/account").permitAll() // `/account` エンドポイントを認証不要にする
             .requestMatchers("/authenticate", "/register").permitAll() // 認証および登録エンドポイントを公開
@@ -123,7 +126,7 @@ public class SecurityConfig {
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("http://localhost:5173"); // クライアントのURL
+        configuration.addAllowedOrigin(allowedOrigins); // クライアントのURL
         configuration.addAllowedMethod("GET");
         configuration.addAllowedMethod("POST");
         configuration.addAllowedMethod("PUT");
