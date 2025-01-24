@@ -90,32 +90,33 @@ public class SecurityConfig {
             })
             .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
         )
-        .logout()
-            .logoutUrl("/auth/logout")
+        .logout(logout -> logout
+            .logoutUrl("/api/logout")
             .logoutSuccessHandler((request, response, authentication) -> {
-                // クッキーの削除
-                ResponseCookie accessTokenCookie = ResponseCookie.from("access_token", "")
-                    .httpOnly(true)
-                    .secure(true)
-                    .sameSite("Strict")
-                    .path("/")
-                    .maxAge(0)
-                    .build();
-                
-                ResponseCookie refreshTokenCookie = ResponseCookie.from("refresh_token", "")
-                    .httpOnly(true)
-                    .secure(true)
-                    .sameSite("Strict")
-                    .path("/")
-                    .maxAge(0)
-                    .build();
-
-                response.addHeader(HttpHeaders.SET_COOKIE, accessTokenCookie.toString());
-                response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
-                response.setStatus(HttpStatus.OK.value());
+                        // クッキーの削除
+                        ResponseCookie accessTokenCookie = ResponseCookie.from("access_token", "")
+                            .httpOnly(true)
+                            .secure(true)
+                            .sameSite("Strict")
+                            .path("/")
+                            .maxAge(0)
+                            .build();
+                        
+                        ResponseCookie refreshTokenCookie = ResponseCookie.from("refresh_token", "")
+                            .httpOnly(true)
+                            .secure(true)
+                            .sameSite("Strict")
+                            .path("/")
+                            .maxAge(0)
+                            .build();
+        
+                        response.addHeader(HttpHeaders.SET_COOKIE, accessTokenCookie.toString());
+                        response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
+                        response.setStatus(HttpStatus.OK.value());
             })
             .invalidateHttpSession(true)
-            .clearAuthentication(true);
+            .clearAuthentication(true)
+        );
 
         return http.build();
     }
