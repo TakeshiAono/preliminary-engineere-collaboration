@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,8 @@ import com.api.EngineerCollabo.entities.User;
 import com.api.EngineerCollabo.repositories.UserRepository;
 import com.api.EngineerCollabo.services.UserService;
 import com.api.EngineerCollabo.util.JwtUtil;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * UserControllerクラス
@@ -47,6 +50,9 @@ public class UserController {
     public ResponseEntity<String> healthCheck() {
         return ResponseEntity.ok("OK");
     }
+
+    @Value("${cors.allowed.origins}")
+    private String allowedOrigins;
 
     /**
      * ユーザ登録API
@@ -81,15 +87,23 @@ public class UserController {
      * @return responseLogin ログインAPIのレスポンスボディ
      */
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody RequestLogin request) {
+    public ResponseEntity<?> login(@RequestBody RequestLogin request, HttpServletRequest httpRequest) {
         ResponseLogin responseLogin = userService.login(request);
-        
+
+        // リクエスト送信元のオリジンを取得
+        String origin = httpRequest.getHeader("Origin");
+        if (origin == null) {
+            // Origin ヘッダーが存在しない場合は Host ヘッダーを利用
+            origin = httpRequest.getScheme() + "://" + httpRequest.getHeader("Host");
+        }
+
         if (!responseLogin.getStatus().equals("error")) {
             Map<String, ResponseCookie> cookies = this.generateTokenCookies(responseLogin.getEmail());
 
             return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookies.get("access_token").toString())
                 .header(HttpHeaders.SET_COOKIE, cookies.get("refresh_token").toString())
+                .header(HttpHeaders.LOCATION, origin + "/mpPage")
                 .body(responseLogin);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
