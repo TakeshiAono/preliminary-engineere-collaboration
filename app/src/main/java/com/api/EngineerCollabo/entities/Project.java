@@ -26,7 +26,6 @@ import jakarta.persistence.Table;
 import lombok.Data;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.api.EngineerCollabo.converters.JsonNodeConverter;
-import jakarta.persistence.ManyToOne;
 
 @Data
 @Entity
@@ -60,11 +59,11 @@ public class Project {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    @Column(name = "use_technology", columnDefinition = "jsonb") // PostgreSQLの場合
+    @Column(name = "use_technology", columnDefinition = "TEXT") // PostgreSQLの場合
     @Convert(converter = JsonNodeConverter.class)
     private JsonNode useTechnology;
 
-    @Column(name = "recruiting_member_job", columnDefinition = "jsonb") // PostgreSQLの場合
+    @Column(name = "recruiting_member_job", nullable = true, columnDefinition = "TEXT") // PostgreSQLの場合
     @Convert(converter = JsonNodeConverter.class)
     private JsonNode recruitingMemberJob;
 
@@ -72,7 +71,7 @@ public class Project {
     private String recruitingText;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)

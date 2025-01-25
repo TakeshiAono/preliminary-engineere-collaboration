@@ -4,17 +4,28 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.api.EngineerCollabo.repositories.ProjectRepository;
+import com.api.EngineerCollabo.repositories.UserRepository;
+import com.api.EngineerCollabo.repositories.ProjectUserRepository;
 
 import com.api.EngineerCollabo.entities.Project;
 import com.api.EngineerCollabo.entities.ResponseProject;
+import com.api.EngineerCollabo.entities.ProjectUser;
+import com.api.EngineerCollabo.entities.User;
 
 @Service
 public class ProjectService {
 
 	@Autowired
     private ProjectRepository projectRepository;
+
+	@Autowired
+	private UserRepository userRepository;
+
+	@Autowired
+	private ProjectUserRepository projectUserRepository;
 
 	public ResponseProject changeResponseProject(Project project) {
 		ResponseProject responseProject = new ResponseProject();
@@ -48,4 +59,18 @@ public class ProjectService {
 	public Project getProjectByApplicationId(Integer applicationId) {
         return projectRepository.findProjectByApplicationId(applicationId);
     }
+
+	@Transactional
+	public Project createProject(Project project) {
+		User owner = project.getOwner();
+
+		// デタッチされたエンティティを再アタッチ
+		owner = userRepository.findById(owner.getId()).orElseThrow(() -> new RuntimeException("User not found"));
+
+		project.getUsers().add(owner);
+
+		Project savedProject = projectRepository.save(project);
+
+		return savedProject;
+	}
 }

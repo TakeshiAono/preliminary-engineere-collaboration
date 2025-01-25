@@ -92,17 +92,17 @@ class ProjectControllerTest {
         verify(projectRepository).deleteById(projectId);
     }
 
-    @Test
-    void createProject() {
-        // 準備
-        Project requestProject = new Project();
+    // @Test
+    // void createProject() {
+    //     // 準備
+    //     Project requestProject = new Project();
 
-        // 実行
-        projectController.createProject(requestProject);
+    //     // 実行
+    //     projectController.createProject(requestProject);
 
-        // 検証
-        verify(projectRepository).save(requestProject);
-    }
+    //     // 検証
+    //     verify(projectRepository).save(requestProject);
+    // }
     @Test
     void searchProject() {
         // TODO

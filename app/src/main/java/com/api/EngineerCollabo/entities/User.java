@@ -116,6 +116,14 @@ public class User {
     @ToString.Exclude // 双方向リレーションを無視して無限ループを防ぐ
     private List<Project> projects = new ArrayList<>();
 
+    // デフォルトコンストラクタ
+    public User() {}
+
+    // JSONデシリアライズ用のコンストラクタ
+    public User(Integer id) {
+        this.id = id;
+    }
+
     @PrePersist
     public void prePersist() {
         if (getIsOwner() == null) {

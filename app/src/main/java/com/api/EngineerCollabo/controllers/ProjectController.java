@@ -40,7 +40,9 @@ import java.util.stream.Collectors;
 import java.util.Map;
 import java.time.Duration;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.regions.Region;
@@ -101,7 +103,6 @@ public class ProjectController {
         List<Project> projects = projectRepository.findAll();
         return projects.stream().map((project) -> projectService.changeResponseProject(project)).toList();
     }
-
 
     @PatchMapping("/{id}")
     public void putProject(@PathVariable("id") Optional<Integer> ID, @RequestBody Project requestProject) {
@@ -298,8 +299,9 @@ public class ProjectController {
     }
 
     @PostMapping("/create")
-    public void createProject(@RequestBody Project requestProject) {
-        projectRepository.save(requestProject);
+    public ResponseEntity<Project> createProject(@RequestBody Project project) {
+        Project createdProject = projectService.createProject(project);
+        return new ResponseEntity<>(createdProject, HttpStatus.CREATED);
     }
 
     @GetMapping("/search")
