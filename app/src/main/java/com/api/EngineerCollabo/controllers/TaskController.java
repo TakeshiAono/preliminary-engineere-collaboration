@@ -73,12 +73,12 @@ public class TaskController {
 
     // TODO ユーザーが所属していないプロジェクト･グループのタスクを取得できてしまうので､修正が必要
     @GetMapping("/tasks")
-    public ResponseTasks responseTask(
-            @RequestParam(name = "projectId", required = false) Integer projectId,
-            @RequestParam(name = "userId", required = false) Integer userId,
-            @RequestParam(name = "milestoneId", required = false) Integer milestoneId) {
+    public Optional<ResponseTasks> responseTask(
+        @RequestParam(name = "projectId", required = false) Integer projectId,
+        @RequestParam(name = "userId", required = true) Integer userId,
+        @RequestParam(name = "milestoneId", required = false) Integer milestoneId) {
 
-        List<Task> tasks = taskRepository.findAll();
+        List<Task> tasks = null;
 
         if (userId != null) {
             Optional<User> user = userRepository.findById(userId);
@@ -86,7 +86,7 @@ public class TaskController {
                 tasks = user.get().getTasks();
             }
         }
-        
+
         if (projectId != null) {
             tasks = tasks.stream()
                     .filter(task -> task.getProjectId().equals(projectId))
@@ -103,7 +103,7 @@ public class TaskController {
         responseTasks.setUserId(userId);
         responseTasks.setProjectId(projectId);
         responseTasks.setTasks(tasks);
-        return responseTasks;
+        return Optional.of(responseTasks);
     }
 
     @GetMapping("/tasks/{id}")
