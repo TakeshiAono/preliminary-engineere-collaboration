@@ -158,4 +158,9 @@ public class UserController {
         userService.updateUser(id, user);
     }
 
+    @PutMapping("/users/{id}")
+    public void putUser(@PathVariable("id") Optional<Integer> ID, @RequestBody User user) {
+        int id = ID.get();
+        userService.updateUser(id, user);
+    }
 }

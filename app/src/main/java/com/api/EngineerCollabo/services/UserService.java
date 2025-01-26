@@ -135,6 +135,9 @@ public class UserService implements UserDetailsService {
     public void updateUser(Integer id, User user) {
         if (userRepository.findById(id).get() != null) {
             user.setId(id);
+            String rawPassword = user.getPassword();
+            String hashPw = PasswordUtil.hashSHA256(rawPassword);
+            user.setPassword(hashPw);
             userRepository.save(user);
         }
     }
