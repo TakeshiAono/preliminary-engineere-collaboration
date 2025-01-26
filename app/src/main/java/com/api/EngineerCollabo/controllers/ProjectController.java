@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -105,6 +106,52 @@ public class ProjectController {
     }
 
     @PatchMapping("/{id}")
+    public void patchProject(@PathVariable("id") Optional<Integer> ID, @RequestBody Project requestProject) {
+        // TODO: サービスクラスに以下のロジックを移設したい。
+        if (ID.isPresent()) {
+            int id = ID.get();
+            Project project = projectRepository.findById(id);
+
+            String name = requestProject.getName();
+            if (name != null) {
+                project.setName(name);
+            }
+
+            String iconUrl = requestProject.getIconUrl();
+            if (iconUrl != null) {
+                project.setIconUrl(iconUrl);
+            }
+
+            String description = requestProject.getDescription();
+            if (description != null) {
+                project.setDescription(description);
+            }
+
+            Date deadline = requestProject.getDeadline();
+            if (deadline != null) {
+                project.setDeadline(deadline);
+            }
+
+            JsonNode recruitingMemberJob = requestProject.getRecruitingMemberJob();
+            if (recruitingMemberJob != null) {
+                project.setRecruitingMemberJob(recruitingMemberJob);
+            }
+
+            JsonNode useTechnology = requestProject.getUseTechnology();
+            if (useTechnology != null) {
+                project.setUseTechnology(useTechnology);
+            }
+
+            String recruitingText = requestProject.getRecruitingText();
+            if (recruitingText != null) {
+                project.setRecruitingText(recruitingText);
+            }
+
+            projectRepository.save(project);
+        }
+    }
+
+    @PutMapping("/{id}")
     public void putProject(@PathVariable("id") Optional<Integer> ID, @RequestBody Project requestProject) {
         // TODO: サービスクラスに以下のロジックを移設したい。
         if (ID.isPresent()) {
