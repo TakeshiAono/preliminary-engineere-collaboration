@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class TaskControllerTest {
@@ -81,14 +82,18 @@ public class TaskControllerTest {
         task.setId(taskId);
         task.setName("Test Task");
 
+        ResponseTask expectedResponse = new ResponseTask();
+        // ... expectedResponseの設定 ...
+
         when(taskRepository.findById(taskId)).thenReturn(Optional.of(task));
-        when(taskService.changeResponseTask(task)).thenReturn(new ResponseTask());
+        when(taskService.changeResponseTask(task)).thenReturn(expectedResponse);
 
         // 実行
-        ResponseTask responseTask = taskController.responseTask(Optional.of(taskId));
-
+        ResponseEntity<ResponseTask> response = taskController.responseTask(Optional.of(taskId));
+        
         // 検証
-        assertEquals(new ResponseTask(), responseTask);
+        assertTrue(response.getStatusCode().is2xxSuccessful());
+        assertEquals(expectedResponse, response.getBody());
     }
 
     @Test

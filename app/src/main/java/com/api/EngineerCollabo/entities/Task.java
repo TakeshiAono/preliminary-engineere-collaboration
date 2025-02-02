@@ -40,7 +40,7 @@ public class Task {
     @Column(name = "in_charge_user_id")
     private Integer inChargeUserId;
 
-    @Column(name = "milestone_id")
+    @Column(name = "milestone_id", nullable = true)
     private Integer milestoneId;
 
     @Column(name = "deadline", nullable = true, columnDefinition = "DATE")
@@ -67,8 +67,8 @@ public class Task {
     @JoinColumn(name = "in_charge_user_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
     private User user;
 
-    @ManyToOne()
+    @ManyToOne(optional = true)
     @JsonIgnore
-    @JoinColumn(name = "milestone_id", nullable = false, referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "milestone_id", nullable = true, referencedColumnName = "id", insertable = false, updatable = false)
     private Milestone milestone;
 }
