@@ -107,15 +107,18 @@ public class TaskController {
     }
 
     @GetMapping("/tasks/{id}")
-    public ResponseTask responseTask(@PathVariable("id") Optional<Integer> ID) {
+    public ResponseEntity<ResponseTask> responseTask(@PathVariable("id") Optional<Integer> ID) {
         if (ID.isPresent()) {
             int id = ID.get();
-            Task task = taskRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Task not found"));
-            return taskService.changeResponseTask(task);
-        } else {
-            return null;
+            try {
+                Task task = taskRepository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("Task not found"));
+                return ResponseEntity.ok(taskService.changeResponseTask(task));
+            } catch (EntityNotFoundException e) {
+                return ResponseEntity.notFound().build();
+            }
         }
+        return ResponseEntity.badRequest().build();
     }
 
     @PatchMapping("/tasks/{id}")
